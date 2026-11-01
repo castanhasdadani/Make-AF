@@ -2094,7 +2094,61 @@
       localStorage.clear();
       location.reload();
     }
-  </script>
+  <script>
+  // Variáveis globais de controle
+  let termoBuscaPaciente = '';
+  let filtroPacientesAtual = 'todos';
+
+  // 1. Função de busca pela Lupa
+  function filtrarPacientesPorBusca() {
+    termoBuscaPaciente = document.getElementById('input-busca-paciente').value.toLowerCase();
+    renderizarPacientes();
+  }
+
+  // 2. Função de filtro por abas (Todos / Ativos / Inativos)
+  function filtrarPacientes(tipo) {
+    filtroPacientesAtual = tipo;
+    
+    document.getElementById('filtro-pac-todos').className = tipo === 'todos' ? 'px-3 py-1.5 rounded-lg bg-white text-brand-main shadow-sm transition-all' : 'px-3 py-1.5 rounded-lg text-gray-600 hover:text-brand-main transition-all';
+    document.getElementById('filtro-pac-ativos').className = tipo === 'ativos' ? 'px-3 py-1.5 rounded-lg bg-white text-brand-main shadow-sm transition-all' : 'px-3 py-1.5 rounded-lg text-gray-600 hover:text-brand-main transition-all';
+    document.getElementById('filtro-pac-inativos').className = tipo === 'inativos' ? 'px-3 py-1.5 rounded-lg bg-white text-brand-main shadow-sm transition-all' : 'px-3 py-1.5 rounded-lg text-gray-600 hover:text-brand-main transition-all';
+    
+    renderizarPacientes();
+  }
+
+  // 3. Função para Alternar Status (Ativar / Inativar paciente)
+  function alternarStatusPaciente(id) {
+    const paciente = MOCK_PACIENTES.find(p => p.id === id);
+    if (paciente) {
+      paciente.ativo = paciente.ativo === false ? true : false;
+      renderizarPacientes();
+    }
+  }
+
+  // 4. Função para Excluir Paciente Totalmente
+  function excluirPaciente(id) {
+    if (confirm("Tem certeza que deseja excluir este paciente e todos os seus registros permanentemente?")) {
+      MOCK_PACIENTES = MOCK_PACIENTES.filter(p => p.id !== id);
+      delete bancoAnamneses[id];
+      renderizarPacientes();
+    }
+  }
+
+  // 5. Função de Edição de Paciente Existente
+  function abrirModalEditarPaciente(id) {
+    const paciente = MOCK_PACIENTES.find(p => p.id === id);
+    if (!paciente) return;
+    
+    if (document.getElementById('modal-paciente-id')) document.getElementById('modal-paciente-id').value = paciente.id;
+    if (document.getElementById('modal-paciente-nome')) document.getElementById('modal-paciente-nome').value = paciente.nome || '';
+    if (document.getElementById('modal-paciente-nasc')) document.getElementById('modal-paciente-nasc').value = paciente.nascimento || '';
+    if (document.getElementById('modal-paciente-telefone')) document.getElementById('modal-paciente-telefone').value = paciente.telefone || '';
+    if (document.getElementById('modal-paciente-queixa')) document.getElementById('modal-paciente-queixa').value = paciente.queixa || '';
+    
+    const modal = document.getElementById('modal-paciente');
+    if (modal) modal.classList.remove('hidden');
+  }
+</script>
 </body>
 </html>
 
