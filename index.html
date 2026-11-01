@@ -127,6 +127,10 @@
           <button onclick="switchTab('pacientes')" id="nav-pacientes" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-brand-main hover:bg-rose-50 transition-all">
             <i class="fa-solid fa-user-group mr-1.5"></i> Pacientes
           </button>
+<button onclick="switchTab('pacientes-inativos')" id="nav-pacientes-inativos" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-brand-main hover:bg-rose-50 transition-all">
+  <i class="fa-solid fa-user-slash mr-1.5"></i> Inativos
+</button>
+
           <button onclick="switchTab('analise')" id="nav-analise" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-brand-main hover:bg-rose-50 transition-all">
             <i class="fa-solid fa-diagram-project mr-1.5"></i> Análise Funcional
           </button>
@@ -248,46 +252,34 @@
     </section>
 
     <!-- VIEW 2: GESTÃO DE PACIENTES E PRONTUÁRIOS -->
-<section id="view-pacientes" class="tab-content hidden space-y-6">
-  <!-- Cabeçalho, Barra de Pesquisa (Lupa) e Ações -->
-  <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-    <div>
-      <div class="flex items-center space-x-2">
-        <span class="bg-rose-100 text-brand-main text-xs font-bold px-2.5 py-0.5 rounded-full">Módulo Administrativo</span>
-        <span class="text-xs text-gray-400">• Prontuários Clínicos</span>
-      </div>
-      <h2 class="text-2xl font-bold text-brand-dark mt-1">Prontuários e Pacientes</h2>
-      <p class="text-xs sm:text-sm text-gray-500 mt-0.5">Cadastre, pesquise e acompanhe o histórico, anamneses e evoluções dos clientes.</p>
-    </div>
-    
-    <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
-      <!-- Barra de Pesquisa com Lupa -->
-      <div class="relative flex-grow sm:flex-grow-0">
-        <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400">
-          <i class="fa-solid fa-magnifying-glass"></i>
-        </span>
-        <input type="text" id="input-busca-paciente" oninput="filtrarPacientesPorBusca()" placeholder="Buscar paciente..." class="w-full sm:w-64 pl-9 pr-4 py-2 text-xs border border-rose-200 rounded-xl outline-none focus:border-brand-main bg-rose-50/30">
+    <section id="view-pacientes" class="tab-content hidden space-y-6">
+      <div class="flex justify-between items-center">
+        <div>
+          <h2 class="text-2xl font-bold text-brand-dark">Prontuários e Pacientes</h2>
+          <p class="text-sm text-gray-500">Cadastre e acompanhe o histórico, anamneses, evoluções e planejamentos dos clientes.</p>
+        </div>
+        <button onclick="abrirModalNovoPaciente()" class="bg-brand-main text-white px-4 py-2.5 rounded-xl font-medium text-sm shadow hover:bg-brand-alt transition-all">
+          <i class="fa-solid fa-user-plus mr-1.5"></i> Cadastrar Paciente
+        </button>
       </div>
 
-      <!-- Filtros de Status (Todos / Ativos / Inativos) -->
-      <div class="flex bg-rose-50 p-1 rounded-xl border border-rose-200 text-xs font-semibold">
-        <button onclick="filtrarPacientes('todos')" id="filtro-pac-todos" class="px-3 py-1.5 rounded-lg bg-white text-brand-main shadow-sm transition-all">Todos</button>
-        <button onclick="filtrarPacientes('ativos')" id="filtro-pac-ativos" class="px-3 py-1.5 rounded-lg text-gray-600 hover:text-brand-main transition-all">Ativos</button>
-        <button onclick="filtrarPacientes('inativos')" id="filtro-pac-inativos" class="px-3 py-1.5 rounded-lg text-gray-600 hover:text-brand-main transition-all">Inativos</button>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="grid-pacientes">
       </div>
-      
-      <!-- Botão de Cadastro Principal -->
-      <button onclick="abrirModalNovoPaciente()" class="bg-brand-main text-white px-4 py-2.5 rounded-xl font-medium text-sm shadow hover:bg-brand-alt transition-all whitespace-nowrap flex items-center justify-center">
-        <i class="fa-solid fa-user-plus mr-1.5"></i> Cadastrar Paciente
-      </button>
+    </section>
+
+<!-- VIEW: PACIENTES INATIVOS -->
+<section id="view-pacientes-inativos" class="tab-content hidden space-y-6">
+  <div class="flex justify-between items-center">
+    <div>
+      <h2 class="text-2xl font-bold text-brand-dark">Pacientes Inativos</h2>
+      <p class="text-sm text-gray-500">Lista de prontuários desativados. Você pode reativá-los a qualquer momento sem perder os registros.</p>
     </div>
   </div>
-
-  <!-- Grid Dinâmico de Exibição dos Pacientes (Cards com Ações de Edição, Inativação e Exclusão) -->
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="grid-pacientes">
-    <!-- Os cards dos pacientes são renderizados dinamicamente via JavaScript aqui dentro -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="grid-pacientes-inativos">
+    <!-- Renderizado dinamicamente via JS -->
   </div>
 </section>
+
 
     <!-- VIEW 2.1: DETALHE DO PRONTUÁRIO / ANAMNESE, EVOLUÇÕES, ANOTAÇÕES E PLANEJAMENTO/SUPERVISÃO -->
     <section id="view-prontuario-detalhe" class="tab-content hidden space-y-6">
@@ -981,6 +973,121 @@
 
     let historicoAnalises = [EXEMPLO_ANALISE_TECNICA];
     let pacienteAtualId = null;
+// Variável auxiliar para controlar se estamos editando um paciente existente
+let pacienteEditandoId = null;
+
+// Sobrescreve a abertura do modal para limpar ou carregar dados na edição
+function abrirModalNovoPaciente(pacienteObj = null) {
+  document.getElementById('form-cad-paciente').reset();
+  const tituloModal = document.querySelector('#modal-paciente h3');
+  
+  if (pacienteObj) {
+    pacienteEditandoId = pacienteObj.id;
+    if (tituloModal) tituloModal.innerHTML = `<i class="fa-solid fa-user-pen text-brand-main mr-2"></i> Editar Dados do Paciente`;
+    document.getElementById('cad-pac-nome').value = pacienteObj.nome || '';
+    document.getElementById('cad-pac-nascimento').value = pacienteObj.nascimento || '';
+    document.getElementById('cad-pac-tel').value = pacienteObj.telefone || '';
+    document.getElementById('cad-pac-queixa').value = pacienteObj.queixa || '';
+  } else {
+    pacienteEditandoId = null;
+    if (tituloModal) tituloModal.innerHTML = `<i class="fa-solid fa-user-plus text-brand-main mr-2"></i> Cadastrar Novo Paciente`;
+  }
+  document.getElementById('modal-paciente').classList.remove('hidden');
+}
+
+// Função para abrir o modal preenchido com os dados do paciente ao clicar em Editar
+function editarPacienteModal(id) {
+  const pac = MOCK_PACIENTES.find(p => p.id === id);
+  if (pac) {
+    abrirModalNovoPaciente(pac);
+  }
+}
+
+// Substitui a função antiga de salvar paciente para lidar tanto com novos cadastros quanto com edições
+function salvarNovoPaciente(e) {
+  e.preventDefault();
+  const nome = document.getElementById('cad-pac-nome').value;
+  const nascimento = document.getElementById('cad-pac-nascimento').value;
+  const queixa = document.getElementById('cad-pac-queixa').value;
+  const telefone = document.getElementById('cad-pac-tel').value;
+  const idade = calcularidade(nascimento);
+
+  if (pacienteEditandoId) {
+    // Editando paciente existente (mantém ID e histórico intactos)
+    let pac = MOCK_PACIENTES.find(p => p.id === pacienteEditandoId);
+    if (pac) {
+      pac.nome = nome;
+      pac.nascimento = nascimento;
+      pac.idade = idade;
+      pac.telefone = telefone;
+      pac.queixa = queixa;
+    }
+    alert(`Dados do paciente "${nome}" atualizados com sucesso!`);
+  } else {
+    // Criando novo paciente
+    const novoPac = {
+      id: `pac-${Date.now()}`,
+      nome: nome,
+      nascimento: nascimento,
+      idade: idade,
+      telefone: telefone,
+      queixa: queixa,
+      ultimaSessao: new Date().toISOString().split('T')[0],
+      inativo: false
+    };
+    MOCK_PACIENTES.push(novoPac);
+    alert(`Paciente "${nome}" cadastrado com sucesso!`);
+  }
+
+  salvarDadosLocalStorage();
+  renderizarPacientes();
+  renderizarDashboard();
+  fecharModalPaciente();
+  pacienteEditandoId = null;
+}
+
+// Função para inativar ou reativar o paciente (mantém anamneses e histórico seguros)
+function alternarInativarPaciente(id) {
+  const pac = MOCK_PACIENTES.find(p => p.id === id);
+  if (pac) {
+    pac.inativo = !pac.inativo;
+    const acaoTexto = pac.inativo ? "inativado" : "reativado";
+    salvarDadosLocalStorage();
+    renderizarPacientes();
+    renderizarDashboard();
+    alert(`O paciente "${pac.nome}" foi ${acaoTexto} com sucesso. Seus prontuários e históricos foram preservados.`);
+  }
+}
+
+// Exclusão segura com aviso rigoroso para proteger o histórico clínico
+function excluirPacienteSeguro(id) {
+  const pac = MOCK_PACIENTES.find(p => p.id === id);
+  if (!pac) return;
+
+  const confirmacao1 = confirm(`ATENÇÃO: Você solicitou a exclusão do cadastro de "${pac.nome}". \n\nIsso apagará permanentemente o prontuário, anamneses e evoluções deste paciente. \n\nDeseja realmente continuar?`);
+  
+  if (confirmacao1) {
+    const confirmacao2 = prompt(`Para confirmar a exclusão definitiva, digite a palavra EXCLUIR em letras maiúsculas:`);
+    if (confirmacao2 === "EXCLUIR") {
+      // Remove da lista de pacientes
+      MOCK_PACIENTES = MOCK_PACIENTES.filter(p => p.id !== id);
+      
+      // Remove com segurança os dados associados para evitar lixo no localStorage
+      delete bancoAnamneses[id];
+      delete bancoAnotacoesSessao[id];
+      delete bancoEvolucoes[id];
+      delete bancoPlanejamentos[id];
+
+      salvarDadosLocalStorage();
+      renderizarPacientes();
+      renderizarDashboard();
+      alert("O cadastro e o histórico do paciente foram excluídos com sucesso.");
+    } else {
+      alert("Ação cancelada. A palavra de confirmação não estava correta, portanto nenhum dado foi apagado.");
+    }
+  }
+}
+
 
     // --- INICIALIZAÇÃO ---
     window.onload = function() {
@@ -1148,54 +1255,78 @@
       document.getElementById('stat-relatorios').innerText = historicoAnalises.length;
     }
 
-    function renderizarPacientes() {
-      const grid = document.getElementById('grid-pacientes');
-      grid.innerHTML = '';
-      MOCK_PACIENTES.forEach(pac => {
-        const idadeReal = pac.nascimento ? calcularIdade(pac.nascimento) : (pac.idade || 25);
-        const tipoAnamnese = idadeReal <= 17 ? 'Infantil/Infantojuvenil (0-17 anos)' : 'Adulta (18+ anos)';
-        const anamneseSalva = bancoAnamneses[pac.id];
-        const statusFicha = anamneseSalva ? anamneseSalva.status : 'Pendente';
-        let badgeColor = 'bg-amber-100 text-amber-800';
-        if (statusFicha === 'Concluída') badgeColor = 'bg-emerald-100 text-emerald-800';
-        else if (statusFicha === 'Rascunho') badgeColor = 'bg-blue-100 text-blue-800';
+   function renderizarPacientes() {
+  const gridAtivos = document.getElementById('grid-pacientes');
+  const gridInativos = document.getElementById('grid-pacientes-inativos');
+  
+  if (gridAtivos) gridAtivos.innerHTML = "";
+  if (gridInativos) gridInativos.innerHTML = "";
 
-        const card = document.createElement('div');
-        card.className = 'bg-white rounded-2xl p-5 border border-rose-100 card-shadow space-y-3 flex flex-col justify-between';
-        card.innerHTML = `
-          <div class="space-y-3">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-full bg-rose-100 text-brand-main font-bold flex items-center justify-center text-sm">
-                  ${pac.nome.split(' ').map(n=>n[0]).join('').substring(0,2)}
-                </div>
-                <div>
-                  <h3 class="font-bold text-brand-dark text-sm">${pac.nome}</h3>
-                  <p class="text-xs text-gray-400">${idadeReal} anos • Nasc: ${formatarDataBR(pac.nascimento || '2000-01-01')}</p>
-                </div>
-              </div>
-              <span class="text-[10px] font-bold px-2 py-0.5 rounded-full badgeColor">{statusFicha}</span>
+  MOCK_PACIENTES.forEach(pac => {
+    const idadeReal = pac.nascimento ? calcularidade(pac.nascimento) : (pac.idade || 25);
+    const tipoAnamnese = idadeReal <= 17 ? 'Infantil/Infantojuvenil (0-17 anos)' : 'Adulta (18+ anos)';
+    const anamneseSalva = bancoAnamneses[pac.id];
+    const statusFicha = anamneseSalva ? anamneseSalva.status : 'Pendente';
+    let badgeColor = 'bg-amber-100 text-amber-800';
+    if (statusFicha === 'Concluída') badgeColor = 'bg-emerald-100 text-emerald-800';
+    else if (statusFicha === 'Rascunho') badgeColor = 'bg-blue-100 text-blue-800';
+
+    const card = document.createElement('div');
+    card.className = 'bg-white rounded-2xl p-5 border border-rose-100 card-shadow space-y-3 flex flex-col justify-between';
+    
+    // Conteúdo do card com os novos botões de ação
+    card.innerHTML = `
+      <div class="space-y-3">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-full bg-rose-100 text-brand-main font-bold flex items-center justify-center text-sm">
+              ${pac.nome.split(' ').map(n=>n[0]).join("").substring(0,2)}
             </div>
-            <div class="text-xs text-gray-600 bg-rose-50/50 p-2.5 rounded-xl border border-rose-100 space-y-1">
-              <div><span class="font-semibold text-brand-dark">Foco:</span> ${pac.queixa}</div>
-              <div class="text-[10px] text-brand-alt font-medium"><i class="fa-solid fa-file-medical mr-1"></i> Ficha: ${tipoAnamnese}</div>
+            <div>
+              <h3 class="font-bold text-brand-dark text-sm">${pac.nome}</h3>
+              <p class="text-xs text-gray-400">${idadeReal} anos • Nasc: ${formatarDataBR(pac.nascimento || '2000-01-01')}</p>
             </div>
           </div>
-          <div class="space-y-2 pt-2 border-t border-rose-50">
-            <button onclick="abrirProntuarioAnamnese('${pac.id}')" class="w-full bg-brand-main hover:bg-brand-alt text-white font-bold py-2 px-3 rounded-xl transition-all flex items-center justify-center shadow text-xs">
-              <i class="fa-solid fa-folder-open mr-1.5"></i> Abrir Prontuário Completo
+          <span class="text-[10px] font-bold px-2 py-0.5 rounded-full badgeColor">{statusFicha}</span>
+        </div>
+        <div class="text-xs text-gray-600 bg-rose-50/50 p-2.5 rounded-xl border border-rose-100 space-y-1">
+          <div><span class="font-semibold text-brand-dark">Foco:</span> ${pac.queixa}</div>
+          <div class="text-[10px] text-brand-alt font-medium"><i class="fa-solid fa-file-medical mr-1"></i> Ficha: ${tipoAnamnese}</div>
+        </div>
+      </div>
+      <div class="space-y-2 pt-2 border-t border-rose-50">
+        <button onclick="abrirProntuarioAnamnese('${pac.id}')" class="w-full bg-brand-main hover:bg-brand-alt text-white font-bold py-2 px-3 rounded-xl transition-all flex items-center justify-center shadow text-xs">
+          <i class="fa-solid fa-folder-open mr-1.5"></i> Abrir Prontuário Completo
+        </button>
+        <div class="flex items-center justify-between pt-1">
+          <div class="flex space-x-1">
+            <button onclick="editarPacienteModal('${pac.id}')" class="px-2.5 py-1 bg-gray-100 text-gray-700 hover:bg-rose-50 hover:text-brand-main rounded-lg text-xs font-semibold" title="Editar dados cadastrais">
+              <i class="fa-solid fa-pen mr-1"></i> Editar
             </button>
-            <div class="flex justify-between items-center text-[11px] pt-1">
-              <span class="text-gray-400">Última: ${formatarDataBR(pac.ultimaSessao)}</span>
-              <button onclick="iniciarAnaliseParaPaciente('${pac.nome}')" class="text-brand-main font-semibold hover:underline">
-                Nova Análise <i class="fa-solid fa-arrow-right ml-0.5"></i>
-              </button>
-            </div>
+            <button onclick="alternarInativarPaciente('${pac.id}')" class="px-2.5 py-1 pac.inativo?'bg-emerald-50text-emerald-700hover:bg-emerald-100':'bg-amber-50text-amber-700hover:bg-amber-100'rounded-lgtext-xsfont-semibold"title="{pac.inativo ? 'Ativar paciente novamente' : 'Inativar paciente'}">
+              <i class="fa-solid ${pac.inativo ? 'fa-user-check' : 'fa-user-slash'} mr-1"></i> ${pac.inativo ? 'Ativar' : 'Inativar'}
+            </button>
           </div>
-        `;
-        grid.appendChild(card);
-      });
+          <button onclick="excluirPacienteSeguro('${pac.id}')" class="p-1 text-red-400 hover:text-red-600 rounded-lg text-xs" title="Excluir cadastro permanentemente">
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        </div>
+      </div>
+    `;
+
+    // Separa automaticamente: se estiver inativo vai para a aba de inativos, senão fica na lista principal
+    if (pac.inativo) {
+      if (gridInativos) gridInativos.appendChild(card);
+    } else {
+      if (gridAtivos) gridAtivos.appendChild(card);
     }
+  });
+
+  // Atualiza o contador de pacientes ativos no painel principal
+  const totalAtivos = MOCK_PACIENTES.filter(p => !p.inativo).length;
+  const statPacientes = document.getElementById('stat-pacientes');
+  if (statPacientes) statPacientes.innerText = totalAtivos;
+}
 
     function abrirProntuarioAnamnese(pacId) {
       pacienteAtualId = pacId;
@@ -1255,85 +1386,85 @@
     }
 
     // --- FORMULÁRIO INFANTIL (12 TÓPICOS)
-    function renderizarFormularioInfantil(pac, d = {}) {
-      return `
-        <form id="form-anamnese-ativa" class="space-y-6 text-xs">
-          <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
-            <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-address-card text-brand-main mr-2"></i> 1. Identificação da criança, pais e responsável legal</h3>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-              <div><label class="font-semibold block mb-1">Nome Completo</label><input type="text" name="nome" value="${d.nome || pac.nome}" class="w-full p-2 border rounded-xl"></div>
-              <div><label class="font-semibold block mb-1">Idade</label><input type="text" name="idade" value="${d.idade || pac.idade || ''}" class="w-full p-2 border rounded-xl"></div>
-              <div><label class="font-semibold block mb-1">Sexo</label><input type="text" name="sexo" value="${d.sexo || ''}" class="w-full p-2 border rounded-xl"></div>
-              <div><label class="font-semibold block mb-1">Nascimento</label><input type="date" name="nasc" value="${d.nasc || pac.nascimento || ''}" class="w-full p-2 border rounded-xl"></div>
-              <div><label class="font-semibold block mb-1">Endereço e Cidade</label><input type="text" name="endereco" value="${d.endereco || ''}" class="w-full p-2 border rounded-xl"></div>
-              <div><label class="font-semibold block mb-1">Telefone</label><input type="text" name="telefone" value="${d.telefone || pac.telefone || ''}" class="w-full p-2 border rounded-xl"></div>
-              <div><label class="font-semibold block mb-1">Escola / Série</label><input type="text" name="escola" value="${d.escola || ''}" class="w-full p-2 border rounded-xl"></div>
-              <div><label class="font-semibold block mb-1">Dados dos Pais (Idade e Profissão)</label><input type="text" name="paisDados" value="${d.paisDados || ''}" class="w-full p-2 border rounded-xl"></div>
-              <div><label class="font-semibold block mb-1">Responsável Legal</label><input type="text" name="respLegal" value="${d.respLegal || ''}" class="w-full p-2 border rounded-xl"></div>
-              <div><label class="font-semibold block mb-1">Posição na Família e Irmãos</label><input type="text" name="posicaoIrmaos" value="${d.posicaoIrmaos || ''}" class="w-full p-2 border rounded-xl"></div>
-              <div><label class="font-semibold block mb-1">Separação dos Pais</label><input type="text" name="separacao" value="${d.separacao || ''}" class="w-full p-2 border rounded-xl"></div>
-              <div><label class="font-semibold block mb-1">Uso de Medicação</label><input type="text" name="medicacao" value="${d.medicacao || ''}" class="w-full p-2 border rounded-xl"></div>
-            </div>
-          </div>
-          <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
-            <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-share text-brand-main mr-2"></i> 2. Encaminhamento e referência</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-              <div><label class="font-semibold block mb-1">Origem do Encaminhamento</label><input type="text" name="origemEncaminhamento" value="${d.origemEncaminhamento || ''}" class="w-full p-2 border rounded-xl"></div>
-              <div><label class="font-semibold block mb-1">Profissional Responsável</label><input type="text" name="profEncaminhamento" value="${d.profEncaminhamento || ''}" class="w-full p-2 border rounded-xl"></div>
-            </div>
-          </div>
-          <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
-            <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-circle-question text-brand-main mr-2"></i> 3. Queixa principal</h3>
-            <div class="space-y-3">
-              <div><label class="font-semibold block mb-1">Motivo da Procura e Dificuldades Relatadas</label><textarea name="queixa" rows="3" class="w-full p-2 border rounded-xl">${d.queixa || pac.queixa || ''}</textarea></div>
-              <div><label class="font-semibold block mb-1">Expectativas Familiares</label><input type="text" name="expectativas" value="${d.expectativas || ''}" class="w-full p-2 border rounded-xl"></div>
-            </div>
-          </div>
-          <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
-            <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-clock-rotate-left text-brand-main mr-2"></i> 4. Histórico do quadro atual</h3>
-            <div><label class="font-semibold block mb-1">Início, Frequência, Intensidade, Contextos, Evolução e Diagnósticos Anteriores</label><textarea name="histQuadro" rows="4" class="w-full p-2 border rounded-xl">${d.histQuadro || ''}</textarea></div>
-          </div>
-          <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
-            <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-user-doctor text-brand-main mr-2"></i> 5. Acompanhamento com outros profissionais</h3>
-            <div><label class="font-semibold block mb-1">Especialidades, Tratamentos, Medicações e Resultados</label><textarea name="outrosProf" rows="3" class="w-full p-2 border rounded-xl">${d.outrosProf || ''}</textarea></div>
-          </div>
-          <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
-            <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-baby text-brand-main mr-2"></i> 6. Antecedentes pessoais e gestacionais</h3>
-            <div><label class="font-semibold block mb-1">Gestação, Concepção, Pré-natal, Intercorrências, Medicações, Parto, Condições ao Nascer e Histórico de Adoção</label><textarea name="antecedentesPessoais" rows="4" class="w-full p-2 border rounded-xl">${d.antecedentesPessoais || ''}</textarea></div>
-          </div>
-          <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
-            <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-child-reaching text-brand-main mr-2"></i> 7. Desenvolvimento: alimentação, sono, psicomotricidade, higiene, desfralde e saúde familiar</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-              <div><label class="font-semibold block mb-1">Alimentação (Amamentação, Seletividade, Autonomia, Alergias, Dietas)</label><textarea name="devAlimentacao" rows="3" class="w-full p-2 border rounded-xl">${d.devAlimentacao || ''}</textarea></div>
-              <div><label class="font-semibold block mb-1">Sono (Insônia, Sonambulismo, Bruxismo, Sono Agitado, Medos)</label><textarea name="devSono" rows="3" class="w-full p-2 border rounded-xl">${d.devSono || ''}</textarea></div>
-              <div><label class="font-semibold block mb-1">Psicomotricidade (Sustentação, Sentar, Engatinhar, Passos, Coordenação)</label><textarea name="devPsicomotricidade" rows="3" class="w-full p-2 border rounded-xl">${d.devPsicomotricidade || ''}</textarea></div>
-              <div><label class="font-semibold block mb-1">Higiene e Desfralde (Autonomia, Controle Esfincteriano, Enurese)</label><textarea name="devHigiene" rows="3" class="w-full p-2 border rounded-xl">${d.devHigiene || ''}</textarea></div>
-            </div>
-            <div><label class="font-semibold block mb-1">Saúde e Histórico Familiar Relevante</label><input type="text" name="devSaudeFamilia" value="${d.devSaudeFamilia || ''}" class="w-full p-2 border rounded-xl"></div>
-          </div>
-          <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
-            <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-people-arrows text-brand-main mr-2"></i> 8. Interações sociais e comunicação</h3>
-            <div><label class="font-semibold block mb-1">Interação com Pares, Comunicação Vocal/Não Vocal, Linguagem e Brincadeiras Funcionais/Simbólicas</label><textarea name="interacaoComunicacao" rows="3" class="w-full p-2 border rounded-xl">${d.interacaoComunicacao || ''}</textarea></div>
-          </div>
-          <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
-            <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-arrows-rotate text-brand-main mr-2"></i> 9. Padrões repetitivos e comportamentos</h3>
-            <div><label class="font-semibold block mb-1">Movimentos Repetitivos, Reação a Mudanças, Interesses Restritos e Comportamento diante da Frustração</label><textarea name="padroesRepetitivos" rows="3" class="w-full p-2 border rounded-xl">${d.padroesRepetitivos || ''}</textarea></div>
-          </div>
-          <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
-            <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-graduation-cap text-brand-main mr-2"></i> 10. Habilidades acadêmicas</h3>
-            <div><label class="font-semibold block mb-1">Histórico Escolar, Adaptação, Aprendizagem, Organização, Reprovações, Suporte Pedagógico e Rotina de Estudos</label><textarea name="habilidadesAcademicas" rows="3" class="w-full p-2 border rounded-xl">${d.habilidadesAcademicas || ''}</textarea></div>
-          </div>
-          <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
-            <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-star text-brand-main mr-2"></i> 11. Reforçadores, preferências e interesses</h3>
-            <div><label class="font-semibold block mb-1">Brinquedos, Atividades, Itens Preferidos, Aversões e Situações de Engajamento</label><textarea name="reforcadoresInteresses" rows="3" class="w-full p-2 border rounded-xl">${d.reforcadoresInteresses || ''}</textarea></div>
-          </div>
-          <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
-            <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-circle-info text-brand-main mr-2"></i> 12. Informações complementares, rotina e observações</h3>
-            <div><label class="font-semibold block mb-1">Características Comportamentais Relatadas, Relações Familiares, Rotina Diária, Rede de Apoio e Observações</label><textarea name="infoComplementares" rows="4" class="w-full p-2 border rounded-xl">${d.infoComplementares || ''}</textarea></div>
-          </div>
-        </form>
-      `;
-    }
+  function renderizarFormularioInfantil(pac, d = {}) {
+  return `
+    <form id="form-anamnese-ativa" class="space-y-6 text-xs">
+      <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
+        <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-address-card text-brand-main mr-2"></i> 1. Identificação da criança, pais e responsável legal</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div><label class="font-semibold block mb-1">Nome Completo</label><input type="text" name="nome" value="${d.nome || pac.nome}" class="w-full p-2 border rounded-xl"></div>
+          <div><label class="font-semibold block mb-1">Idade</label><input type="text" name="idade" value="${d.idade || pac.idade || ''}" class="w-full p-2 border rounded-xl"></div>
+          <div><label class="font-semibold block mb-1">Sexo</label><input type="text" name="sexo" value="${d.sexo || ''}" class="w-full p-2 border rounded-xl"></div>
+          <div><label class="font-semibold block mb-1">Nascimento</label><input type="date" name="nasc" value="${d.nasc || pac.nascimento || ''}" class="w-full p-2 border rounded-xl"></div>
+          <div><label class="font-semibold block mb-1">Endereço e Cidade</label><input type="text" name="endereco" value="${d.endereco || ''}" class="w-full p-2 border rounded-xl"></div>
+          <div><label class="font-semibold block mb-1">Telefone</label><input type="text" name="telefone" value="${d.telefone || pac.telefone || ''}" class="w-full p-2 border rounded-xl"></div>
+          <div><label class="font-semibold block mb-1">Escola / Série</label><input type="text" name="escola" value="${d.escola || ''}" class="w-full p-2 border rounded-xl"></div>
+          <div><label class="font-semibold block mb-1">Dados dos Pais (Idade e Profissão)</label><input type="text" name="paisDados" value="${d.paisDados || ''}" class="w-full p-2 border rounded-xl"></div>
+          <div><label class="font-semibold block mb-1">Responsável Legal</label><input type="text" name="respLegal" value="${d.respLegal || ''}" class="w-full p-2 border rounded-xl"></div>
+          <div><label class="font-semibold block mb-1">Posição na Família e Irmãos</label><input type="text" name="posicaoIrmaos" value="${d.posicaoIrmaos || ''}" class="w-full p-2 border rounded-xl"></div>
+          <div><label class="font-semibold block mb-1">Separação dos Pais</label><input type="text" name="separacao" value="${d.separacao || ''}" class="w-full p-2 border rounded-xl"></div>
+          <div><label class="font-semibold block mb-1">Uso de Medicação</label><input type="text" name="medicacao" value="${d.medicacao || ''}" class="w-full p-2 border rounded-xl"></div>
+        </div>
+      </div>
+      <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
+        <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-share text-brand-main mr-2"></i> 2. Encaminhamento e referência</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div><label class="font-semibold block mb-1">Origem do Encaminhamento</label><input type="text" name="origemEncaminhamento" value="${d.origemEncaminhamento || ''}" class="w-full p-2 border rounded-xl"></div>
+          <div><label class="font-semibold block mb-1">Profissional Responsável</label><input type="text" name="profEncaminhamento" value="${d.profEncaminhamento || ''}" class="w-full p-2 border rounded-xl"></div>
+        </div>
+      </div>
+      <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
+        <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-circle-question text-brand-main mr-2"></i> 3. Queixa principal</h3>
+        <div class="space-y-3">
+          <div><label class="font-semibold block mb-1">Motivo da Procura e Dificuldades Relatadas</label><textarea name="queixa" rows="3" class="w-full p-2 border rounded-xl">${d.queixa || pac.queixa || ''}</textarea></div>
+          <div><label class="font-semibold block mb-1">Expectativas Familiares</label><input type="text" name="expectativas" value="${d.expectativas || ''}" class="w-full p-2 border rounded-xl"></div>
+        </div>
+      </div>
+      <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
+        <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-clock-rotate-left text-brand-main mr-2"></i> 4. Histórico do quadro atual</h3>
+        <div><label class="font-semibold block mb-1">Início, Frequência, Intensidade, Contextos, Evolução e Diagnósticos Anteriores</label><textarea name="histQuadro" rows="4" class="w-full p-2 border rounded-xl">${d.histQuadro || ''}</textarea></div>
+      </div>
+      <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
+        <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-user-doctor text-brand-main mr-2"></i> 5. Acompanhamento com outros profissionais</h3>
+        <div><label class="font-semibold block mb-1">Especialidades, Tratamentos, Medicações e Resultados</label><textarea name="outrosProf" rows="3" class="w-full p-2 border rounded-xl">${d.outrosProf || ''}</textarea></div>
+      </div>
+      <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
+        <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-baby text-brand-main mr-2"></i> 6. Antecedentes pessoais e gestacionais</h3>
+        <div><label class="font-semibold block mb-1">Gestação, Concepção, Pré-natal, Intercorrências, Medicações, Parto, Condições ao Nascer e Histórico de Adoção</label><textarea name="antecedentesPessoais" rows="4" class="w-full p-2 border rounded-xl">${d.antecedentesPessoais || ''}</textarea></div>
+      </div>
+      <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
+        <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-child-reaching text-brand-main mr-2"></i> 7. Desenvolvimento: alimentação, sono, psicomotricidade, higiene, desfralde e saúde familiar</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div><label class="font-semibold block mb-1">Alimentação (Amamentação, Seletividade, Autonomia, Alergias, Dietas)</label><textarea name="devAlimentacao" rows="3" class="w-full p-2 border rounded-xl">${d.devAlimentacao || ''}</textarea></div>
+          <div><label class="font-semibold block mb-1">Sono (Insônia, Sonambulismo, Bruxismo, Sono Agitado, Medos)</label><textarea name="devSono" rows="3" class="w-full p-2 border rounded-xl">${d.devSono || ''}</textarea></div>
+          <div><label class="font-semibold block mb-1">Psicomotricidade (Sustentação, Sentar, Engatinhar, Passos, Coordenação)</label><textarea name="devPsicomotricidade" rows="3" class="w-full p-2 border rounded-xl">${d.devPsicomotricidade || ''}</textarea></div>
+          <div><label class="font-semibold block mb-1">Higiene e Desfralde (Autonomia, Controle Esfincteriano, Enurese)</label><textarea name="devHigiene" rows="3" class="w-full p-2 border rounded-xl">${d.devHigiene || ''}</textarea></div>
+        </div>
+        <div><label class="font-semibold block mb-1">Saúde e Histórico Familiar Relevante</label><input type="text" name="devSaudeFamilia" value="${d.devSaudeFamilia || ''}" class="w-full p-2 border rounded-xl"></div>
+      </div>
+      <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
+        <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-people-arrows text-brand-main mr-2"></i> 8. Interações sociais e comunicação</h3>
+        <div><label class="font-semibold block mb-1">Interação com Pares, Comunicação Vocal/Não Vocal, Linguagem e Brincadeiras Funcionais/Simbólicas</label><textarea name="interacaoComunicacao" rows="3" class="w-full p-2 border rounded-xl">${d.interacaoComunicacao || ''}</textarea></div>
+      </div>
+      <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
+        <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-arrows-rotate text-brand-main mr-2"></i> 9. Padrões repetitivos e comportamentos</h3>
+        <div><label class="font-semibold block mb-1">Movimentos Repetitivos, Reação a Mudanças, Interesses Restritos e Comportamento diante da Frustração</label><textarea name="padroesRepetitivos" rows="3" class="w-full p-2 border rounded-xl">${d.padroesRepetitivos || ''}</textarea></div>
+      </div>
+      <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
+        <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-graduation-cap text-brand-main mr-2"></i> 10. Habilidades acadêmicas</h3>
+        <div><label class="font-semibold block mb-1">Histórico Escolar, Adaptação, Aprendizagem, Organização, Reprovações, Suporte Pedagógico e Rotina de Estudos</label><textarea name="habilidadesAcademicas" rows="3" class="w-full p-2 border rounded-xl">${d.habilidadesAcademicas || ''}</textarea></div>
+      </div>
+      <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
+        <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-star text-brand-main mr-2"></i> 11. Reforçadores, preferências e interesses</h3>
+        <div><label class="font-semibold block mb-1">Brinquedos, Atividades, Itens Preferidos, Aversões e Situações de Engajamento</label><textarea name="reforcadoresInteresses" rows="3" class="w-full p-2 border rounded-xl">${d.reforcadoresInteresses || ''}</textarea></div>
+      </div>
+      <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
+        <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-circle-info text-brand-main mr-2"></i> 12. Informações complementares, rotina e observações</h3>
+        <div><label class="font-semibold block mb-1">Características Comportamentais Relatadas, Relações Familiares, Rotina Diária, Rede de Apoio e Observações</label><textarea name="infoComplementares" rows="4" class="w-full p-2 border rounded-xl">${d.infoComplementares || ''}</textarea></div>
+      </div>
+    </form>
+  `;
+}
 
     // --- FORMULÁRIO ADULTO (8 TÓPICOS) ---
     function renderizarFormularioAdulto(pac, d = {}) {
@@ -2094,62 +2225,11 @@
       localStorage.clear();
       location.reload();
     }
-  <script>
-  // Variáveis globais de controle
-  let termoBuscaPaciente = '';
-  let filtroPacientesAtual = 'todos';
-
-  // 1. Função de busca pela Lupa
-  function filtrarPacientesPorBusca() {
-    termoBuscaPaciente = document.getElementById('input-busca-paciente').value.toLowerCase();
-    renderizarPacientes();
-  }
-
-  // 2. Função de filtro por abas (Todos / Ativos / Inativos)
-  function filtrarPacientes(tipo) {
-    filtroPacientesAtual = tipo;
-    
-    document.getElementById('filtro-pac-todos').className = tipo === 'todos' ? 'px-3 py-1.5 rounded-lg bg-white text-brand-main shadow-sm transition-all' : 'px-3 py-1.5 rounded-lg text-gray-600 hover:text-brand-main transition-all';
-    document.getElementById('filtro-pac-ativos').className = tipo === 'ativos' ? 'px-3 py-1.5 rounded-lg bg-white text-brand-main shadow-sm transition-all' : 'px-3 py-1.5 rounded-lg text-gray-600 hover:text-brand-main transition-all';
-    document.getElementById('filtro-pac-inativos').className = tipo === 'inativos' ? 'px-3 py-1.5 rounded-lg bg-white text-brand-main shadow-sm transition-all' : 'px-3 py-1.5 rounded-lg text-gray-600 hover:text-brand-main transition-all';
-    
-    renderizarPacientes();
-  }
-
-  // 3. Função para Alternar Status (Ativar / Inativar paciente)
-  function alternarStatusPaciente(id) {
-    const paciente = MOCK_PACIENTES.find(p => p.id === id);
-    if (paciente) {
-      paciente.ativo = paciente.ativo === false ? true : false;
-      renderizarPacientes();
-    }
-  }
-
-  // 4. Função para Excluir Paciente Totalmente
-  function excluirPaciente(id) {
-    if (confirm("Tem certeza que deseja excluir este paciente e todos os seus registros permanentemente?")) {
-      MOCK_PACIENTES = MOCK_PACIENTES.filter(p => p.id !== id);
-      delete bancoAnamneses[id];
-      renderizarPacientes();
-    }
-  }
-
-  // 5. Função de Edição de Paciente Existente
-  function abrirModalEditarPaciente(id) {
-    const paciente = MOCK_PACIENTES.find(p => p.id === id);
-    if (!paciente) return;
-    
-    if (document.getElementById('modal-paciente-id')) document.getElementById('modal-paciente-id').value = paciente.id;
-    if (document.getElementById('modal-paciente-nome')) document.getElementById('modal-paciente-nome').value = paciente.nome || '';
-    if (document.getElementById('modal-paciente-nasc')) document.getElementById('modal-paciente-nasc').value = paciente.nascimento || '';
-    if (document.getElementById('modal-paciente-telefone')) document.getElementById('modal-paciente-telefone').value = paciente.telefone || '';
-    if (document.getElementById('modal-paciente-queixa')) document.getElementById('modal-paciente-queixa').value = paciente.queixa || '';
-    
-    const modal = document.getElementById('modal-paciente');
-    if (modal) modal.classList.remove('hidden');
-  }
-</script>
+  </script>
 </body>
 </html>
+
+
+
 
 
