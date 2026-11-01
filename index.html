@@ -433,40 +433,146 @@ body {
         </div>
       </div>
     </section>
+<!-- VIEW 2.1: DETALHE DO PRONTUÁRIO -->
+        <section id="view-prontuario-detalhe" class="tab-content hidden space-y-6">
+          <!-- Cabeçalho do Prontuário -->
+          <div class="bg-white rounded-2xl p-5 border border-rose-100 card-shadow flex flex-wrap justify-between items-center gap-4">
+            <div class="flex items-center gap-3.5">
+              <!-- Botão Voltar com micro-interação -->
+              <button 
+                onclick="switchTab('pacientes')" 
+                class="p-2.5 bg-rose-50 text-brand-main rounded-xl hover:bg-rose-100 active:scale-95 transition-all flex items-center justify-center"
+                title="Voltar para a lista de pacientes">
+                <i class="fa-solid fa-arrow-left text-sm"></i>
+              </button>
+              
+              <div>
+                <!-- Badges de Status e Faixa Etária -->
+                <div class="flex items-center gap-2">
+                  <span id="prontuario-badge-faixa" class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-rose-100 text-brand-main tracking-wide uppercase">
+                    Faixa Etária
+                  </span>
+                  <span id="prontuario-status-ficha" class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 tracking-wide uppercase">
+                    Pendente
+                  </span>
+                </div>
 
-    <!-- VIEW 2.1: DETALHE DO PRONTUÁRIO / ANAMNESE, EVOLUÇÕES, ANOTAÇÕES E PLANEJAMENTO/SUPERVISÃO -->
-    <section id="view-prontuario-detalhe" class="tab-content hidden space-y-6">
-      <div class="bg-white rounded-2xl p-5 border border-rose-100 card-shadow flex flex-wrap justify-between items-center gap-4">
-        <div class="flex items-center space-x-3">
-          <button onclick="switchTab('pacientes')" class="p-2.5 bg-rose-50 text-brand-main rounded-xl hover:bg-rose-100 transition-colors">
-            <i class="fa-solid fa-arrow-left"></i>
-          </button>
-          <div>
-            <div class="flex items-center space-x-2">
-              <span id="prontuario-badge-faixa" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-100 text-brand-main">Faixa Etária</span>
-              <span id="prontuario-status-ficha" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">Pendente</span>
+                <!-- Nome e Informações do Paciente -->
+                <h2 class="text-xl font-bold text-brand-dark mt-1 tracking-tight" id="prontuario-nome-paciente">
+                  Nome do Paciente
+                </h2>
+                <p class="text-xs text-gray-500 mt-0.5" id="prontuario-sub-info">
+                  Data de Nascimento: --/--/---- • Idade: -- anos
+                </p>
+              </div>
             </div>
-            <h2 class="text-xl font-bold text-brand-dark mt-1" id="prontuario-nome-paciente">Nome do Paciente</h2>
-            <p class="text-xs text-gray-500" id="prontuario-sub-info">Data de Nascimento: --/--/---- • Idade: -- anos</p>
-          </div>
-        </div>
         
-        <!-- NAVEGAÇÃO INTERNA DO PRONTUÁRIO -->
-        <div class="flex flex-wrap gap-1 bg-gray-50 p-1.5 rounded-xl border border-gray-200">
-          <button onclick="alternarAbaProntuario('anamnese')" id="subnav-anamnese" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-white text-brand-main shadow-sm transition-all">
-            <i class="fa-solid fa-notes-medical mr-1"></i> Anamnese
+      <!-- NAVEGAÇÃO INTERNA DO PRONTUÁRIO (ESTRUTURA COMPLETA - 10 MÓDULOS) -->
+        <div class="flex flex-wrap gap-1.5 bg-rose-50/50 p-2 rounded-xl border border-rose-100 shadow-xs" aria-label="Navegação do Prontuário">
+          
+          <!-- 1. Anamnese -->
+          <button 
+            onclick="alternarAbaProntuario('anamnese')" 
+            id="subnav-anamnese" 
+            class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-white text-brand-main shadow-xs transition-all duration-200 flex items-center gap-1.5 active:scale-95"
+            title="Anamnese de adultos, crianças, responsáveis e histórico completo">
+            <i class="fa-solid fa-notes-medical text-xs"></i> 
+            <span>Anamnese</span>
           </button>
-          <button onclick="alternarAbaProntuario('evolucoes')" id="subnav-evolucoes" class="px-3 py-1.5 rounded-lg text-xs font-bold text-gray-600 hover:text-brand-main transition-all">
-            <i class="fa-solid fa-file-waveform mr-1"></i> Evoluções
+
+          <!-- 2. Evoluções -->
+          <button 
+            onclick="alternarAbaProntuario('evolucoes')" 
+            id="subnav-evolucoes" 
+            class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-brand-main hover:bg-white/80 transition-all duration-200 flex items-center gap-1.5 active:scale-95"
+            title="Evoluções das sessões, faltas, atendimentos com responsáveis e devolutivas">
+            <i class="fa-solid fa-file-waveform text-xs"></i> 
+            <span>Evoluções</span>
           </button>
-          <button onclick="alternarAbaProntuario('anotacoes')" id="subnav-anotacoes" class="px-3 py-1.5 rounded-lg text-xs font-bold text-gray-600 hover:text-brand-main transition-all">
-            <i class="fa-solid fa-book-open-reader mr-1"></i> Folhas de Sessão
+
+          <!-- 3. Folhas de Sessão -->
+          <button 
+            onclick="alternarAbaProntuario('anotacoes')" 
+            id="subnav-anotacoes" 
+            class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-brand-main hover:bg-white/80 transition-all duration-200 flex items-center gap-1.5 active:scale-95"
+            title="Anotações clínicas, relatos, intervenções e acompanhamento de tarefas">
+            <i class="fa-solid fa-book-open-reader text-xs"></i> 
+            <span>Folhas de Sessão</span>
           </button>
-          <button onclick="alternarAbaProntuario('planejamento')" id="subnav-planejamento" class="px-3 py-1.5 rounded-lg text-xs font-bold text-gray-600 hover:text-brand-main transition-all">
-            <i class="fa-solid fa-compass-drafting mr-1"></i> Planejamento & Supervisão
+
+          <!-- 4. Avaliação Psicológica -->
+          <button 
+            onclick="alternarAbaProntuario('avaliacao')" 
+            id="subnav-avaliacao" 
+            class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-brand-main hover:bg-white/80 transition-all duration-200 flex items-center gap-1.5 active:scale-95"
+            title="Planejamento, instrumentos, aplicação de escalas, inventários e análise integrada">
+            <i class="fa-solid fa-clipboard-check text-xs"></i> 
+            <span>Avaliação Psicológica</span>
           </button>
+
+          <!-- 5. Plano Terapêutico -->
+          <button 
+            onclick="alternarAbaProntuario('plano-terapeutico')" 
+            id="subnav-plano-terapeutico" 
+            class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-brand-main hover:bg-white/80 transition-all duration-200 flex items-center gap-1.5 active:scale-95"
+            title="Demandas, objetivos, metas, indicadores e estratégias de intervenção">
+            <i class="fa-solid fa-bullseye text-xs"></i> 
+            <span>Plano Terapêutico</span>
+          </button>
+
+          <!-- 6. Análise Funcional -->
+          <button 
+            onclick="alternarAbaProntuario('analise-funcional')" 
+            id="subnav-analise-funcional" 
+            class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-brand-main hover:bg-white/80 transition-all duration-200 flex items-center gap-1.5 active:scale-95"
+            title="Análise molecular (ABC), molar, variáveis contextuais e hipóteses funcionais">
+            <i class="fa-solid fa-diagram-project text-xs"></i> 
+            <span>Análise Funcional</span>
+          </button>
+
+          <!-- 7. Orientação Familiar -->
+          <button 
+            onclick="alternarAbaProntuario('orientacao-familiar')" 
+            id="subnav-orientacao-familiar" 
+            class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-brand-main hover:bg-white/80 transition-all duration-200 flex items-center gap-1.5 active:scale-95"
+            title="Orientações parentais, manejo de comportamentos e reuniões familiares">
+            <i class="fa-solid fa-people-roof text-xs"></i> 
+            <span>Orientação Familiar</span>
+          </button>
+
+          <!-- 8. Planejamento & Supervisão -->
+          <button 
+            onclick="alternarAbaProntuario('planejamento')" 
+            id="subnav-planejamento" 
+            class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-brand-main hover:bg-white/80 transition-all duration-200 flex items-center gap-1.5 active:scale-95"
+            title="Planejamento de sessões, dúvidas, discussões de caso e hipóteses clínicas">
+            <i class="fa-solid fa-compass-drafting text-xs"></i> 
+            <span>Planejamento & Supervisão</span>
+          </button>
+
+          <!-- 9. Documentos Psicológicos -->
+          <button 
+            onclick="alternarAbaProntuario('documentos')" 
+            id="subnav-documentos" 
+            class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-brand-main hover:bg-white/80 transition-all duration-200 flex items-center gap-1.5 active:scale-95"
+            title="Declarações, atestados, relatórios, laudos, pareceres e termos">
+            <i class="fa-solid fa-folder-closed text-xs"></i> 
+            <span>Documentos</span>
+          </button>
+
+          <!-- 10. Encerramento e Histórico -->
+          <button 
+            onclick="alternarAbaProntuario('encerramento')" 
+            id="subnav-encerramento" 
+            class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-brand-main hover:bg-white/80 transition-all duration-200 flex items-center gap-1.5 active:scale-95"
+            title="Alta, interrupção, encaminhamentos e transferência do atendimento">
+            <i class="fa-solid fa-box-archive text-xs"></i> 
+            <span>Encerramento</span>
+          </button>
+
         </div>
       </div>
+
 
       <!-- ABA 1: ANAMNESE PSICOLÓGICA -->
       <div id="aba-conteudo-anamnese" class="space-y-6">
