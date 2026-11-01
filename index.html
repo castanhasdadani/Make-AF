@@ -249,7 +249,7 @@
 
     <!-- VIEW 2: GESTÃO DE PACIENTES E PRONTUÁRIOS -->
 <section id="view-pacientes" class="tab-content hidden space-y-6">
-  <!-- Cabeçalho e Ferramentas de Filtragem/Ação -->
+  <!-- Cabeçalho, Barra de Pesquisa (Lupa) e Ações -->
   <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
     <div>
       <div class="flex items-center space-x-2">
@@ -257,11 +257,19 @@
         <span class="text-xs text-gray-400">• Prontuários Clínicos</span>
       </div>
       <h2 class="text-2xl font-bold text-brand-dark mt-1">Prontuários e Pacientes</h2>
-      <p class="text-xs sm:text-sm text-gray-500 mt-0.5">Cadastre, filtre e acompanhe o histórico, anamneses, evoluções e planejamentos dos clientes.</p>
+      <p class="text-xs sm:text-sm text-gray-500 mt-0.5">Cadastre, pesquise e acompanhe o histórico, anamneses e evoluções dos clientes.</p>
     </div>
     
     <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
-      <!-- Sistema de Filtros de Status (Todos / Ativos / Inativos) -->
+      <!-- Barra de Pesquisa com Lupa -->
+      <div class="relative flex-grow sm:flex-grow-0">
+        <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </span>
+        <input type="text" id="input-busca-paciente" oninput="filtrarPacientesPorBusca()" placeholder="Buscar paciente..." class="w-full sm:w-64 pl-9 pr-4 py-2 text-xs border border-rose-200 rounded-xl outline-none focus:border-brand-main bg-rose-50/30">
+      </div>
+
+      <!-- Filtros de Status (Todos / Ativos / Inativos) -->
       <div class="flex bg-rose-50 p-1 rounded-xl border border-rose-200 text-xs font-semibold">
         <button onclick="filtrarPacientes('todos')" id="filtro-pac-todos" class="px-3 py-1.5 rounded-lg bg-white text-brand-main shadow-sm transition-all">Todos</button>
         <button onclick="filtrarPacientes('ativos')" id="filtro-pac-ativos" class="px-3 py-1.5 rounded-lg text-gray-600 hover:text-brand-main transition-all">Ativos</button>
@@ -277,11 +285,7 @@
 
   <!-- Grid Dinâmico de Exibição dos Pacientes (Cards com Ações de Edição, Inativação e Exclusão) -->
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="grid-pacientes">
-    <!-- Os cards dos pacientes são renderizados dinamicamente via JavaScript com suporte a:
-         - Abrir Prontuário Completo
-         - Editar Dados Cadastrais
-         - Alternar Status (Ativo / Inativo)
-         - Exclusão Definitiva com Confirmação -->
+    <!-- Os cards dos pacientes são renderizados dinamicamente via JavaScript aqui dentro -->
   </div>
 </section>
 
