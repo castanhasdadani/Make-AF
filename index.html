@@ -1186,31 +1186,45 @@ function excluirPacienteSeguro(id) {
       document.getElementById('modal-paciente').classList.add('hidden');
     }
 
-    function salvarNovoPaciente(e) {
-      e.preventDefault();
-      const nome = document.getElementById('cad-pac-nome').value;
-      const nascimento = document.getElementById('cad-pac-nascimento').value;
-      const queixa = document.getElementById('cad-pac-queixa').value;
-      const telefone = document.getElementById('cad-pac-tel').value;
-      const idade = calcularIdade(nascimento);
+   function salvarNovoPaciente(e) {
+  e.preventDefault();
+  const nome = document.getElementById('cad-pac-nome').value;
+  const nascimento = document.getElementById('cad-pac-nascimento').value;
+  const queixa = document.getElementById('cad-pac-queixa').value;
+  const telefone = document.getElementById('cad-pac-tel').value;
+  const idade = calcularIdade(nascimento);
 
-      const novoPac = {
-        id: `pac-${Date.now()}`,
-        nome: nome,
-        nascimento: nascimento,
-        idade: idade,
-        telefone: telefone,
-        queixa: queixa,
-        ultimaSessao: new Date().toISOString().split('T')[0]
-      };
-
-      MOCK_PACIENTES.push(novoPac);
-      salvarDadosLocalStorage();
-      renderizarPacientes();
-      renderizarDashboard();
-      fecharModalPaciente();
-      alert(`Paciente "${nome}" cadastrado com sucesso!`);
+  if (pacienteEditandoId) {
+    let pac = MOCK_PACIENTES.find(p => p.id === pacienteEditandoId);
+    if (pac) {
+      pac.nome = nome;
+      pac.nascimento = nascimento;
+      pac.idade = idade;
+      pac.telefone = telefone;
+      pac.queixa = queixa;
+      alert(`Dados do paciente "${nome}" atualizados com sucesso!`);
     }
+  } else {
+    const novoPac = {
+      id: `pac-${Date.now()}`,
+      nome: nome,
+      nascimento: nascimento,
+      idade: idade,
+      telefone: telefone,
+      queixa: queixa,
+      ultimaSessao: new Date().toISOString().split('T')[0],
+      inativo: false
+    };
+    MOCK_PACIENTES.push(novoPac);
+    alert(`Paciente "${nome}" cadastrado com sucesso!`);
+  }
+
+  salvarDadosLocalStorage();
+  renderizarPacientes();
+  renderizarDashboard();
+  fecharModalPaciente();
+  pacienteEditandoId = null;
+}
 
     function switchTab(tabId) {
       document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
