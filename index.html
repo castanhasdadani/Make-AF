@@ -46,7 +46,7 @@ body {
 .pdf-page {
   width: 210mm;
   min-height: 297mm;
-  padding: 12mm 15mm 12mm 15mm;
+  padding: 12mm 15mm;
   background: #ffffff;
   color: #2D3748;
   box-sizing: border-box;
@@ -105,7 +105,7 @@ body {
       <!-- Navigation Tabs -->
       <nav class="hidden md:flex items-center space-x-1">
         <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium transition-all text-brand-main bg-brand-soft">
-          <i class="fa-solid fa-chart-line mr-1.5"></i> Dashboard
+          <i class="fa-solid fa-chart-line mr-1.5"></i> Início
         </button>
         <button onclick="switchTab('pacientes')" id="nav-pacientes" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-brand-main hover:bg-rose-50 transition-all">
           <i class="fa-solid fa-user-group mr-1.5"></i> Pacientes
@@ -120,10 +120,7 @@ body {
       <!-- Right Quick Actions -->
       <div class="flex items-center space-x-2">
         <button onclick="abrirModalEditarProfissional()" class="inline-flex items-center px-3 py-1.5 text-xs font-semibold rounded-lg text-brand-main bg-rose-50 hover:bg-rose-100 border border-rose-200 transition-colors" title="Editar dados da profissional">
-          <i class="fa-solid fa-user-pen mr-1"></i> <span class="hidden sm:inline">Editar Profissional</span>
-        </button>
-        <button onclick="carregarExemploModelo()" class="hidden sm:inline-flex items-center px-3 py-1.5 text-xs font-semibold rounded-lg text-brand-main bg-rose-100 hover:bg-rose-200 transition-colors">
-          <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Preencher Caso Exemplo
+          <i class="fa-solid fa-user-pen mr-1"></i> <span class="hidden sm:inline">Perfil Profissional</span>
         </button>
         <button onclick="toggleBackupModal()" class="p-2 text-gray-500 hover:text-brand-main rounded-lg hover:bg-rose-50" title="Backup e Dados">
           <i class="fa-solid fa-database text-lg"></i>
@@ -147,7 +144,7 @@ body {
           </button>
         </div>
         <h2 class="text-2xl font-bold font-display mt-2">Bem-vinda, <span id="dash-prof-nome">Dra. Daniele Sousa Santos</span></h2>
-        <p class="text-rose-100 text-sm mt-1 max-w-2xl">Gerencie prontuários, anamneses por faixa etária, evoluções, planejamento, supervisão e análises comportamentais.</p>
+        <p class="text-rose-100 text-sm mt-1 max-w-2xl">Aqui está tudo o que precisa da sua rotina de hoje. Gerencie prontuários, anamneses, evoluções e planejamentos.</p>
         <div class="mt-4 flex flex-wrap gap-3">
           <button onclick="novaAnaliseFuncional()" class="bg-white text-brand-main font-semibold px-4 py-2 rounded-xl text-sm shadow hover:bg-rose-50 transition-all">
             <i class="fa-solid fa-plus mr-1"></i> Nova Análise Funcional
@@ -165,7 +162,7 @@ body {
       <div class="bg-white rounded-xl p-5 border border-rose-100 card-shadow flex items-center justify-between">
         <div>
           <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Pacientes Ativos</p>
-          <h3 class="text-2xl font-bold text-brand-dark mt-1" id="stat-pacientes">4</h3>
+          <h3 class="text-2xl font-bold text-brand-dark mt-1" id="stat-pacientes">0</h3>
         </div>
         <div class="w-12 h-12 bg-rose-50 rounded-xl flex items-center justify-center text-brand-main text-xl">
           <i class="fa-solid fa-user-check"></i>
@@ -174,7 +171,7 @@ body {
       <div class="bg-white rounded-xl p-5 border border-rose-100 card-shadow flex items-center justify-between">
         <div>
           <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Relatórios Emitidos</p>
-          <h3 class="text-2xl font-bold text-brand-dark mt-1" id="stat-relatorios">12</h3>
+          <h3 class="text-2xl font-bold text-brand-dark mt-1" id="stat-relatorios">0</h3>
         </div>
         <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600 text-xl">
           <i class="fa-solid fa-file-contract"></i>
@@ -220,6 +217,7 @@ body {
             </tr>
           </thead>
           <tbody id="recentes-table-body" class="divide-y divide-rose-50">
+            <!-- Dinâmico -->
           </tbody>
         </table>
       </div>
@@ -238,6 +236,7 @@ body {
       </button>
     </div>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="grid-pacientes">
+      <!-- Dinâmico -->
     </div>
   </section>
 
@@ -254,7 +253,7 @@ body {
             <span id="prontuario-status-ficha" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">Pendente</span>
           </div>
           <h2 class="text-xl font-bold text-brand-dark mt-1" id="prontuario-nome-paciente">Nome do Paciente</h2>
-          <p class="text-xs text-gray-500" id="prontuario-sub-info">Data de Nascimento: --/--/---- | Idade: -- anos</p>
+          <p class="text-xs text-gray-500" id="prontuario-sub-info">Data de Nascimento: --/--/---- Idade: -- anos</p>
         </div>
       </div>
       <!-- NAVEGAÇÃO INTERNA DO PRONTUÁRIO -->
@@ -287,7 +286,9 @@ body {
           <i class="fa-solid fa-file-pdf mr-1.5"></i> Gerar PDF da Anamnese
         </button>
       </div>
-      <div id="container-formulario-anamnese"></div>
+      <div id="container-formulario-anamnese">
+        <!-- Dinâmico -->
+      </div>
     </div>
 
     <!-- ABA 2: EVOLUÇÕES CLÍNICAS -->
@@ -303,7 +304,9 @@ body {
           <i class="fa-solid fa-plus mr-1.5"></i> Fazer Evolução
         </button>
       </div>
-      <div id="lista-evolucoes-paciente" class="space-y-4"></div>
+      <div id="lista-evolucoes-paciente" class="space-y-4">
+        <!-- Dinâmico -->
+      </div>
     </div>
 
     <!-- ABA 3: FOLHA DE ANOTAÇÕES POR SESSÃO & ANEXOS -->
@@ -314,7 +317,7 @@ body {
             <i class="fa-solid fa-pen-to-square text-brand-main mr-2"></i> Folha de Anotações da Sessão
           </h3>
           <button onclick="abrirModalEvolucao()" class="bg-brand-alt text-white font-semibold px-3 py-1.5 rounded-xl text-xs shadow transition-all">
-            <i class="fa-solid fa-file-waveform mr-1"></i> Fazer Evolução desta Sessão
+            <i class="fa-solid fa-file-waveform mr-1"></i> Fazer Evolução
           </button>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-xs">
@@ -328,7 +331,7 @@ body {
           </div>
           <div>
             <label class="block font-semibold text-gray-700 mb-1">N° da Sessão</label>
-            <input type="text" id="nota-sessao-numero" class="w-full px-3 py-2 text-sm border border-gray-200 rounded-xl outline-none" placeholder="Ex: 05">
+            <input type="text" id="nota-sessao-numero" class="w-full px-3 py-2 text-sm border border-gray-200 rounded-xl outline-none" placeholder="Ex: 01">
           </div>
           <div>
             <label class="block font-semibold text-gray-700 mb-1">Anexar Arquivo (PDF, JPG, PNG)</label>
@@ -354,16 +357,17 @@ body {
           </button>
         </div>
       </div>
-      <!-- HISTÓRICO DE FOLHAS DE SESSÃO -->
       <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
         <h3 class="text-md font-bold text-brand-dark border-b border-rose-100 pb-2 flex items-center">
           <i class="fa-solid fa-clock-rotate-left text-brand-main mr-2"></i> Histórico Cronológico de Folhas de Sessão
         </h3>
-        <div id="lista-folhas-sessao" class="space-y-3"></div>
+        <div id="lista-folhas-sessao" class="space-y-3">
+          <!-- Dinâmico -->
+        </div>
       </div>
     </div>
 
-    <!-- ABA 4: PLANEJAMENTO E SUPERVISÃO -->
+    <!-- ABA 4: PLANEJAMENTO E SUPERVISÃO DAS PRÓXIMAS SESSÕES -->
     <div id="aba-conteudo-planejamento" class="hidden space-y-6">
       <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow flex justify-between items-center">
         <div>
@@ -376,7 +380,9 @@ body {
           <i class="fa-solid fa-plus mr-1.5"></i> Adicionar Novo Planejamento
         </button>
       </div>
-      <div id="lista-planejamentos-paciente" class="space-y-4"></div>
+      <div id="lista-planejamentos-paciente" class="space-y-4">
+        <!-- Dinâmico -->
+      </div>
     </div>
   </section>
 
@@ -408,11 +414,11 @@ body {
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div>
             <label class="block text-xs font-semibold text-gray-700 mb-1">Nome Completo do Paciente *</label>
-            <input type="text" id="campo-paciente" required class="w-full px-3 py-2 text-sm border border-gray-200 rounded-xl outline-none" placeholder="Ex: Lucas Mendes Ribeiro">
+            <input type="text" id="campo-paciente" required class="w-full px-3 py-2 text-sm border border-gray-200 rounded-xl outline-none" placeholder="Ex: Nome do Paciente">
           </div>
           <div>
             <label class="block text-xs font-semibold text-gray-700 mb-1">Tema / Foco da Análise *</label>
-            <input type="text" id="campo-tema" required class="w-full px-3 py-2 text-sm border border-gray-200 rounded-xl outline-none" placeholder="Ex: Dificuldade de impor limites interpessoais">
+            <input type="text" id="campo-tema" required class="w-full px-3 py-2 text-sm border border-gray-200 rounded-xl outline-none" placeholder="Ex: Comportamento de esquiva">
           </div>
           <div>
             <label class="block text-xs font-semibold text-gray-700 mb-1">Data da Sessão *</label>
@@ -423,7 +429,6 @@ body {
             <select id="campo-status" class="w-full px-3 py-2 text-sm border border-gray-200 rounded-xl outline-none">
               <option value="Concluída">Concluída</option>
               <option value="Em Andamento">Em Andamento</option>
-              <option value="Revisão Interpsicólogos">Revisão Interpsicólogos</option>
             </select>
           </div>
         </div>
@@ -433,11 +438,11 @@ body {
           <i class="fa-solid fa-bullseye text-brand-main mr-2"></i> 2. Comportamento-Alvo (Topografia Descritiva)
         </h3>
         <p class="text-xs text-gray-500 mb-3">Descreva o comportamento operacionalmente, livre de inferências mentalistas.</p>
-        <textarea id="campo-comportamento-alvo" rows="3" required class="w-full p-3 text-sm border border-gray-200 rounded-xl outline-none" placeholder="Ex: Dizer 'sim' imediatamente a solicitações do irmão..."></textarea>
+        <textarea id="campo-comportamento-alvo" rows="3" required class="w-full p-3 text-sm border border-gray-200 rounded-xl outline-none" placeholder="Descreva a ação observável..."></textarea>
       </div>
       <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow">
         <h3 class="text-md font-bold text-brand-dark mb-4 border-b border-rose-100 pb-2 flex items-center">
-          <i class="fa-solid fa-layer-group text-brand-main mr-2"></i> 3. Tríplice Contingência e Efeitos $(A \rightarrow R \rightarrow C \rightarrow E)$
+          <i class="fa-solid fa-layer-group text-brand-main mr-2"></i> 3. Tríplice Contingência e Efeitos ($A \rightarrow R \rightarrow C \rightarrow E$)
         </h3>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <div class="bg-rose-50/50 p-4 rounded-xl border border-rose-100 space-y-3">
@@ -485,14 +490,14 @@ body {
           <div>
             <label class="block text-xs font-semibold text-gray-700 mb-1">Grau de Confiança Clínica</label>
             <select id="campo-confianca" class="w-full px-3 py-2 text-sm border border-gray-200 rounded-xl outline-none">
-              <option value="Alto (Evidências Consistentes em Múltiplos Relatos)">Alto (Evidências Consistentes)</option>
-              <option value="Médio (Necessita mais registros em diário de campo)">Médio (Necessita validação)</option>
-              <option value="Hipotético Inicial (Primeira Formulação)">Hipotético Inicial</option>
+              <option value="Alto (Evidências Consistentes)">Alto (Evidências Consistentes)</option>
+              <option value="Médio (Necessita mais registros)">Médio (Necessita validação)</option>
+              <option value="Hipotético Inicial">Hipotético Inicial</option>
             </select>
           </div>
           <div>
             <label class="block text-xs font-semibold text-gray-700 mb-1">Evidências de Suporte</label>
-            <input type="text" id="campo-evidencias" class="w-full px-3 py-2 text-sm border border-gray-200 rounded-xl outline-none" placeholder="Ex: Relato de alívio imediato">
+            <input type="text" id="campo-evidencias" class="w-full px-3 py-2 text-sm border border-gray-200 rounded-xl outline-none" placeholder="Relato clínico...">
           </div>
         </div>
       </div>
@@ -507,9 +512,6 @@ body {
         </div>
       </div>
       <div class="flex justify-end space-x-3 pt-2">
-        <button type="button" onclick="salvarAnaliseNoProntuario()" class="bg-white text-gray-700 border border-gray-300 font-semibold px-5 py-2.5 rounded-xl text-sm hover:bg-gray-50 transition-all">
-          <i class="fa-solid fa-floppy-disk mr-1.5"></i> Salvar no Prontuário
-        </button>
         <button type="submit" class="bg-brand-main text-white font-bold px-6 py-2.5 rounded-xl text-sm shadow-md hover:bg-brand-alt transition-all">
           <i class="fa-solid fa-file-pdf mr-1.5"></i> Gerar Prévia & Exportar PDF
         </button>
@@ -543,7 +545,7 @@ body {
   </section>
 </main>
 
-<!-- MODAL DE CADASTRO / EDIÇÃO DE PACIENTE -->
+<!-- MODAL DE CADASTRO DE PACIENTE -->
 <div id="modal-paciente" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
   <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4 border border-rose-100">
     <div class="flex justify-between items-center border-b border-gray-100 pb-3">
@@ -557,7 +559,7 @@ body {
     <form id="form-cad-paciente" onsubmit="salvarNovoPaciente(event)" class="space-y-3 text-xs">
       <div>
         <label class="block font-semibold text-gray-700 mb-1">Nome Completo do Paciente *</label>
-        <input type="text" id="cad-pac-nome" required class="w-full px-3 py-2 text-sm border border-gray-200 rounded-xl outline-none" placeholder="Ex: Sofia Mendes">
+        <input type="text" id="cad-pac-nome" required class="w-full px-3 py-2 text-sm border border-gray-200 rounded-xl outline-none" placeholder="Ex: Nome do Paciente">
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
@@ -571,13 +573,11 @@ body {
       </div>
       <div>
         <label class="block font-semibold text-gray-700 mb-1">Foco de Atendimento / Queixa Principal *</label>
-        <input type="text" id="cad-pac-queixa" required class="w-full px-3 py-2 text-sm border border-gray-200 rounded-xl outline-none" placeholder="Ex: Avaliação comportamental e seletividade">
+        <input type="text" id="cad-pac-queixa" required class="w-full px-3 py-2 text-sm border border-gray-200 rounded-xl outline-none" placeholder="Ex: Avaliação comportamental">
       </div>
       <div class="flex justify-end space-x-2 pt-3 border-t border-gray-100">
         <button type="button" onclick="fecharModalPaciente()" class="px-4 py-2 rounded-xl text-gray-600 bg-gray-100 font-semibold hover:bg-gray-200 transition-colors">Cancelar</button>
-        <button type="submit" class="px-5 py-2 rounded-xl text-white bg-brand-main font-bold shadow hover:bg-brand-alt transition-colors">
-          <i class="fa-solid fa-floppy-disk mr-1"></i> Salvar e Iniciar Prontuário
-        </button>
+        <button type="submit" class="px-5 py-2 rounded-xl text-white bg-brand-main font-bold shadow hover:bg-brand-alt transition-colors">Salvar e Prontuário</button>
       </div>
     </form>
   </div>
@@ -591,7 +591,7 @@ body {
         <h3 class="font-bold text-brand-dark text-lg flex items-center">
           <i class="fa-solid fa-file-waveform text-brand-main mr-2"></i> Registro de Evolução Clínica
         </h3>
-        <p class="text-xs text-gray-500">Preenchimento automático com dados da profissional e do paciente.</p>
+        <p class="text-xs text-gray-500">Editor confortável com áreas amplas de escrita.</p>
       </div>
       <button onclick="fecharModalEvolucao()" class="text-gray-400 hover:text-gray-600 transition-colors">
         <i class="fa-solid fa-xmark text-lg"></i>
@@ -602,27 +602,23 @@ body {
         <div><b>Profissional:</b> <span id="evo-prof-display">Dra. Daniele Sousa Santos</span> (CRP 22/07398)</div>
         <div><b>Paciente:</b> <span id="evo-pac-display">--</span></div>
         <div><b>Data da Sessão:</b> <input type="date" id="evo-data" required class="mt-1 px-2 py-1 bg-white border rounded"></div>
-        <div><b>N° da Sessão:</b> <input type="text" id="evo-sessao-num" placeholder="Ex: 03" class="mt-1 px-2 py-1 bg-white border rounded"></div>
+        <div><b>N° da Sessão:</b> <input type="text" id="evo-sessao-num" placeholder="Ex: 01" class="mt-1 px-2 py-1 bg-white border rounded"></div>
       </div>
       <div>
-        <label class="block font-semibold text-gray-700 mb-1">1. Queixa Principal *</label>
-        <textarea id="evo-queixa" rows="2" required class="w-full p-2.5 border rounded-xl outline-none" placeholder="Relato apresentado pelo paciente ou responsável..."></textarea>
+        <label class="block font-semibold text-gray-700 mb-1">1. Queixa Principal / Relato *</label>
+        <textarea id="evo-queixa" rows="2" required class="w-full p-2.5 border rounded-xl outline-none" placeholder="Relato apresentado..."></textarea>
       </div>
       <div>
         <label class="block font-semibold text-gray-700 mb-1">2. Demanda Trabalhada *</label>
-        <textarea id="evo-demanda" rows="2" required class="w-full p-2.5 border rounded-xl outline-none" placeholder="Objetivos clínicos abordados durante a sessão..."></textarea>
+        <textarea id="evo-demanda" rows="2" required class="w-full p-2.5 border rounded-xl outline-none" placeholder="Objetivos clínicos abordados..."></textarea>
       </div>
       <div>
-        <label class="block font-semibold text-gray-700 mb-1">3. Descrição da Sessão *</label>
-        <textarea id="evo-descricao" rows="4" required class="w-full p-2.5 border rounded-xl outline-none" placeholder="Atividades realizadas, relatos relevantes, comportamentos observados, intervenções..."></textarea>
+        <label class="block font-semibold text-gray-700 mb-1">3. Descrição Detalhada da Sessão *</label>
+        <textarea id="evo-descricao" rows="4" required class="w-full p-2.5 border rounded-xl outline-none" placeholder="Atividades realizadas e comportamentos observados..."></textarea>
       </div>
       <div>
-        <label class="block font-semibold text-gray-700 mb-1">4. Análise Técnica da Sessão *</label>
-        <textarea id="evo-analise" rows="3" required class="w-full p-2.5 border rounded-xl outline-none" placeholder="Análise clínica fundamentada, evolução observada, respostas e pontos de acompanhamento..."></textarea>
-      </div>
-      <div>
-        <label class="block font-semibold text-gray-700 mb-1">Anexar Documento Relacionado (Opcional)</label>
-        <input type="file" id="evo-arquivo" accept=".pdf,.jpg,.jpeg,.png" class="w-full p-1 border rounded-xl bg-gray-50">
+        <label class="block font-semibold text-gray-700 mb-1">4. Análise Técnica e Evolução *</label>
+        <textarea id="evo-analise" rows="3" required class="w-full p-2.5 border rounded-xl outline-none" placeholder="Análise fundamentada e respostas observadas..."></textarea>
       </div>
       <div class="flex justify-between items-center pt-3 border-t border-gray-100">
         <select id="evo-status-select" class="px-3 py-2 border rounded-xl font-bold text-brand-main bg-white">
@@ -644,9 +640,9 @@ body {
     <div class="flex justify-between items-center border-b border-rose-100 pb-3">
       <div>
         <h3 class="font-bold text-brand-dark text-lg flex items-center">
-          <i class="fa-solid fa-compass-drafting text-brand-main mr-2"></i> Folha de Planejamento e Supervisão das Próximas Sessões
+          <i class="fa-solid fa-compass-drafting text-brand-main mr-2"></i> Planejamento Clínico e Supervisão das Próximas Sessões
         </h3>
-        <p class="text-xs text-gray-500">Planejamento clínico estruturado e registro de supervisão.</p>
+        <p class="text-xs text-gray-500">Planejamento estruturado e registro de supervisão clínica.</p>
       </div>
       <button onclick="fecharModalPlanejamento()" class="text-gray-400 hover:text-gray-600 transition-colors">
         <i class="fa-solid fa-xmark text-lg"></i>
@@ -658,43 +654,38 @@ body {
         <div><b>Paciente:</b> <span id="plan-pac-display">--</span></div>
         <div><b>Data Elaboração:</b> <input type="date" id="plan-data-el" required class="mt-1 px-2 py-1 bg-white border rounded"></div>
         <div><b>Data Prevista Próxima Sessão:</b> <input type="date" id="plan-data-prev" class="mt-1 px-2 py-1 bg-white border rounded"></div>
-        <div><b>Status do Registro:</b>
+        <div><b>Status:</b>
           <select id="plan-status" class="mt-1 px-2 py-1 bg-white border rounded font-bold text-brand-main">
             <option value="Rascunho">Rascunho</option>
             <option value="Concluída">Concluído</option>
           </select>
         </div>
       </div>
-      <div class="space-y-3">
+      <div class="space-y-1">
         <h4 class="font-bold text-brand-dark border-b pb-1">1. Síntese da Sessão Anterior</h4>
-        <textarea id="plan-sintese-ant" rows="3" class="w-full p-2.5 border rounded-xl outline-none" placeholder="Principais aspectos observados, demandas trabalhadas, respostas às intervenções e pontos a retomar..."></textarea>
+        <textarea id="plan-sintese-ant" rows="3" class="w-full p-2.5 border rounded-xl outline-none" placeholder="Síntese da sessão anterior..."></textarea>
       </div>
-      <div class="space-y-3">
-        <h4 class="font-bold text-brand-dark border-b pb-1">2. Objetivos para as Próximas Sessões</h4>
-        <textarea id="plan-objetivos" rows="3" class="w-full p-2.5 border rounded-xl outline-none" placeholder="Objetivo clínico principal, específicos, habilidades/repertórios e comportamentos a acompanhar..."></textarea>
+      <div class="space-y-1">
+        <h4 class="font-bold text-brand-dark border-b pb-1">2. Objetivos Clínicos</h4>
+        <textarea id="plan-objetivos" rows="3" class="w-full p-2.5 border rounded-xl outline-none" placeholder="Objetivos para as próximas sessões..."></textarea>
       </div>
-      <div class="space-y-3">
-        <h4 class="font-bold text-brand-dark border-b pb-1">3. Planejamento das Intervenções</h4>
-        <textarea id="plan-intervencoes" rows="3" class="w-full p-2.5 border rounded-xl outline-none" placeholder="Procedimentos previstos, atividades, perguntas/temas a explorar e generalização de repertórios..."></textarea>
+      <div class="space-y-1">
+        <h4 class="font-bold text-brand-dark border-b pb-1">3. Intervenções Planejadas</h4>
+        <textarea id="plan-intervencoes" rows="3" class="w-full p-2.5 border rounded-xl outline-none" placeholder="Intervenções planejadas..."></textarea>
       </div>
-      <div class="space-y-3">
-        <h4 class="font-bold text-brand-dark border-b pb-1">4. Indicadores de Acompanhamento</h4>
-        <textarea id="plan-indicadores" rows="3" class="w-full p-2.5 border rounded-xl outline-none" placeholder="Comportamentos observados, indicadores de progresso e critérios para ajuste..."></textarea>
-      </div>
-      <div class="space-y-3">
-        <h4 class="font-bold text-brand-dark border-b pb-1">5. Orientações e Pontos de Atenção</h4>
-        <textarea id="plan-orientacoes" rows="3" class="w-full p-2.5 border rounded-xl outline-none" placeholder="Aspectos relevantes, orientações profissionais e pontos para discussão em supervisão..."></textarea>
+      <div class="space-y-1">
+        <h4 class="font-bold text-brand-dark border-b pb-1">4. Indicadores de Acompanhamento e Pontos de Atenção</h4>
+        <textarea id="plan-indicadores" rows="3" class="w-full p-2.5 border rounded-xl outline-none" placeholder="Indicadores e pontos de atenção..."></textarea>
       </div>
       <div class="bg-blue-50/40 p-4 rounded-xl border border-blue-100 space-y-3">
         <h4 class="font-bold text-blue-900 border-b border-blue-200 pb-1 flex items-center">
-          <i class="fa-solid fa-user-shield mr-2"></i> 6. Registro de Supervisão Clínica (Opcional)
+          <i class="fa-solid fa-user-shield mr-2"></i> 5. Registro de Supervisão Clínica (Opcional)
         </h4>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div><label class="font-semibold block mb-1">Data da Supervisão</label><input type="date" id="sup-data" class="w-full p-2 bg-white border rounded-xl"></div>
-          <div><label class="font-semibold block mb-1">Questões Clínicas Apresentadas</label><input type="text" id="sup-questoes" class="w-full p-2 bg-white border rounded-xl" placeholder="Resumo das dúvidas ou casos"></div>
+          <div><label class="font-semibold block mb-1">Questões Discutidas</label><input type="text" id="sup-questoes" class="w-full p-2 bg-white border rounded-xl" placeholder="Questões discutidas"></div>
         </div>
-        <div><label class="font-semibold block mb-1">Discussões e Hipóteses Funcionais</label><textarea id="sup-hipoteses" rows="2" class="w-full p-2 bg-white border rounded-xl" placeholder="Discussão teórica/analítica..."></textarea></div>
-        <div><label class="font-semibold block mb-1">Recomendações Recebidas e Ajustes Definidos</label><textarea id="sup-recomendacoes" rows="2" class="w-full p-2 bg-white border rounded-xl" placeholder="Orientações e mudanças no plano..."></textarea></div>
+        <div><label class="font-semibold block mb-1">Recomendações e Ajustes</label><textarea id="sup-recomendacoes" rows="2" class="w-full p-2 bg-white border rounded-xl" placeholder="Recomendações e ajustes definidos..."></textarea></div>
       </div>
       <div class="flex justify-end space-x-2 pt-3 border-t">
         <button type="button" onclick="fecharModalPlanejamento()" class="px-4 py-2 rounded-xl text-gray-600 bg-gray-100 font-semibold">Cancelar</button>
@@ -726,7 +717,7 @@ body {
           <input type="text" id="prof-input-crp" required class="w-full px-3 py-2 text-sm border rounded-xl outline-none">
         </div>
         <div>
-          <label class="block font-semibold text-gray-700 mb-1">Especialidade / Título *</label>
+          <label class="block font-semibold text-gray-700 mb-1">Especialidade *</label>
           <input type="text" id="prof-input-especialidade" required class="w-full px-3 py-2 text-sm border rounded-xl outline-none">
         </div>
       </div>
@@ -748,12 +739,12 @@ body {
   </div>
 </div>
 
-<!-- MODAL DE PRÉ-VISUALIZAÇÃO AO VIVO DO PDF (A4 IMPECÁVEL - CORRIGIDO) -->
+<!-- MODAL DE PRÉ-VISUALIZAÇÃO DO PDF (A4 OFICIAL - CORRIGIDO) -->
 <div id="modal-pdf" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 hidden flex flex-col items-center justify-start p-2 sm:p-6 overflow-y-auto">
   <div class="w-full max-w-4xl bg-white rounded-t-2xl px-6 py-4 border-b border-gray-200 flex flex-wrap justify-between items-center gap-3 sticky top-0 z-10 shadow-md">
     <div>
       <h3 class="font-bold text-brand-dark text-lg flex items-center">
-        <i class="fa-solid fa-file-pdf text-brand-main mr-2"></i> Documento A4 Clínico Oficial (Corrigido)
+        <i class="fa-solid fa-file-pdf text-brand-main mr-2"></i> Documento A4 Clínico Oficial
       </h3>
       <p class="text-xs text-gray-500">Pré-visualização com alinhamento, margens e caixas ajustadas.</p>
     </div>
@@ -769,7 +760,6 @@ body {
       </button>
     </div>
   </div>
-  <!-- ÁREA DE RENDERIZAÇÃO A4 -->
   <div class="w-full max-w-4xl bg-gray-200 p-2 sm:p-6 rounded-b-2xl flex justify-center">
     <div id="pdf-render-target" class="pdf-page bg-white shadow-2xl relative font-sans text-gray-800">
       <!-- CABEÇALHO DO DOCUMENTO CLÍNICO -->
@@ -784,7 +774,7 @@ body {
           <span id="pdf-badge-confidencial" class="inline-block bg-[#F7EBEF] text-[#B85C83] border border-[#B85C83]/30 text-[8.5px] font-extrabold px-2 py-0.5 rounded tracking-wider uppercase">
             DOCUMENTO CONFIDENCIAL
           </span>
-          <p class="text-[8.5px] text-gray-500 mt-1" id="pdf-emissao-data">Emissão: --/--/----, --:--</p>
+          <p class="text-[8.5px] text-gray-500 mt-1" id="pdf-emissao-data">Emissão: --/--/----</p>
         </div>
       </div>
       <div class="bg-[#F0F4F8] border-l-4 border-[#B85C83] p-2.5 rounded-r-lg mb-3">
@@ -792,7 +782,7 @@ body {
           RELATÓRIO CLÍNICO
         </h2>
       </div>
-      <!-- QUADRO CORRIGIDO DE IDENTIFICAÇÃO DO PACIENTE -->
+      <!-- QUADRO DE IDENTIFICAÇÃO DO PACIENTE -->
       <div class="border border-gray-200 rounded-lg overflow-hidden mb-3 bg-gray-50/50">
         <div class="grid grid-cols-2 text-xs">
           <div class="pdf-grid-box border-r border-b border-gray-200">
@@ -814,8 +804,10 @@ body {
         </div>
       </div>
       <!-- CONTEÚDO CORPO DO PDF -->
-      <div id="pdf-corpo-conteudo" class="space-y-3"></div>
-      <!-- RODAPÉ ÉTICO E ASSINATURA -->
+      <div id="pdf-corpo-conteudo" class="space-y-3">
+        <!-- Dinâmico -->
+      </div>
+      <!-- RODAPÉ ÉTICO E ASSINATURA OBRIGATÓRIA -->
       <div class="mt-6 pt-3 border-t border-gray-200 text-center pdf-keep-together">
         <div class="max-w-xs mx-auto mb-1.5">
           <div class="border-b border-gray-400 mb-1"></div>
@@ -843,7 +835,7 @@ body {
         <i class="fa-solid fa-download mr-2"></i> Exportar Backup em JSON
       </button>
       <button onclick="restaurarDadosPadrao()" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-xl text-xs flex items-center justify-center">
-        <i class="fa-solid fa-rotate-left mr-2"></i> Restaurar Dados Demonstrativos
+        <i class="fa-solid fa-rotate-left mr-2"></i> Limpar / Restaurar Estado Inicial
       </button>
     </div>
   </div>
@@ -851,7 +843,6 @@ body {
 
 <!-- LÓGICA JAVASCRIPT INTEGRADA -->
 <script>
-// --- DADOS DA PROFISSIONAL
 let profissional = {
   nome: 'Dra. Daniele Sousa Santos',
   crp: 'CRP 22/07398',
@@ -860,51 +851,19 @@ let profissional = {
   email: 'contato@danielesousa.psico.br'
 };
 
-// --- ESTADO E BANCO LOCAL
-let MOCK_PACIENTES = [
-  { id: 'pac-1', nome: 'Lucas Mendes Ribeiro', nascimento: '1998-05-12', idade: 28, queixa: 'Dificuldades assertivas e esquiva interpessoal', ultimaSessao: '2026-10-21' },
-  { id: 'pac-2', nome: 'Mariana Costa Silva', nascimento: '1992-09-15', idade: 34, queixa: 'Ansiedade de desempenho e esquiva experiencial', ultimaSessao: '2026-10-18' },
-  { id: 'pac-3', nome: 'Sofia Mendes Santos', nascimento: '2016-03-10', idade: 10, queixa: 'Seletividade alimentar e rigidez de rotina', ultimaSessao: '2026-10-15' },
-  { id: 'pac-4', nome: 'Raul Teixeira Noleto', nascimento: '1995-04-20', idade: 31, queixa: 'Procrastinação e fusão cognitiva', ultimaSessao: '2026-10-22' }
-];
-
+let MOCK_PACIENTES = [];
 let bancoAnamneses = {};
 let bancoAnotacoesSessao = {};
 let bancoEvolucoes = {};
 let bancoPlanejamentos = {};
-
-const EXEMPLO_ANALISE_TECNICA = {
-  paciente: "Lucas Mendes Ribeiro",
-  tema: "Conflitos de assertividade na relação com irmão",
-  data: "2026-10-21",
-  status: "Concluída",
-  comportamentoAlvo: "Aceitar prontamente demandas adicionais de favorecimento feitas pelo irmão...",
-  antecedenteTipo: "Estímulo Discriminativo (SD)",
-  antecedenteItens: ["Irmão aproxima-se com tom de urgência solicitando favores."],
-  respostaTipo: "Motora / Verbal",
-  respostaItens: ["Vocalização imediata: 'Pode deixar que eu resolvo'."],
-  consequenciaTipo: "Imediata / Reforço Negativo",
-  consequenciaItens: ["Cessação imediata do tom urgente do irmão."],
-  efeitoImediato: "Alívio imediato do estado ansioso.",
-  probabilidade: "Aumentou (Fortalecimento do Operante)",
-  efeitoLongo: "Instalação de ressentimento reprimido.",
-  processo: "Reforçamento Negativo (R-) - Esquiva/Fuga",
-  confianca: "Alto",
-  evidencias: "Múltiplos episódios semanais.",
-  intervencao: "Treino de Comunicação Assertiva.",
-  sintese: "O paciente apresenta operante assertivo deficitário."
-};
-
-let historicoAnalises = [EXEMPLO_ANALISE_TECNICA];
+let historicoAnalises = [];
 let pacienteAtualId = null;
 
-// --- INICIALIZAÇÃO ---
 window.onload = function() {
   carregarDadosLocalStorage();
   atualizarInterfaceProfissional();
   renderizarDashboard();
   renderizarPacientes();
-  carregarExemploModelo();
 };
 
 function salvarDadosLocalStorage() {
@@ -1002,9 +961,9 @@ function salvarNovoPaciente(e) {
   const queixa = document.getElementById('cad-pac-queixa').value;
   const telefone = document.getElementById('cad-pac-tel').value;
   const idade = calcularIdade(nascimento);
-  
+
   const novoPac = {
-    id: `pac-${Date.now()}`,
+    id: 'pac-' + Date.now(),
     nome: nome,
     nascimento: nascimento,
     idade: idade,
@@ -1012,7 +971,7 @@ function salvarNovoPaciente(e) {
     queixa: queixa,
     ultimaSessao: new Date().toISOString().split('T')[0]
   };
-  
+
   MOCK_PACIENTES.push(novoPac);
   salvarDadosLocalStorage();
   renderizarPacientes();
@@ -1027,10 +986,9 @@ function switchTab(tabId) {
     btn.classList.remove('bg-brand-soft', 'text-brand-main');
     btn.classList.add('text-gray-600');
   });
-  const targetView = document.getElementById(`view-${tabId}`);
+  const targetView = document.getElementById('view-' + tabId);
   if (targetView) targetView.classList.remove('hidden');
-  
-  const activeNav = document.getElementById(`nav-${tabId}`);
+  const activeNav = document.getElementById('nav-' + tabId);
   if (activeNav) {
     activeNav.classList.add('bg-brand-soft', 'text-brand-main');
     activeNav.classList.remove('text-gray-600');
@@ -1040,6 +998,9 @@ function switchTab(tabId) {
 function renderizarDashboard() {
   const tbody = document.getElementById('recentes-table-body');
   tbody.innerHTML = '';
+  if (historicoAnalises.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="5" class="px-6 py-4 text-center text-gray-400 italic">Nenhuma análise funcional registrada.</td></tr>`;
+  }
   historicoAnalises.forEach((item, idx) => {
     const tr = document.createElement('tr');
     tr.className = 'hover:bg-rose-50/30 transition-colors';
@@ -1049,7 +1010,7 @@ function renderizarDashboard() {
       <td class="px-6 py-4 text-xs font-medium">${formatarDataBR(item.data)}</td>
       <td class="px-6 py-4">
         <span class="bg-rose-100 text-brand-main text-xs font-semibold px-2.5 py-1 rounded-full">
-          ${item.processo.split('-')[0]}
+          ${item.processo ? item.processo.split('-')[0] : 'Operante'}
         </span>
       </td>
       <td class="px-6 py-4 text-right">
@@ -1067,16 +1028,19 @@ function renderizarDashboard() {
 function renderizarPacientes() {
   const grid = document.getElementById('grid-pacientes');
   grid.innerHTML = '';
+  if (MOCK_PACIENTES.length === 0) {
+    grid.innerHTML = `<div class="col-span-3 bg-white rounded-2xl p-8 text-center text-gray-400 italic">Nenhum paciente cadastrado. Clique em "Cadastrar Paciente" para iniciar.</div>`;
+    return;
+  }
   MOCK_PACIENTES.forEach(pac => {
     const idadeReal = pac.nascimento ? calcularIdade(pac.nascimento) : (pac.idade || 25);
-    const tipoAnamnese = idadeReal <= 17 ? 'Infantil / Infantojuvenil (0-17 anos)' : 'Adulta (18+ anos)';
+    const tipoAnamnese = idadeReal <= 17 ? 'Infantil/Infantojuvenil (0-17 anos)' : 'Adulta (18+ anos)';
     const anamneseSalva = bancoAnamneses[pac.id];
     const statusFicha = anamneseSalva ? anamneseSalva.status : 'Pendente';
-    
     let badgeColor = 'bg-amber-100 text-amber-800';
     if (statusFicha === 'Concluída') badgeColor = 'bg-emerald-100 text-emerald-800';
     else if (statusFicha === 'Rascunho') badgeColor = 'bg-blue-100 text-blue-800';
-    
+
     const card = document.createElement('div');
     card.className = 'bg-white rounded-2xl p-5 border border-rose-100 card-shadow space-y-3 flex flex-col justify-between';
     card.innerHTML = `
@@ -1118,22 +1082,20 @@ function abrirProntuarioAnamnese(pacId) {
   pacienteAtualId = pacId;
   const pac = MOCK_PACIENTES.find(p => p.id === pacId);
   if (!pac) return;
-  
   const idade = pac.nascimento ? calcularIdade(pac.nascimento) : (pac.idade || 25);
   document.getElementById('prontuario-nome-paciente').innerText = pac.nome;
   document.getElementById('prontuario-sub-info').innerText = `Data de Nascimento: ${formatarDataBR(pac.nascimento || '2000-01-01')} | Idade: ${idade} anos | Contato: ${pac.telefone || 'Não informado'}`;
   document.getElementById('evo-pac-display').innerText = pac.nome;
   document.getElementById('plan-pac-display').innerText = pac.nome;
-  
+
   const badgeFaixa = document.getElementById('prontuario-badge-faixa');
   const container = document.getElementById('container-formulario-anamnese');
   container.innerHTML = '';
-  
   const anamneseSalva = bancoAnamneses[pacId] || { status: 'Pendente', dados: {} };
   const statusFichaEl = document.getElementById('prontuario-status-ficha');
   statusFichaEl.innerText = anamneseSalva.status;
   statusFichaEl.className = `text-[10px] font-bold px-2 py-0.5 rounded-full ${anamneseSalva.status === 'Concluída' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}`;
-  
+
   if (idade <= 17) {
     badgeFaixa.innerText = 'Ficha: Infantil / Infantojuvenil (0 a 17 anos)';
     badgeFaixa.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-100 text-purple-800';
@@ -1143,11 +1105,11 @@ function abrirProntuarioAnamnese(pacId) {
     badgeFaixa.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-100 text-blue-800';
     container.innerHTML = renderizarFormularioAdulto(pac, anamneseSalva.dados);
   }
-  
+
   document.getElementById('nota-sessao-data').value = new Date().toISOString().split('T')[0];
   document.getElementById('evo-data').value = new Date().toISOString().split('T')[0];
   document.getElementById('plan-data-el').value = new Date().toISOString().split('T')[0];
-  
+
   renderizarListaAnotacoes();
   renderizarListaEvolucoes();
   renderizarListaPlanejamentos();
@@ -1160,60 +1122,63 @@ function alternarAbaProntuario(aba) {
   document.getElementById('aba-conteudo-evolucoes').classList.add('hidden');
   document.getElementById('aba-conteudo-anotacoes').classList.add('hidden');
   document.getElementById('aba-conteudo-planejamento').classList.add('hidden');
-  
+
   document.getElementById('subnav-anamnese').className = 'px-3 py-1.5 rounded-lg text-xs font-bold text-gray-600 hover:text-brand-main transition-all';
   document.getElementById('subnav-evolucoes').className = 'px-3 py-1.5 rounded-lg text-xs font-bold text-gray-600 hover:text-brand-main transition-all';
   document.getElementById('subnav-anotacoes').className = 'px-3 py-1.5 rounded-lg text-xs font-bold text-gray-600 hover:text-brand-main transition-all';
   document.getElementById('subnav-planejamento').className = 'px-3 py-1.5 rounded-lg text-xs font-bold text-gray-600 hover:text-brand-main transition-all';
-  
-  document.getElementById(`aba-conteudo-${aba}`).classList.remove('hidden');
-  document.getElementById(`subnav-${aba}`).className = 'px-3 py-1.5 rounded-lg text-xs font-bold bg-white text-brand-main shadow-sm transition-all';
+
+  document.getElementById('aba-conteudo-' + aba).classList.remove('hidden');
+  document.getElementById('subnav-' + aba).className = 'px-3 py-1.5 rounded-lg text-xs font-bold bg-white text-brand-main shadow-sm transition-all';
 }
 
 function renderizarFormularioInfantil(pac, d = {}) {
   return `
-    <form id="form-anamnese-ativa" class="space-y-6 text-xs">
-      <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
-        <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-address-card text-brand-main mr-2"></i> 1. Identificação da criança, pais e responsável legal</h3>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-          <div><label class="font-semibold block mb-1">Nome Completo</label><input type="text" name="nome" value="${d.nome || pac.nome}" class="w-full p-2 border rounded-xl"></div>
-          <div><label class="font-semibold block mb-1">Idade</label><input type="text" name="idade" value="${d.idade || pac.idade || ''}" class="w-full p-2 border rounded-xl"></div>
-          <div><label class="font-semibold block mb-1">Sexo</label><input type="text" name="sexo" value="${d.sexo || ''}" class="w-full p-2 border rounded-xl"></div>
-          <div><label class="font-semibold block mb-1">Nascimento</label><input type="date" name="nasc" value="${d.nasc || pac.nascimento || ''}" class="w-full p-2 border rounded-xl"></div>
-          <div><label class="font-semibold block mb-1">Endereço e Cidade</label><input type="text" name="endereco" value="${d.endereco || ''}" class="w-full p-2 border rounded-xl"></div>
-          <div><label class="font-semibold block mb-1">Telefone</label><input type="text" name="telefone" value="${d.telefone || pac.telefone || ''}" class="w-full p-2 border rounded-xl"></div>
-          <div><label class="font-semibold block mb-1">Escola / Série</label><input type="text" name="escola" value="${d.escola || ''}" class="w-full p-2 border rounded-xl"></div>
-          <div><label class="font-semibold block mb-1">Dados dos Pais (Idade e Profissão)</label><input type="text" name="paisDados" value="${d.paisDados || ''}" class="w-full p-2 border rounded-xl"></div>
-          <div><label class="font-semibold block mb-1">Responsável Legal</label><input type="text" name="respLegal" value="${d.respLegal || ''}" class="w-full p-2 border rounded-xl"></div>
-        </div>
+  <form id="form-anamnese-ativa" class="space-y-6 text-xs">
+    <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
+      <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-address-card text-brand-main mr-2"></i> 1. Identificação da criança, pais e responsável legal</h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div><label class="font-semibold block mb-1">Nome Completo</label><input type="text" name="nome" value="${d.nome || pac.nome}" class="w-full p-2 border rounded-xl"></div>
+        <div><label class="font-semibold block mb-1">Idade</label><input type="text" name="idade" value="${d.idade || pac.idade || ''}" class="w-full p-2 border rounded-xl"></div>
+        <div><label class="font-semibold block mb-1">Nascimento</label><input type="date" name="nasc" value="${d.nasc || pac.nascimento || ''}" class="w-full p-2 border rounded-xl"></div>
+        <div><label class="font-semibold block mb-1">Endereço e Cidade</label><input type="text" name="endereco" value="${d.endereco || ''}" class="w-full p-2 border rounded-xl"></div>
+        <div><label class="font-semibold block mb-1">Telefone</label><input type="text" name="telefone" value="${d.telefone || pac.telefone || ''}" class="w-full p-2 border rounded-xl"></div>
+        <div><label class="font-semibold block mb-1">Escola / Série</label><input type="text" name="escola" value="${d.escola || ''}" class="w-full p-2 border rounded-xl"></div>
       </div>
-      <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
-        <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-circle-question text-brand-main mr-2"></i> 2. Queixa principal</h3>
-        <div><label class="font-semibold block mb-1">Motivo da Procura e Dificuldades Relatadas</label><textarea name="queixa" rows="3" class="w-full p-2 border rounded-xl">${d.queixa || pac.queixa || ''}</textarea></div>
-      </div>
-    </form>
+    </div>
+    <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
+      <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-circle-question text-brand-main mr-2"></i> 2. Queixa principal</h3>
+      <div><label class="font-semibold block mb-1">Motivo da Procura e Dificuldades Relatadas</label><textarea name="queixa" rows="3" class="w-full p-2 border rounded-xl">${d.queixa || pac.queixa || ''}</textarea></div>
+    </div>
+    <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
+      <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-clock-rotate-left text-brand-main mr-2"></i> 3. Histórico do quadro atual e desenvolvimento</h3>
+      <div><textarea name="histQuadro" rows="4" class="w-full p-2 border rounded-xl" placeholder="Evolução, marcos do desenvolvimento, alimentação e sono...">${d.histQuadro || ''}</textarea></div>
+    </div>
+  </form>
   `;
 }
 
 function renderizarFormularioAdulto(pac, d = {}) {
   return `
-    <form id="form-anamnese-ativa" class="space-y-6 text-xs">
-      <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
-        <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-id-card text-brand-main mr-2"></i> 1. Identificação</h3>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-          <div><label class="font-semibold block mb-1">Nome Completo</label><input type="text" name="nome" value="${d.nome || pac.nome}" class="w-full p-2 border rounded-xl"></div>
-          <div><label class="font-semibold block mb-1">Nascimento</label><input type="date" name="nasc" value="${d.nasc || pac.nascimento || ''}" class="w-full p-2 border rounded-xl"></div>
-          <div><label class="font-semibold block mb-1">Idade</label><input type="text" name="idade" value="${d.idade || pac.idade || ''}" class="w-full p-2 border rounded-xl"></div>
-          <div><label class="font-semibold block mb-1">Profissão</label><input type="text" name="profissao" value="${d.profissao || ''}" class="w-full p-2 border rounded-xl"></div>
-          <div><label class="font-semibold block mb-1">Telefone</label><input type="text" name="telefone" value="${d.telefone || pac.telefone || ''}" class="w-full p-2 border rounded-xl"></div>
-          <div><label class="font-semibold block mb-1">E-mail</label><input type="email" name="email" value="${d.email || ''}" class="w-full p-2 border rounded-xl"></div>
-        </div>
+  <form id="form-anamnese-ativa" class="space-y-6 text-xs">
+    <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
+      <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-id-card text-brand-main mr-2"></i> 1. Identificação</h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div><label class="font-semibold block mb-1">Nome Completo</label><input type="text" name="nome" value="${d.nome || pac.nome}" class="w-full p-2 border rounded-xl"></div>
+        <div><label class="font-semibold block mb-1">Nascimento</label><input type="date" name="nasc" value="${d.nasc || pac.nascimento || ''}" class="w-full p-2 border rounded-xl"></div>
+        <div><label class="font-semibold block mb-1">Profissão</label><input type="text" name="profissao" value="${d.profissao || ''}" class="w-full p-2 border rounded-xl"></div>
+        <div><label class="font-semibold block mb-1">Telefone</label><input type="text" name="telefone" value="${d.telefone || pac.telefone || ''}" class="w-full p-2 border rounded-xl"></div>
       </div>
-      <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
-        <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-circle-question text-brand-main mr-2"></i> 2. Queixa principal</h3>
-        <div><label class="font-semibold block mb-1">Motivo da Procura e Expectativas</label><textarea name="queixa" rows="3" class="w-full p-2 border rounded-xl">${d.queixa || pac.queixa || ''}</textarea></div>
-      </div>
-    </form>
+    </div>
+    <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
+      <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-circle-question text-brand-main mr-2"></i> 2. Queixa principal</h3>
+      <div><textarea name="queixa" rows="3" class="w-full p-2 border rounded-xl" placeholder="Motivo da procura...">${d.queixa || pac.queixa || ''}</textarea></div>
+    </div>
+    <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
+      <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-clock-rotate-left text-brand-main mr-2"></i> 3. História da demanda atual e histórico psicológico</h3>
+      <div><textarea name="historiaDemanda" rows="4" class="w-full p-2 border rounded-xl" placeholder="Início, frequência, tratamentos prévios...">${d.historiaDemanda || ''}</textarea></div>
+    </div>
+  </form>
   `;
 }
 
@@ -1256,18 +1221,13 @@ function salvarFolhaSessao(statusSessao) {
   const texto = document.getElementById('nota-sessao-texto').value;
   const proximo = document.getElementById('nota-sessao-proximo').value;
   const fileInput = document.getElementById('nota-sessao-arquivo');
-  
+
   if (!data) { alert("Preencha a data da sessão."); return; }
   if (!bancoAnotacoesSessao[pacienteAtualId]) bancoAnotacoesSessao[pacienteAtualId] = [];
-  
-  const arquivoObj = fileInput.files.length > 0 ? {
-    nome: fileInput.files[0].name,
-    tipo: fileInput.files[0].type,
-    tamanho: fileInput.files[0].size
-  } : null;
-  
+
+  const arquivoObj = fileInput.files.length > 0 ? { nome: fileInput.files[0].name } : null;
   const novaNota = {
-    id: `nota-${Date.now()}`,
+    id: 'nota-' + Date.now(),
     data: data,
     horario: horario,
     numero: numero || '1',
@@ -1276,16 +1236,15 @@ function salvarFolhaSessao(statusSessao) {
     status: statusSessao,
     arquivo: arquivoObj
   };
-  
+
   bancoAnotacoesSessao[pacienteAtualId].unshift(novaNota);
   salvarDadosLocalStorage();
-  
   document.getElementById('nota-sessao-texto').value = '';
   document.getElementById('nota-sessao-proximo').value = '';
   document.getElementById('nota-sessao-numero').value = '';
   document.getElementById('nota-sessao-arquivo').value = '';
   renderizarListaAnotacoes();
-  alert(`Folha de Anotação da Sessão salva (${statusSessao})!`);
+  alert(`Folha de Anotação salva (${statusSessao})!`);
 }
 
 function renderizarListaAnotacoes() {
@@ -1293,7 +1252,7 @@ function renderizarListaAnotacoes() {
   lista.innerHTML = '';
   const notas = bancoAnotacoesSessao[pacienteAtualId] || [];
   if (notas.length === 0) {
-    lista.innerHTML = '<p class="text-xs text-gray-400 italic">Nenhuma folha de anotação de sessão registrada ainda.</p>';
+    lista.innerHTML = `<p class="text-xs text-gray-400 italic">Nenhuma folha de anotação de sessão registrada ainda.</p>`;
     return;
   }
   notas.forEach((nota) => {
@@ -1303,7 +1262,7 @@ function renderizarListaAnotacoes() {
     item.innerHTML = `
       <div class="flex justify-between items-center border-b border-rose-100 pb-1.5">
         <div class="flex items-center space-x-2">
-          <span class="font-bold text-brand-dark text-sm">Sessão nº ${nota.numero} (${formatarDataBR(nota.data)}${nota.horario ? ' às '+nota.horario : ''})</span>
+          <span class="font-bold text-brand-dark text-sm">Sessão nº ${nota.numero} (${formatarDataBR(nota.data)}${nota.horario?' às '+nota.horario:''})</span>
           <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${badgeBg}">${nota.status}</span>
         </div>
         <div class="space-x-2">
@@ -1311,9 +1270,8 @@ function renderizarListaAnotacoes() {
           <button onclick="removerFolhaSessao('${nota.id}')" class="text-red-500 font-semibold hover:underline"><i class="fa-solid fa-trash mr-1"></i> Excluir</button>
         </div>
       </div>
-      <p class="text-gray-700 whitespace-pre-line leading-relaxed text-justify"><b>Anotações da Sessão:</b> ${nota.texto || 'Nenhuma anotação registrada.'}</p>
+      <p class="text-gray-700 whitespace-pre-line leading-relaxed text-justify"><b>Anotações:</b> ${nota.texto || 'Nenhuma anotação.'}</p>
       ${nota.proximo ? `<p class="text-gray-700 text-justify"><b>Próximo Atendimento:</b> ${nota.proximo}</p>` : ''}
-      ${nota.arquivo ? `<div class="pt-1 flex items-center justify-between text-[11px] text-brand-navy bg-white p-2 rounded border"><span><i class="fa-solid fa-paperclip mr-1"></i> Anexo: <b>${nota.arquivo.nome}</b></span><button onclick="baixarAnexo('${nota.id}')" class="text-brand-main font-bold hover:underline"><i class="fa-solid fa-download mr-1"></i> Baixar Anexo</button></div>` : ''}
     `;
     lista.appendChild(item);
   });
@@ -1324,13 +1282,6 @@ function removerFolhaSessao(notaId) {
   bancoAnotacoesSessao[pacienteAtualId] = bancoAnotacoesSessao[pacienteAtualId].filter(n => n.id !== notaId);
   salvarDadosLocalStorage();
   renderizarListaAnotacoes();
-}
-
-function baixarAnexo(notaId) {
-  const nota = (bancoAnotacoesSessao[pacienteAtualId] || []).find(n => n.id === notaId);
-  if (nota && nota.arquivo) {
-    alert(`Iniciando download do arquivo anexo: ${nota.arquivo.nome}`);
-  }
 }
 
 function abrirModalEvolucao() {
@@ -1355,27 +1306,19 @@ function salvarEvolucaoClinica(e) {
   const descricao = document.getElementById('evo-descricao').value;
   const analise = document.getElementById('evo-analise').value;
   const status = document.getElementById('evo-status-select').value;
-  const fileInput = document.getElementById('evo-arquivo');
-  
+
   if (!bancoEvolucoes[pacienteAtualId]) bancoEvolucoes[pacienteAtualId] = [];
-  const arquivoObj = fileInput.files.length > 0 ? {
-    nome: fileInput.files[0].name
-  } : null;
-  
   const novaEvo = {
-    id: `evo-${Date.now()}`,
+    id: 'evo-' + Date.now(),
     data: data,
     sessaoNum: sessaoNum,
     queixa: queixa,
     demanda: demanda,
     descricao: descricao,
     analise: analise,
-    status: status,
-    arquivo: arquivoObj,
-    profissional: profissional.nome,
-    crp: profissional.crp
+    status: status
   };
-  
+
   bancoEvolucoes[pacienteAtualId].unshift(novaEvo);
   salvarDadosLocalStorage();
   renderizarListaEvolucoes();
@@ -1388,7 +1331,7 @@ function renderizarListaEvolucoes() {
   lista.innerHTML = '';
   const evols = bancoEvolucoes[pacienteAtualId] || [];
   if (evols.length === 0) {
-    lista.innerHTML = '<div class="bg-white rounded-2xl p-6 border text-center text-xs text-gray-400 italic">Nenhuma evolução clínica registrada para este paciente. Clique em "Fazer Evolução" para iniciar.</div>';
+    lista.innerHTML = '<div class="bg-white rounded-2xl p-6 border text-center text-xs text-gray-400 italic">Nenhuma evolução clínica registrada.</div>';
     return;
   }
   evols.forEach(evo => {
@@ -1427,7 +1370,6 @@ function renderizarListaEvolucoes() {
         <b class="text-brand-dark block mb-1">Análise Técnica:</b>
         <p class="text-gray-700 bg-gray-50 p-3 rounded-xl border text-justify">${evo.analise}</p>
       </div>
-      ${evo.arquivo ? `<div class="text-brand-navy font-semibold"><i class="fa-solid fa-paperclip mr-1"></i> Anexo: ${evo.arquivo.nome}</div>` : ''}
     `;
     lista.appendChild(card);
   });
@@ -1460,15 +1402,14 @@ function salvarPlanejamentoClinico(e) {
   const objetivos = document.getElementById('plan-objetivos').value;
   const intervencoes = document.getElementById('plan-intervencoes').value;
   const indicadores = document.getElementById('plan-indicadores').value;
-  const orientacoes = document.getElementById('plan-orientacoes').value;
+  
   const supData = document.getElementById('sup-data').value;
   const supQuestoes = document.getElementById('sup-questoes').value;
-  const supHipoteses = document.getElementById('sup-hipoteses').value;
   const supRecomendacoes = document.getElementById('sup-recomendacoes').value;
-  
+
   if (!bancoPlanejamentos[pacienteAtualId]) bancoPlanejamentos[pacienteAtualId] = [];
   const novoPlan = {
-    id: `plan-${Date.now()}`,
+    id: 'plan-' + Date.now(),
     dataElaboracao: dataEl,
     dataPrevista: dataPrev,
     status: status,
@@ -1476,15 +1417,13 @@ function salvarPlanejamentoClinico(e) {
     objetivos: objetivos,
     intervencoes: intervencoes,
     indicadores: indicadores,
-    orientacoes: orientacoes,
-    supervisao: (supData || supQuestoes || supHipoteses || supRecomendacoes) ? {
+    supervisao: (supData || supQuestoes || supRecomendacoes) ? {
       data: supData,
       questoes: supQuestoes,
-      hipoteses: supHipoteses,
       recomendacoes: supRecomendacoes
     } : null
   };
-  
+
   bancoPlanejamentos[pacienteAtualId].unshift(novoPlan);
   salvarDadosLocalStorage();
   renderizarListaPlanejamentos();
@@ -1497,7 +1436,7 @@ function renderizarListaPlanejamentos() {
   lista.innerHTML = '';
   const plans = bancoPlanejamentos[pacienteAtualId] || [];
   if (plans.length === 0) {
-    lista.innerHTML = '<div class="bg-white rounded-2xl p-6 border text-center text-xs text-gray-400 italic">Nenhum planejamento ou supervisão registrado para este paciente.</div>';
+    lista.innerHTML = '<div class="bg-white rounded-2xl p-6 border text-center text-xs text-gray-400 italic">Nenhum planejamento ou supervisão registrado.</div>';
     return;
   }
   plans.forEach(plan => {
@@ -1507,9 +1446,8 @@ function renderizarListaPlanejamentos() {
     card.innerHTML = `
       <div class="flex justify-between items-center border-b border-rose-50 pb-2">
         <div class="flex items-center space-x-2">
-          <span class="font-bold text-brand-dark text-sm">Planejamento Clínico</span>
+          <span class="font-bold text-brand-dark text-sm">Planejamento & Supervisão</span>
           <span class="text-gray-400">Elaboração: ${formatarDataBR(plan.dataElaboracao)}</span>
-          ${plan.dataPrevista ? `<span class="text-gray-400">Próxima Sessão: ${formatarDataBR(plan.dataPrevista)}</span>` : ''}
           <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${badgeBg}">${plan.status}</span>
         </div>
         <div class="space-x-2">
@@ -1525,20 +1463,20 @@ function renderizarListaPlanejamentos() {
           <p class="text-gray-700 text-justify">${plan.sinteseAnterior || 'Não informada.'}</p>
         </div>
         <div class="bg-rose-50/40 p-3 rounded-xl border border-rose-100">
-          <b class="text-brand-dark block mb-1">2. Objetivos Próximas Sessões:</b>
+          <b class="text-brand-dark block mb-1">2. Objetivos:</b>
           <p class="text-gray-700 text-justify">${plan.objetivos || 'Não informados.'}</p>
         </div>
       </div>
       <div>
-        <b class="text-brand-dark block mb-1">3. Planejamento das Intervenções:</b>
+        <b class="text-brand-dark block mb-1">3. Intervenções Planejadas:</b>
         <p class="text-gray-700 bg-gray-50 p-3 rounded-xl border text-justify">${plan.intervencoes || 'Não informadas.'}</p>
       </div>
       ${plan.supervisao ? `
-      <div class="bg-blue-50/50 p-3 rounded-xl border border-blue-100 space-y-1">
-        <b class="text-blue-900 block"><i class="fa-solid fa-user-shield mr-1"></i> Registro de Supervisão Clínica (${formatarDataBR(plan.supervisao.data || plan.dataElaboracao)})</b>
-        <p class="text-gray-700 text-justify"><b>Questões:</b> ${plan.supervisao.questoes || 'N/A'} | <b>Hipóteses:</b> ${plan.supervisao.hipoteses || 'N/A'}</p>
-        <p class="text-gray-700 text-justify"><b>Recomendações:</b> ${plan.supervisao.recomendacoes || 'N/A'}</p>
-      </div>
+        <div class="bg-blue-50/50 p-3 rounded-xl border border-blue-100 space-y-1">
+          <b class="text-blue-900 block"><i class="fa-solid fa-user-shield mr-1"></i> Registro de Supervisão Clínica (${formatarDataBR(plan.supervisao.data || plan.dataElaboracao)})</b>
+          <p class="text-gray-700 text-justify"><b>Questões:</b> ${plan.supervisao.questoes || 'N/A'}</p>
+          <p class="text-gray-700 text-justify"><b>Recomendações e Ajustes:</b> ${plan.supervisao.recomendacoes || 'N/A'}</p>
+        </div>
       ` : ''}
     `;
     lista.appendChild(card);
@@ -1557,23 +1495,14 @@ function gerarPDFAnamnese() {
   const pac = MOCK_PACIENTES.find(p => p.id === pacienteAtualId);
   const ficha = bancoAnamneses[pacienteAtualId] || { status: 'Rascunho', dados: extrairDadosFormAnamnese() };
   const d = ficha.dados;
-  
+
   document.getElementById('pdf-emissao-data').innerText = `Emissão: ${new Date().toLocaleString('pt-BR')}`;
   document.getElementById('pdf-paciente-nome').innerText = pac.nome;
   document.getElementById('pdf-paciente-tema').innerText = `Ficha de Anamnese (${ficha.status})`;
   document.getElementById('pdf-paciente-data').innerText = formatarDataBR(new Date().toISOString().split('T')[0]);
   document.getElementById('pdf-paciente-status').innerText = ficha.status;
-  document.getElementById('pdf-titulo-relatorio').innerText = `FICHA DE ANAMNESE PSICOLÓGICA — ${ficha.status.toUpperCase()}`;
-  
-  const badgeConfidencial = document.getElementById('pdf-badge-confidencial');
-  if (ficha.status === 'Rascunho') {
-    badgeConfidencial.innerText = 'DOCUMENTO EM RASCUNHO / INCOMPLETO';
-    badgeConfidencial.className = 'inline-block bg-amber-100 text-amber-800 border border-amber-300 text-[8.5px] font-extrabold px-2 py-0.5 rounded tracking-wider uppercase';
-  } else {
-    badgeConfidencial.innerText = 'DOCUMENTO CONFIDENCIAL CONCLUÍDO';
-    badgeConfidencial.className = 'inline-block bg-[#F7EBEF] text-[#B85C83] border border-[#B85C83]/30 text-[8.5px] font-extrabold px-2 py-0.5 rounded tracking-wider uppercase';
-  }
-  
+  document.getElementById('pdf-titulo-relatorio').innerText = `FICHA DE ANAMNESE PSICOLÓGICA - ${ficha.status.toUpperCase()}`;
+
   const corpo = document.getElementById('pdf-corpo-conteudo');
   corpo.innerHTML = '';
   Object.keys(d).forEach(chave => {
@@ -1595,23 +1524,14 @@ function gerarPDFEvolucao(evoId) {
   const evo = (bancoEvolucoes[pacienteAtualId] || []).find(e => e.id === evoId);
   if (!evo) return;
   const pac = MOCK_PACIENTES.find(p => p.id === pacienteAtualId);
-  
+
   document.getElementById('pdf-emissao-data').innerText = `Emissão: ${new Date().toLocaleString('pt-BR')}`;
   document.getElementById('pdf-paciente-nome').innerText = pac ? pac.nome : 'Paciente';
   document.getElementById('pdf-paciente-tema').innerText = `Evolução Clínica (Sessão nº ${evo.sessaoNum})`;
   document.getElementById('pdf-paciente-data').innerText = formatarDataBR(evo.data);
   document.getElementById('pdf-paciente-status').innerText = evo.status;
-  document.getElementById('pdf-titulo-relatorio').innerText = `REGISTRO DE EVOLUÇÃO CLÍNICA — ${evo.status.toUpperCase()}`;
-  
-  const badgeConfidencial = document.getElementById('pdf-badge-confidencial');
-  if (evo.status === 'Rascunho') {
-    badgeConfidencial.innerText = 'RASCUNHO DE EVOLUÇÃO';
-    badgeConfidencial.className = 'inline-block bg-amber-100 text-amber-800 border text-[8.5px] font-extrabold px-2 py-0.5 rounded uppercase';
-  } else {
-    badgeConfidencial.innerText = 'DOCUMENTO CONCLUÍDO';
-    badgeConfidencial.className = 'inline-block bg-emerald-100 text-emerald-800 border text-[8.5px] font-extrabold px-2 py-0.5 rounded uppercase';
-  }
-  
+  document.getElementById('pdf-titulo-relatorio').innerText = `REGISTRO DE EVOLUÇÃO CLÍNICA - ${evo.status.toUpperCase()}`;
+
   const corpo = document.getElementById('pdf-corpo-conteudo');
   corpo.innerHTML = `
     <div class="bg-gray-50 border p-3 rounded text-xs pdf-keep-together">
@@ -1639,23 +1559,14 @@ function gerarPDFFolhaSessao(notaId) {
   const nota = (bancoAnotacoesSessao[pacienteAtualId] || []).find(n => n.id === notaId);
   if (!nota) return;
   const pac = MOCK_PACIENTES.find(p => p.id === pacienteAtualId);
-  
+
   document.getElementById('pdf-emissao-data').innerText = `Emissão: ${new Date().toLocaleString('pt-BR')}`;
   document.getElementById('pdf-paciente-nome').innerText = pac ? pac.nome : 'Paciente';
   document.getElementById('pdf-paciente-tema').innerText = `Folha de Anotação (Sessão nº ${nota.numero})`;
   document.getElementById('pdf-paciente-data').innerText = formatarDataBR(nota.data);
   document.getElementById('pdf-paciente-status').innerText = nota.status;
   document.getElementById('pdf-titulo-relatorio').innerText = 'FOLHA DE ANOTAÇÕES DA SESSÃO';
-  
-  const badgeConfidencial = document.getElementById('pdf-badge-confidencial');
-  if (nota.status === 'Rascunho') {
-    badgeConfidencial.innerText = 'RASCUNHO DE ANOTAÇÃO';
-    badgeConfidencial.className = 'inline-block bg-amber-100 text-amber-800 border text-[8.5px] font-extrabold px-2 py-0.5 rounded uppercase';
-  } else {
-    badgeConfidencial.innerText = 'DOCUMENTO CONCLUÍDO';
-    badgeConfidencial.className = 'inline-block bg-emerald-100 text-emerald-800 border text-[8.5px] font-extrabold px-2 py-0.5 rounded uppercase';
-  }
-  
+
   const corpo = document.getElementById('pdf-corpo-conteudo');
   corpo.innerHTML = `
     <div class="bg-gray-50 border p-3 rounded text-xs pdf-keep-together">
@@ -1663,7 +1574,7 @@ function gerarPDFFolhaSessao(notaId) {
       <p class="text-gray-700 leading-relaxed text-justify">${nota.texto || 'Sem anotações.'}</p>
     </div>
     <div class="bg-gray-50 border p-3 rounded text-xs pdf-keep-together">
-      <b class="text-[#1A365D] block mb-1 uppercase text-[9.5px]">Pontos Importantes para o Próximo Atendimento:</b>
+      <b class="text-[#1A365D] block mb-1 uppercase text-[9.5px]">Próximo Atendimento:</b>
       <p class="text-gray-700 leading-relaxed text-justify">${nota.proximo || 'Nenhum registro.'}</p>
     </div>
   `;
@@ -1675,23 +1586,14 @@ function gerarPDFPlanejamento(planId) {
   const plan = (bancoPlanejamentos[pacienteAtualId] || []).find(p => p.id === planId);
   if (!plan) return;
   const pac = MOCK_PACIENTES.find(p => p.id === pacienteAtualId);
-  
+
   document.getElementById('pdf-emissao-data').innerText = `Emissão: ${new Date().toLocaleString('pt-BR')}`;
   document.getElementById('pdf-paciente-nome').innerText = pac ? pac.nome : 'Paciente';
   document.getElementById('pdf-paciente-tema').innerText = 'Planejamento & Supervisão';
   document.getElementById('pdf-paciente-data').innerText = formatarDataBR(plan.dataElaboracao);
   document.getElementById('pdf-paciente-status').innerText = plan.status;
   document.getElementById('pdf-titulo-relatorio').innerText = 'FOLHA DE PLANEJAMENTO CLÍNICO E SUPERVISÃO';
-  
-  const badgeConfidencial = document.getElementById('pdf-badge-confidencial');
-  if (plan.status === 'Rascunho') {
-    badgeConfidencial.innerText = 'RASCUNHO DE PLANEJAMENTO';
-    badgeConfidencial.className = 'inline-block bg-amber-100 text-amber-800 border text-[8.5px] font-extrabold px-2 py-0.5 rounded uppercase';
-  } else {
-    badgeConfidencial.innerText = 'DOCUMENTO CONCLUÍDO';
-    badgeConfidencial.className = 'inline-block bg-emerald-100 text-emerald-800 border text-[8.5px] font-extrabold px-2 py-0.5 rounded uppercase';
-  }
-  
+
   const corpo = document.getElementById('pdf-corpo-conteudo');
   corpo.innerHTML = `
     <div class="bg-gray-50 border p-3 rounded text-xs pdf-keep-together">
@@ -1699,28 +1601,19 @@ function gerarPDFPlanejamento(planId) {
       <p class="text-gray-700 leading-relaxed text-justify">${plan.sinteseAnterior || 'Não informada.'}</p>
     </div>
     <div class="bg-gray-50 border p-3 rounded text-xs pdf-keep-together">
-      <b class="text-[#1A365D] block mb-1 uppercase text-[9.5px]">2. Objetivos para as Próximas Sessões:</b>
+      <b class="text-[#1A365D] block mb-1 uppercase text-[9.5px]">2. Objetivos Clínicos:</b>
       <p class="text-gray-700 leading-relaxed text-justify">${plan.objetivos || 'Não informados.'}</p>
     </div>
     <div class="bg-gray-50 border p-3 rounded text-xs pdf-keep-together">
-      <b class="text-[#1A365D] block mb-1 uppercase text-[9.5px]">3. Planejamento das Intervenções:</b>
+      <b class="text-[#1A365D] block mb-1 uppercase text-[9.5px]">3. Intervenções Planejadas:</b>
       <p class="text-gray-700 leading-relaxed text-justify">${plan.intervencoes || 'Não informadas.'}</p>
     </div>
-    <div class="bg-gray-50 border p-3 rounded text-xs pdf-keep-together">
-      <b class="text-[#1A365D] block mb-1 uppercase text-[9.5px]">4. Indicadores de Acompanhamento:</b>
-      <p class="text-gray-700 leading-relaxed text-justify">${plan.indicadores || 'Não informados.'}</p>
-    </div>
-    <div class="bg-gray-50 border p-3 rounded text-xs pdf-keep-together">
-      <b class="text-[#1A365D] block mb-1 uppercase text-[9.5px]">5. Orientações e Pontos de Atenção:</b>
-      <p class="text-gray-700 leading-relaxed text-justify">${plan.orientacoes || 'Não informadas.'}</p>
-    </div>
     ${plan.supervisao ? `
-    <div class="bg-blue-50/40 border border-blue-200 p-3 rounded text-xs pdf-keep-together">
-      <b class="text-blue-900 block mb-1 uppercase text-[9.5px]"><i class="fa-solid fa-user-shield mr-1"></i> 6. Registro de Supervisão Clínica:</b>
-      <p class="text-gray-700 text-justify mb-1"><b>Data:</b> ${formatarDataBR(plan.supervisao.data || plan.dataElaboracao)} | <b>Questões:</b> ${plan.supervisao.questoes || 'N/A'}</p>
-      <p class="text-gray-700 text-justify mb-1"><b>Discussões e Hipóteses:</b> ${plan.supervisao.hipoteses || 'N/A'}</p>
-      <p class="text-gray-700 text-justify"><b>Recomendações e Ajustes:</b> ${plan.supervisao.recomendacoes || 'N/A'}</p>
-    </div>
+      <div class="bg-blue-50/40 border border-blue-200 p-3 rounded text-xs pdf-keep-together">
+        <b class="text-blue-900 block mb-1 uppercase text-[9.5px]"><i class="fa-solid fa-user-shield mr-1"></i> 4. Registro de Supervisão Clínica:</b>
+        <p class="text-gray-700 text-justify mb-1"><b>Data:</b> ${formatarDataBR(plan.supervisao.data || plan.dataElaboracao)} | <b>Questões:</b> ${plan.supervisao.questoes || 'N/A'}</p>
+        <p class="text-gray-700 text-justify"><b>Recomendações:</b> ${plan.supervisao.recomendacoes || 'N/A'}</p>
+      </div>
     ` : ''}
   `;
   atualizarInterfaceProfissional();
@@ -1733,18 +1626,14 @@ function gerarEExibirPDF() {
   const dataSessao = document.getElementById('campo-data').value || new Date().toISOString().split('T')[0];
   const status = document.getElementById('campo-status').value;
   const compAlvo = document.getElementById('campo-comportamento-alvo').value || "Não especificado.";
-  
+
   document.getElementById('pdf-emissao-data').innerText = `Emissão: ${new Date().toLocaleString('pt-BR')}`;
   document.getElementById('pdf-paciente-nome').innerText = paciente;
   document.getElementById('pdf-paciente-tema').innerText = tema;
   document.getElementById('pdf-paciente-data').innerText = formatarDataBR(dataSessao);
   document.getElementById('pdf-paciente-status').innerText = status;
   document.getElementById('pdf-titulo-relatorio').innerText = 'RELATÓRIO DE ANÁLISE FUNCIONAL MOLECULAR';
-  
-  const badgeConfidencial = document.getElementById('pdf-badge-confidencial');
-  badgeConfidencial.innerText = 'DOCUMENTO CONFIDENCIAL';
-  badgeConfidencial.className = 'inline-block bg-[#F7EBEF] text-[#B85C83] border border-[#B85C83]/30 text-[8.5px] font-extrabold px-2 py-0.5 rounded tracking-wider uppercase';
-  
+
   const corpo = document.getElementById('pdf-corpo-conteudo');
   corpo.innerHTML = `
     <div class="pdf-keep-together mb-2">
@@ -1754,9 +1643,9 @@ function gerarEExibirPDF() {
     <div class="pdf-keep-together mb-2">
       <h3 class="text-xs font-bold text-[#1A365D] uppercase border-b pb-0.5 mb-1">2. TRÍPLICE CONTINGÊNCIA</h3>
       <div class="grid grid-cols-2 gap-2 text-xs">
-        <div class="bg-slate-50 p-2 border rounded text-justify"><b>A:</b> ${document.getElementById('campo-antecedente-itens').value}</div>
-        <div class="bg-slate-50 p-2 border rounded text-justify"><b>R:</b> ${document.getElementById('campo-resposta-itens').value}</div>
-        <div class="bg-slate-50 p-2 border rounded text-justify"><b>C:</b> ${document.getElementById('campo-consequencia-itens').value}</div>
+        <div class="bg-slate-50 p-2 border rounded text-justify"><b>A:</b> ${document.getElementById('campo-antecedente-itens').value || 'N/A'}</div>
+        <div class="bg-slate-50 p-2 border rounded text-justify"><b>R:</b> ${document.getElementById('campo-resposta-itens').value || 'N/A'}</div>
+        <div class="bg-slate-50 p-2 border rounded text-justify"><b>C:</b> ${document.getElementById('campo-consequencia-itens').value || 'N/A'}</div>
         <div class="bg-slate-50 p-2 border rounded text-justify"><b>E:</b> ${document.getElementById('campo-probabilidade').value}</div>
       </div>
     </div>
@@ -1780,21 +1669,7 @@ function baixarPDFCompletamente() {
     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
     pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
   };
-  
-  const btn = event.currentTarget;
-  const originalHTML = btn.innerHTML;
-  btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1.5"></i> Gerando...';
-  btn.disabled = true;
-  
-  html2pdf().set(opcoes).from(elemento).save().then(() => {
-    btn.innerHTML = originalHTML;
-    btn.disabled = false;
-  }).catch(err => {
-    console.error("Erro na geração do PDF:", err);
-    alert("Ocorreu um erro ao gerar o arquivo PDF.");
-    btn.innerHTML = originalHTML;
-    btn.disabled = false;
-  });
+  html2pdf().set(opcoes).from(elemento).save();
 }
 
 function imprimirPDF() {
@@ -1809,25 +1684,20 @@ function formatarDataBR(dataIso) {
 }
 
 function carregarExemploModelo() {
-  document.getElementById('campo-paciente').value = EXEMPLO_ANALISE_TECNICA.paciente;
-  document.getElementById('campo-tema').value = EXEMPLO_ANALISE_TECNICA.tema;
-  document.getElementById('campo-data').value = EXEMPLO_ANALISE_TECNICA.data;
-  document.getElementById('campo-status').value = EXEMPLO_ANALISE_TECNICA.status;
-  document.getElementById('campo-comportamento-alvo').value = EXEMPLO_ANALISE_TECNICA.comportamentoAlvo;
-  document.getElementById('campo-antecedente-tipo').value = EXEMPLO_ANALISE_TECNICA.antecedenteTipo;
-  document.getElementById('campo-antecedente-itens').value = EXEMPLO_ANALISE_TECNICA.antecedenteItens.join('\n');
-  document.getElementById('campo-resposta-tipo').value = EXEMPLO_ANALISE_TECNICA.respostaTipo;
-  document.getElementById('campo-resposta-itens').value = EXEMPLO_ANALISE_TECNICA.respostaItens.join('\n');
-  document.getElementById('campo-consequencia-tipo').value = EXEMPLO_ANALISE_TECNICA.consequenciaTipo;
-  document.getElementById('campo-consequencia-itens').value = EXEMPLO_ANALISE_TECNICA.consequenciaItens.join('\n');
-  document.getElementById('campo-efeito-imediato').value = EXEMPLO_ANALISE_TECNICA.efeitoImediato;
-  document.getElementById('campo-probabilidade').value = EXEMPLO_ANALISE_TECNICA.probabilidade;
-  document.getElementById('campo-efeito-longo').value = EXEMPLO_ANALISE_TECNICA.efeitoLongo;
-  document.getElementById('campo-processo').value = EXEMPLO_ANALISE_TECNICA.processo;
-  document.getElementById('campo-confianca').value = EXEMPLO_ANALISE_TECNICA.confianca;
-  document.getElementById('campo-evidencias').value = EXEMPLO_ANALISE_TECNICA.evidencias;
-  document.getElementById('campo-intervencao').value = EXEMPLO_ANALISE_TECNICA.intervencao;
-  document.getElementById('campo-sintese').value = EXEMPLO_ANALISE_TECNICA.sintese;
+  document.getElementById('campo-paciente').value = "Lucas Mendes Ribeiro";
+  document.getElementById('campo-tema').value = "Conflitos de assertividade na relação familiar";
+  document.getElementById('campo-data').value = new Date().toISOString().split('T')[0];
+  document.getElementById('campo-status').value = "Concluída";
+  document.getElementById('campo-comportamento-alvo').value = "Aceitar prontamente demandas adicionais de favorecimento sem relatar recusa.";
+  document.getElementById('campo-antecedente-tipo').value = "Estímulo Discriminativo (SD)";
+  document.getElementById('campo-antecedente-itens').value = "Solicitação direta de favor por familiar.";
+  document.getElementById('campo-resposta-tipo').value = "Motora / Verbal";
+  document.getElementById('campo-resposta-itens').value = "Emissão imediata de concordância ('Pode deixar').";
+  document.getElementById('campo-consequencia-tipo').value = "Imediata / Reforço Negativo";
+  document.getElementById('campo-consequencia-itens').value = "Cessação imediata da insistência e alívio da ansiedade.";
+  document.getElementById('campo-efeito-imediato').value = "Alívio imediato";
+  document.getElementById('campo-probabilidade').value = "Aumentou (Fortalecimento do Operante)";
+  document.getElementById('campo-processo').value = "Reforçamento Negativo (R-) - Esquiva/Fuga";
 }
 
 function novaAnaliseFuncional() {
@@ -1839,24 +1709,6 @@ function novaAnaliseFuncional() {
 function iniciarAnaliseParaPaciente(nome) {
   novaAnaliseFuncional();
   document.getElementById('campo-paciente').value = nome;
-}
-
-function salvarAnaliseNoProntuario() {
-  const paciente = document.getElementById('campo-paciente').value;
-  if (!paciente) { alert("Preencha o nome do paciente."); return; }
-  const novaAnalise = {
-    paciente: paciente,
-    tema: document.getElementById('campo-tema').value || "Análise Geral",
-    data: document.getElementById('campo-data').value || new Date().toISOString().split('T')[0],
-    status: document.getElementById('campo-status').value,
-    comportamentoAlvo: document.getElementById('campo-comportamento-alvo').value,
-    processo: document.getElementById('campo-processo').value
-  };
-  historicoAnalises.unshift(novaAnalise);
-  salvarDadosLocalStorage();
-  renderizarDashboard();
-  alert(`Análise funcional de "${paciente}" salva com sucesso!`);
-  switchTab('dashboard');
 }
 
 function carregarEVisualizarAnalise(idx) {
@@ -1895,8 +1747,10 @@ function exportarDadosJSON() {
 }
 
 function restaurarDadosPadrao() {
-  localStorage.clear();
-  location.reload();
+  if (confirm("Deseja realmente limpar todos os registros locais e reiniciar o sistema?")) {
+    localStorage.clear();
+    location.reload();
+  }
 }
 </script>
 </body>
