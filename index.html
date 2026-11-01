@@ -248,20 +248,42 @@
     </section>
 
     <!-- VIEW 2: GESTÃO DE PACIENTES E PRONTUÁRIOS -->
-    <section id="view-pacientes" class="tab-content hidden space-y-6">
-      <div class="flex justify-between items-center">
-        <div>
-          <h2 class="text-2xl font-bold text-brand-dark">Prontuários e Pacientes</h2>
-          <p class="text-sm text-gray-500">Cadastre e acompanhe o histórico, anamneses, evoluções e planejamentos dos clientes.</p>
-        </div>
-        <button onclick="abrirModalNovoPaciente()" class="bg-brand-main text-white px-4 py-2.5 rounded-xl font-medium text-sm shadow hover:bg-brand-alt transition-all">
-          <i class="fa-solid fa-user-plus mr-1.5"></i> Cadastrar Paciente
-        </button>
+<section id="view-pacientes" class="tab-content hidden space-y-6">
+  <!-- Cabeçalho e Ferramentas de Filtragem/Ação -->
+  <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+    <div>
+      <div class="flex items-center space-x-2">
+        <span class="bg-rose-100 text-brand-main text-xs font-bold px-2.5 py-0.5 rounded-full">Módulo Administrativo</span>
+        <span class="text-xs text-gray-400">• Prontuários Clínicos</span>
       </div>
+      <h2 class="text-2xl font-bold text-brand-dark mt-1">Prontuários e Pacientes</h2>
+      <p class="text-xs sm:text-sm text-gray-500 mt-0.5">Cadastre, filtre e acompanhe o histórico, anamneses, evoluções e planejamentos dos clientes.</p>
+    </div>
+    
+    <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+      <!-- Sistema de Filtros de Status (Todos / Ativos / Inativos) -->
+      <div class="flex bg-rose-50 p-1 rounded-xl border border-rose-200 text-xs font-semibold">
+        <button onclick="filtrarPacientes('todos')" id="filtro-pac-todos" class="px-3 py-1.5 rounded-lg bg-white text-brand-main shadow-sm transition-all">Todos</button>
+        <button onclick="filtrarPacientes('ativos')" id="filtro-pac-ativos" class="px-3 py-1.5 rounded-lg text-gray-600 hover:text-brand-main transition-all">Ativos</button>
+        <button onclick="filtrarPacientes('inativos')" id="filtro-pac-inativos" class="px-3 py-1.5 rounded-lg text-gray-600 hover:text-brand-main transition-all">Inativos</button>
+      </div>
+      
+      <!-- Botão de Cadastro Principal -->
+      <button onclick="abrirModalNovoPaciente()" class="bg-brand-main text-white px-4 py-2.5 rounded-xl font-medium text-sm shadow hover:bg-brand-alt transition-all whitespace-nowrap flex items-center justify-center">
+        <i class="fa-solid fa-user-plus mr-1.5"></i> Cadastrar Paciente
+      </button>
+    </div>
+  </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="grid-pacientes">
-      </div>
-    </section>
+  <!-- Grid Dinâmico de Exibição dos Pacientes (Cards com Ações de Edição, Inativação e Exclusão) -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="grid-pacientes">
+    <!-- Os cards dos pacientes são renderizados dinamicamente via JavaScript com suporte a:
+         - Abrir Prontuário Completo
+         - Editar Dados Cadastrais
+         - Alternar Status (Ativo / Inativo)
+         - Exclusão Definitiva com Confirmação -->
+  </div>
+</section>
 
     <!-- VIEW 2.1: DETALHE DO PRONTUÁRIO / ANAMNESE, EVOLUÇÕES, ANOTAÇÕES E PLANEJAMENTO/SUPERVISÃO -->
     <section id="view-prontuario-detalhe" class="tab-content hidden space-y-6">
@@ -1229,85 +1251,85 @@
     }
 
     // --- FORMULÁRIO INFANTIL (12 TÓPICOS)
-  function renderizarFormularioInfantil(pac, d = {}) {
-  return `
-    <form id="form-anamnese-ativa" class="space-y-6 text-xs">
-      <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
-        <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-address-card text-brand-main mr-2"></i> 1. Identificação da criança, pais e responsável legal</h3>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-          <div><label class="font-semibold block mb-1">Nome Completo</label><input type="text" name="nome" value="${d.nome || pac.nome}" class="w-full p-2 border rounded-xl"></div>
-          <div><label class="font-semibold block mb-1">Idade</label><input type="text" name="idade" value="${d.idade || pac.idade || ''}" class="w-full p-2 border rounded-xl"></div>
-          <div><label class="font-semibold block mb-1">Sexo</label><input type="text" name="sexo" value="${d.sexo || ''}" class="w-full p-2 border rounded-xl"></div>
-          <div><label class="font-semibold block mb-1">Nascimento</label><input type="date" name="nasc" value="${d.nasc || pac.nascimento || ''}" class="w-full p-2 border rounded-xl"></div>
-          <div><label class="font-semibold block mb-1">Endereço e Cidade</label><input type="text" name="endereco" value="${d.endereco || ''}" class="w-full p-2 border rounded-xl"></div>
-          <div><label class="font-semibold block mb-1">Telefone</label><input type="text" name="telefone" value="${d.telefone || pac.telefone || ''}" class="w-full p-2 border rounded-xl"></div>
-          <div><label class="font-semibold block mb-1">Escola / Série</label><input type="text" name="escola" value="${d.escola || ''}" class="w-full p-2 border rounded-xl"></div>
-          <div><label class="font-semibold block mb-1">Dados dos Pais (Idade e Profissão)</label><input type="text" name="paisDados" value="${d.paisDados || ''}" class="w-full p-2 border rounded-xl"></div>
-          <div><label class="font-semibold block mb-1">Responsável Legal</label><input type="text" name="respLegal" value="${d.respLegal || ''}" class="w-full p-2 border rounded-xl"></div>
-          <div><label class="font-semibold block mb-1">Posição na Família e Irmãos</label><input type="text" name="posicaoIrmaos" value="${d.posicaoIrmaos || ''}" class="w-full p-2 border rounded-xl"></div>
-          <div><label class="font-semibold block mb-1">Separação dos Pais</label><input type="text" name="separacao" value="${d.separacao || ''}" class="w-full p-2 border rounded-xl"></div>
-          <div><label class="font-semibold block mb-1">Uso de Medicação</label><input type="text" name="medicacao" value="${d.medicacao || ''}" class="w-full p-2 border rounded-xl"></div>
-        </div>
-      </div>
-      <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
-        <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-share text-brand-main mr-2"></i> 2. Encaminhamento e referência</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-          <div><label class="font-semibold block mb-1">Origem do Encaminhamento</label><input type="text" name="origemEncaminhamento" value="${d.origemEncaminhamento || ''}" class="w-full p-2 border rounded-xl"></div>
-          <div><label class="font-semibold block mb-1">Profissional Responsável</label><input type="text" name="profEncaminhamento" value="${d.profEncaminhamento || ''}" class="w-full p-2 border rounded-xl"></div>
-        </div>
-      </div>
-      <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
-        <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-circle-question text-brand-main mr-2"></i> 3. Queixa principal</h3>
-        <div class="space-y-3">
-          <div><label class="font-semibold block mb-1">Motivo da Procura e Dificuldades Relatadas</label><textarea name="queixa" rows="3" class="w-full p-2 border rounded-xl">${d.queixa || pac.queixa || ''}</textarea></div>
-          <div><label class="font-semibold block mb-1">Expectativas Familiares</label><input type="text" name="expectativas" value="${d.expectativas || ''}" class="w-full p-2 border rounded-xl"></div>
-        </div>
-      </div>
-      <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
-        <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-clock-rotate-left text-brand-main mr-2"></i> 4. Histórico do quadro atual</h3>
-        <div><label class="font-semibold block mb-1">Início, Frequência, Intensidade, Contextos, Evolução e Diagnósticos Anteriores</label><textarea name="histQuadro" rows="4" class="w-full p-2 border rounded-xl">${d.histQuadro || ''}</textarea></div>
-      </div>
-      <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
-        <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-user-doctor text-brand-main mr-2"></i> 5. Acompanhamento com outros profissionais</h3>
-        <div><label class="font-semibold block mb-1">Especialidades, Tratamentos, Medicações e Resultados</label><textarea name="outrosProf" rows="3" class="w-full p-2 border rounded-xl">${d.outrosProf || ''}</textarea></div>
-      </div>
-      <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
-        <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-baby text-brand-main mr-2"></i> 6. Antecedentes pessoais e gestacionais</h3>
-        <div><label class="font-semibold block mb-1">Gestação, Concepção, Pré-natal, Intercorrências, Medicações, Parto, Condições ao Nascer e Histórico de Adoção</label><textarea name="antecedentesPessoais" rows="4" class="w-full p-2 border rounded-xl">${d.antecedentesPessoais || ''}</textarea></div>
-      </div>
-      <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
-        <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-child-reaching text-brand-main mr-2"></i> 7. Desenvolvimento: alimentação, sono, psicomotricidade, higiene, desfralde e saúde familiar</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-          <div><label class="font-semibold block mb-1">Alimentação (Amamentação, Seletividade, Autonomia, Alergias, Dietas)</label><textarea name="devAlimentacao" rows="3" class="w-full p-2 border rounded-xl">${d.devAlimentacao || ''}</textarea></div>
-          <div><label class="font-semibold block mb-1">Sono (Insônia, Sonambulismo, Bruxismo, Sono Agitado, Medos)</label><textarea name="devSono" rows="3" class="w-full p-2 border rounded-xl">${d.devSono || ''}</textarea></div>
-          <div><label class="font-semibold block mb-1">Psicomotricidade (Sustentação, Sentar, Engatinhar, Passos, Coordenação)</label><textarea name="devPsicomotricidade" rows="3" class="w-full p-2 border rounded-xl">${d.devPsicomotricidade || ''}</textarea></div>
-          <div><label class="font-semibold block mb-1">Higiene e Desfralde (Autonomia, Controle Esfincteriano, Enurese)</label><textarea name="devHigiene" rows="3" class="w-full p-2 border rounded-xl">${d.devHigiene || ''}</textarea></div>
-        </div>
-        <div><label class="font-semibold block mb-1">Saúde e Histórico Familiar Relevante</label><input type="text" name="devSaudeFamilia" value="${d.devSaudeFamilia || ''}" class="w-full p-2 border rounded-xl"></div>
-      </div>
-      <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
-        <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-people-arrows text-brand-main mr-2"></i> 8. Interações sociais e comunicação</h3>
-        <div><label class="font-semibold block mb-1">Interação com Pares, Comunicação Vocal/Não Vocal, Linguagem e Brincadeiras Funcionais/Simbólicas</label><textarea name="interacaoComunicacao" rows="3" class="w-full p-2 border rounded-xl">${d.interacaoComunicacao || ''}</textarea></div>
-      </div>
-      <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
-        <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-arrows-rotate text-brand-main mr-2"></i> 9. Padrões repetitivos e comportamentos</h3>
-        <div><label class="font-semibold block mb-1">Movimentos Repetitivos, Reação a Mudanças, Interesses Restritos e Comportamento diante da Frustração</label><textarea name="padroesRepetitivos" rows="3" class="w-full p-2 border rounded-xl">${d.padroesRepetitivos || ''}</textarea></div>
-      </div>
-      <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
-        <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-graduation-cap text-brand-main mr-2"></i> 10. Habilidades acadêmicas</h3>
-        <div><label class="font-semibold block mb-1">Histórico Escolar, Adaptação, Aprendizagem, Organização, Reprovações, Suporte Pedagógico e Rotina de Estudos</label><textarea name="habilidadesAcademicas" rows="3" class="w-full p-2 border rounded-xl">${d.habilidadesAcademicas || ''}</textarea></div>
-      </div>
-      <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
-        <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-star text-brand-main mr-2"></i> 11. Reforçadores, preferências e interesses</h3>
-        <div><label class="font-semibold block mb-1">Brinquedos, Atividades, Itens Preferidos, Aversões e Situações de Engajamento</label><textarea name="reforcadoresInteresses" rows="3" class="w-full p-2 border rounded-xl">${d.reforcadoresInteresses || ''}</textarea></div>
-      </div>
-      <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
-        <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-circle-info text-brand-main mr-2"></i> 12. Informações complementares, rotina e observações</h3>
-        <div><label class="font-semibold block mb-1">Características Comportamentais Relatadas, Relações Familiares, Rotina Diária, Rede de Apoio e Observações</label><textarea name="infoComplementares" rows="4" class="w-full p-2 border rounded-xl">${d.infoComplementares || ''}</textarea></div>
-      </div>
-    </form>
-  `;
-}
+    function renderizarFormularioInfantil(pac, d = {}) {
+      return `
+        <form id="form-anamnese-ativa" class="space-y-6 text-xs">
+          <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
+            <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-address-card text-brand-main mr-2"></i> 1. Identificação da criança, pais e responsável legal</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div><label class="font-semibold block mb-1">Nome Completo</label><input type="text" name="nome" value="${d.nome || pac.nome}" class="w-full p-2 border rounded-xl"></div>
+              <div><label class="font-semibold block mb-1">Idade</label><input type="text" name="idade" value="${d.idade || pac.idade || ''}" class="w-full p-2 border rounded-xl"></div>
+              <div><label class="font-semibold block mb-1">Sexo</label><input type="text" name="sexo" value="${d.sexo || ''}" class="w-full p-2 border rounded-xl"></div>
+              <div><label class="font-semibold block mb-1">Nascimento</label><input type="date" name="nasc" value="${d.nasc || pac.nascimento || ''}" class="w-full p-2 border rounded-xl"></div>
+              <div><label class="font-semibold block mb-1">Endereço e Cidade</label><input type="text" name="endereco" value="${d.endereco || ''}" class="w-full p-2 border rounded-xl"></div>
+              <div><label class="font-semibold block mb-1">Telefone</label><input type="text" name="telefone" value="${d.telefone || pac.telefone || ''}" class="w-full p-2 border rounded-xl"></div>
+              <div><label class="font-semibold block mb-1">Escola / Série</label><input type="text" name="escola" value="${d.escola || ''}" class="w-full p-2 border rounded-xl"></div>
+              <div><label class="font-semibold block mb-1">Dados dos Pais (Idade e Profissão)</label><input type="text" name="paisDados" value="${d.paisDados || ''}" class="w-full p-2 border rounded-xl"></div>
+              <div><label class="font-semibold block mb-1">Responsável Legal</label><input type="text" name="respLegal" value="${d.respLegal || ''}" class="w-full p-2 border rounded-xl"></div>
+              <div><label class="font-semibold block mb-1">Posição na Família e Irmãos</label><input type="text" name="posicaoIrmaos" value="${d.posicaoIrmaos || ''}" class="w-full p-2 border rounded-xl"></div>
+              <div><label class="font-semibold block mb-1">Separação dos Pais</label><input type="text" name="separacao" value="${d.separacao || ''}" class="w-full p-2 border rounded-xl"></div>
+              <div><label class="font-semibold block mb-1">Uso de Medicação</label><input type="text" name="medicacao" value="${d.medicacao || ''}" class="w-full p-2 border rounded-xl"></div>
+            </div>
+          </div>
+          <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
+            <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-share text-brand-main mr-2"></i> 2. Encaminhamento e referência</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div><label class="font-semibold block mb-1">Origem do Encaminhamento</label><input type="text" name="origemEncaminhamento" value="${d.origemEncaminhamento || ''}" class="w-full p-2 border rounded-xl"></div>
+              <div><label class="font-semibold block mb-1">Profissional Responsável</label><input type="text" name="profEncaminhamento" value="${d.profEncaminhamento || ''}" class="w-full p-2 border rounded-xl"></div>
+            </div>
+          </div>
+          <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
+            <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-circle-question text-brand-main mr-2"></i> 3. Queixa principal</h3>
+            <div class="space-y-3">
+              <div><label class="font-semibold block mb-1">Motivo da Procura e Dificuldades Relatadas</label><textarea name="queixa" rows="3" class="w-full p-2 border rounded-xl">${d.queixa || pac.queixa || ''}</textarea></div>
+              <div><label class="font-semibold block mb-1">Expectativas Familiares</label><input type="text" name="expectativas" value="${d.expectativas || ''}" class="w-full p-2 border rounded-xl"></div>
+            </div>
+          </div>
+          <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
+            <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-clock-rotate-left text-brand-main mr-2"></i> 4. Histórico do quadro atual</h3>
+            <div><label class="font-semibold block mb-1">Início, Frequência, Intensidade, Contextos, Evolução e Diagnósticos Anteriores</label><textarea name="histQuadro" rows="4" class="w-full p-2 border rounded-xl">${d.histQuadro || ''}</textarea></div>
+          </div>
+          <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
+            <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-user-doctor text-brand-main mr-2"></i> 5. Acompanhamento com outros profissionais</h3>
+            <div><label class="font-semibold block mb-1">Especialidades, Tratamentos, Medicações e Resultados</label><textarea name="outrosProf" rows="3" class="w-full p-2 border rounded-xl">${d.outrosProf || ''}</textarea></div>
+          </div>
+          <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
+            <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-baby text-brand-main mr-2"></i> 6. Antecedentes pessoais e gestacionais</h3>
+            <div><label class="font-semibold block mb-1">Gestação, Concepção, Pré-natal, Intercorrências, Medicações, Parto, Condições ao Nascer e Histórico de Adoção</label><textarea name="antecedentesPessoais" rows="4" class="w-full p-2 border rounded-xl">${d.antecedentesPessoais || ''}</textarea></div>
+          </div>
+          <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
+            <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-child-reaching text-brand-main mr-2"></i> 7. Desenvolvimento: alimentação, sono, psicomotricidade, higiene, desfralde e saúde familiar</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div><label class="font-semibold block mb-1">Alimentação (Amamentação, Seletividade, Autonomia, Alergias, Dietas)</label><textarea name="devAlimentacao" rows="3" class="w-full p-2 border rounded-xl">${d.devAlimentacao || ''}</textarea></div>
+              <div><label class="font-semibold block mb-1">Sono (Insônia, Sonambulismo, Bruxismo, Sono Agitado, Medos)</label><textarea name="devSono" rows="3" class="w-full p-2 border rounded-xl">${d.devSono || ''}</textarea></div>
+              <div><label class="font-semibold block mb-1">Psicomotricidade (Sustentação, Sentar, Engatinhar, Passos, Coordenação)</label><textarea name="devPsicomotricidade" rows="3" class="w-full p-2 border rounded-xl">${d.devPsicomotricidade || ''}</textarea></div>
+              <div><label class="font-semibold block mb-1">Higiene e Desfralde (Autonomia, Controle Esfincteriano, Enurese)</label><textarea name="devHigiene" rows="3" class="w-full p-2 border rounded-xl">${d.devHigiene || ''}</textarea></div>
+            </div>
+            <div><label class="font-semibold block mb-1">Saúde e Histórico Familiar Relevante</label><input type="text" name="devSaudeFamilia" value="${d.devSaudeFamilia || ''}" class="w-full p-2 border rounded-xl"></div>
+          </div>
+          <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
+            <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-people-arrows text-brand-main mr-2"></i> 8. Interações sociais e comunicação</h3>
+            <div><label class="font-semibold block mb-1">Interação com Pares, Comunicação Vocal/Não Vocal, Linguagem e Brincadeiras Funcionais/Simbólicas</label><textarea name="interacaoComunicacao" rows="3" class="w-full p-2 border rounded-xl">${d.interacaoComunicacao || ''}</textarea></div>
+          </div>
+          <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
+            <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-arrows-rotate text-brand-main mr-2"></i> 9. Padrões repetitivos e comportamentos</h3>
+            <div><label class="font-semibold block mb-1">Movimentos Repetitivos, Reação a Mudanças, Interesses Restritos e Comportamento diante da Frustração</label><textarea name="padroesRepetitivos" rows="3" class="w-full p-2 border rounded-xl">${d.padroesRepetitivos || ''}</textarea></div>
+          </div>
+          <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
+            <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-graduation-cap text-brand-main mr-2"></i> 10. Habilidades acadêmicas</h3>
+            <div><label class="font-semibold block mb-1">Histórico Escolar, Adaptação, Aprendizagem, Organização, Reprovações, Suporte Pedagógico e Rotina de Estudos</label><textarea name="habilidadesAcademicas" rows="3" class="w-full p-2 border rounded-xl">${d.habilidadesAcademicas || ''}</textarea></div>
+          </div>
+          <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
+            <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-star text-brand-main mr-2"></i> 11. Reforçadores, preferências e interesses</h3>
+            <div><label class="font-semibold block mb-1">Brinquedos, Atividades, Itens Preferidos, Aversões e Situações de Engajamento</label><textarea name="reforcadoresInteresses" rows="3" class="w-full p-2 border rounded-xl">${d.reforcadoresInteresses || ''}</textarea></div>
+          </div>
+          <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
+            <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-circle-info text-brand-main mr-2"></i> 12. Informações complementares, rotina e observações</h3>
+            <div><label class="font-semibold block mb-1">Características Comportamentais Relatadas, Relações Familiares, Rotina Diária, Rede de Apoio e Observações</label><textarea name="infoComplementares" rows="4" class="w-full p-2 border rounded-xl">${d.infoComplementares || ''}</textarea></div>
+          </div>
+        </form>
+      `;
+    }
 
     // --- FORMULÁRIO ADULTO (8 TÓPICOS) ---
     function renderizarFormularioAdulto(pac, d = {}) {
@@ -2071,6 +2093,5 @@
   </script>
 </body>
 </html>
-
 
 
