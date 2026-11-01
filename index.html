@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sistema Clínico de Análise do Comportamento - Dra. Daniele Sousa Santos</title>
+  <title>Sistema Clínico de Análise do Comportamento - . Daniele Sousa Santos</title>
   
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -104,33 +104,39 @@ body {
     print-color-adjust: exact;
   }
 }
-
   </style>
 
   <style>
-    body {
+  body {
       background-color: #FAF2F5;
       color: #3D2A32;
       font-family: 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
     
     /* Regras estritas de renderização A4 do PDF com texto justificado e alinhamento interno corrigido */
     .pdf-page {
       width: 210mm;
       min-height: 297mm;
-      padding: 12mm 15mm 12mm 15mm;
+      padding: 12mm 15mm;
       background: #ffffff;
       color: #2D3748;
       box-sizing: border-box;
       margin: 0 auto;
       font-size: 10pt;
-      line-height: 1.4;
+      line-height: 1.5;
       text-align: justify;
+      text-justify: inter-word;
     }
 
-    .pdf-page p, .pdf-page span, .pdf-page li, .pdf-page div {
+    .pdf-page p, 
+    .pdf-page span, 
+    .pdf-page li, 
+    .pdf-page div {
       text-align: justify;
       word-break: break-word;
+      overflow-wrap: break-word;
     }
 
     /* Correção de campos do grid de identificação no PDF para evitar sobreposições e desalinhamentos */
@@ -148,7 +154,7 @@ body {
       break-inside: avoid !important;
     }
 
-    /* Scrollbar personalizada */
+    /* Scrollbar personalizada mais suave */
     ::-webkit-scrollbar {
       width: 6px;
       height: 6px;
@@ -159,6 +165,10 @@ body {
     ::-webkit-scrollbar-thumb {
       background: #B85C83;
       border-radius: 4px;
+      transition: background 0.2s ease;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #C25983;
     }
 
     .card-shadow {
@@ -169,18 +179,21 @@ body {
 <body class="min-h-screen flex flex-col antialiased">
 
   <!-- TOP NAVIGATION BAR -->
-  <header class="bg-white border-b border-rose-100 sticky top-0 z-30 shadow-sm">
+  <header class="bg-white/90 backdrop-blur-md border-b border-rose-100 sticky top-0 z-30 shadow-sm">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex justify-between h-16">
+      <div class="flex justify-between items-center h-16">
         <div class="flex items-center space-x-3">
-          <div class="w-10 h-10 rounded-xl bg-brand-main text-white flex items-center justify-center font-bold text-xl shadow-md">
+          <div class="w-10 h-10 rounded-xl bg-brand-main text-white flex items-center justify-center text-xl shadow-md transition-transform hover:scale-105">
             <i class="fa-solid fa-brain"></i>
           </div>
           <div>
-            <h1 class="text-base font-bold text-brand-dark leading-tight" id="header-prof-nome">Dra. Daniele Sousa Santos</h1>
-            <p class="text-xs text-brand-alt font-medium" id="header-prof-sub"><span id="header-prof-crp">CRP 22/07398</span> • <span id="header-prof-especialidade">Análise do Comportamento</span></p>
+            <h1 class="text-base font-bold text-brand-dark leading-tight" id="header-prof-nome">Daniele Sousa Santos</h1>
+            <p class="text-xs text-brand-alt font-medium tracking-wide" id="header-prof-sub"><span id="header-prof-crp">CRP 22/07398</span> • <span id="header-prof-especialidade">Análise do Comportamento</span></p>
           </div>
         </div>
+      </div>
+    </div>
+  </header>
 
         <!-- Navigation Tabs -->
         <nav class="hidden md:flex items-center space-x-1">
