@@ -474,472 +474,389 @@
       </section>
 
 <!-- VIEW 2: GESTÃO DE PACIENTES E PRONTUÁRIOS -->
-    <section id="view-pacientes" class="tab-content hidden space-y-6">
-      <!-- Cabeçalho com Título e Ação -->
-      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+<section id="view-pacientes" class="tab-content hidden space-y-6">
+  <!-- Cabeçalho com Título e Ação -->
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div>
+      <h2 class="text-2xl font-bold text-brand-dark tracking-tight">Prontuários e Pacientes</h2>
+      <p class="text-sm text-gray-500 mt-0.5">Cadastre e acompanhe o histórico, anamneses, evoluções e planejamentos dos clientes.</p>
+    </div>
+    <button 
+      onclick="abrirModalNovoPaciente()" 
+      class="bg-brand-main text-white px-4 py-2.5 rounded-xl font-medium text-sm shadow-md hover:bg-brand-alt active:scale-95 transition-all flex items-center justify-center gap-2 flex-shrink-0">
+      <i class="fa-solid fa-user-plus text-xs"></i> 
+      <span>Cadastrar Paciente</span>
+    </button>
+  </div>
+
+  <!-- Barra de Pesquisa Rápida -->
+  <div class="bg-white p-4 rounded-xl border border-rose-100 card-shadow flex items-center gap-3">
+    <div class="text-gray-400 pl-1">
+      <i class="fa-solid fa-search"></i>
+    </div>
+    <input 
+      type="text" 
+      id="input-busca-paciente" 
+      oninput="filtrarPacientes(this.value)"
+      placeholder="Pesquisar paciente por nome..." 
+      class="w-full text-sm bg-transparent border-none focus:outline-none text-brand-dark placeholder-gray-400">
+  </div>
+
+  <!-- Grid de Cards de Pacientes (Preenchido dinamicamente via JS) -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="grid-pacientes">
+    <!-- Estado vazio padrão (caso não haja pacientes cadastrados) -->
+    <div class="col-span-full bg-white rounded-xl p-8 text-center border border-dashed border-rose-200">
+      <div class="w-12 h-12 bg-rose-50 text-brand-main rounded-full flex items-center justify-center mx-auto mb-3 text-xl">
+        <i class="fa-solid fa-folder-open"></i>
+      </div>
+      <h3 class="text-base font-semibold text-brand-dark">Nenhum paciente cadastrado</h3>
+      <p class="text-xs text-gray-500 mt-1">Cadastre um paciente para visualizar as informações do prontuário.</p>
+    </div>
+  </div>
+</section>
+
+<!-- VIEW 2.1: DETALHE DO PRONTUÁRIO -->
+<section id="view-prontuario-detalhe" class="tab-content hidden space-y-6">
+  <!-- Cabeçalho do Prontuário -->
+  <div class="bg-white rounded-2xl p-5 border border-rose-100 card-shadow flex flex-wrap justify-between items-center gap-4">
+    <div class="flex items-center gap-3.5">
+      <!-- Botão Voltar com micro-interação -->
+      <button 
+        onclick="switchTab('pacientes')" 
+        class="p-2.5 bg-rose-50 text-brand-main rounded-xl hover:bg-rose-100 active:scale-95 transition-all flex items-center justify-center"
+        title="Voltar para a lista de pacientes">
+        <i class="fa-solid fa-arrow-left text-sm"></i>
+      </button>
+      <div>
+        <!-- Badges de Status e Faixa Etária -->
+        <div class="flex items-center gap-2">
+          <span id="prontuario-badge-faixa" class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-rose-100 text-brand-main tracking-wide uppercase">
+            Faixa Etária
+          </span>
+          <span id="prontuario-status-ficha" class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 tracking-wide uppercase">
+            Ativo
+          </span>
+        </div>
+        <!-- Nome e Informações do Paciente -->
+        <h2 class="text-xl font-bold text-brand-dark mt-1 tracking-tight" id="prontuario-nome-paciente">
+          Nome do Paciente
+        </h2>
+        <p class="text-xs text-gray-500 mt-0.5" id="prontuario-sub-info">
+          Data de Nascimento: --/--/---- • Idade: -- anos
+        </p>
+      </div>
+    </div>
+    <div class="flex flex-wrap items-center gap-2">
+      <button onclick="adicionarSessaoAgendaPacienteAtual()" class="bg-brand-main hover:bg-brand-alt text-white font-bold py-2 px-3.5 rounded-xl text-xs transition-all shadow flex items-center gap-1.5">
+        <i class="fa-solid fa-calendar-plus"></i> Agendar Sessão
+      </button>
+      <button onclick="abrirModalEditarPacienteAtual()" class="bg-rose-50 text-brand-main border border-rose-200 hover:bg-rose-100 font-bold py-2 px-3 rounded-xl text-xs transition-all shadow-xs flex items-center gap-1.5" title="Editar Paciente">
+        <i class="fa-solid fa-pen-to-square"></i> Editar
+      </button>
+      <button onclick="inativarPacienteAtual()" class="bg-amber-50 text-amber-700 border border-amber-200 hover:bg-amber-100 font-bold py-2 px-3 rounded-xl text-xs transition-all shadow-xs flex items-center gap-1.5" title="Inativar Paciente">
+        <i class="fa-solid fa-user-slash"></i> Inativar
+      </button>
+      <button onclick="excluirPacienteAtual()" class="bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 font-bold py-2 px-3 rounded-xl text-xs transition-all shadow-xs flex items-center gap-1.5" title="Excluir Paciente">
+        <i class="fa-solid fa-trash"></i> Excluir
+      </button>
+    </div>
+  </div>
+
+  <!-- NAVEGAÇÃO INTERNA DO PRONTUÁRIO (10 MÓDULOS) -->
+  <div class="flex flex-wrap gap-1.5 bg-rose-50/50 p-2 rounded-xl border border-rose-100 shadow-xs" aria-label="Navegação do Prontuário">
+    <!-- 1. Anamnese -->
+    <button onclick="alternarAbaProntuario('anamnese')" id="subnav-anamnese" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-white text-brand-main shadow-xs transition-all duration-200 flex items-center gap-1.5 active:scale-95" title="Anamnese de adultos, crianças, responsáveis e histórico completo">
+      <i class="fa-solid fa-notes-medical text-xs"></i> <span>1. Anamnese</span>
+    </button>
+    <!-- 2. Evoluções -->
+    <button onclick="alternarAbaProntuario('evolucoes')" id="subnav-evolucoes" class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-brand-main hover:bg-white/80 transition-all duration-200 flex items-center gap-1.5 active:scale-95" title="Evoluções das sessões, faltas, atendimentos com responsáveis e devolutivas">
+      <i class="fa-solid fa-file-waveform text-xs"></i> <span>2. Evoluções</span>
+    </button>
+    <!-- 3. Folhas de Sessão -->
+    <button onclick="alternarAbaProntuario('anotacoes')" id="subnav-anotacoes" class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-brand-main hover:bg-white/80 transition-all duration-200 flex items-center gap-1.5 active:scale-95" title="Anotações clínicas, relatos, intervenções e acompanhamento de tarefas">
+      <i class="fa-solid fa-book-open-reader text-xs"></i> <span>3. Folhas de Sessão</span>
+    </button>
+    <!-- 4. Avaliação Psicológica -->
+    <button onclick="alternarAbaProntuario('avaliacao')" id="subnav-avaliacao" class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-brand-main hover:bg-white/80 transition-all duration-200 flex items-center gap-1.5 active:scale-95" title="Planejamento, instrumentos, aplicação de escalas, inventários e análise integrada">
+      <i class="fa-solid fa-clipboard-check text-xs"></i> <span>4. Avaliação Psicológica</span>
+    </button>
+    <!-- 5. Plano Terapêutico -->
+    <button onclick="alternarAbaProntuario('plano-terapeutico')" id="subnav-plano-terapeutico" class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-brand-main hover:bg-white/80 transition-all duration-200 flex items-center gap-1.5 active:scale-95" title="Demandas, objetivos, metas, indicadores e estratégias de intervenção">
+      <i class="fa-solid fa-bullseye text-xs"></i> <span>5. Plano Terapêutico</span>
+    </button>
+    <!-- 6. Análise Funcional -->
+    <button onclick="alternarAbaProntuario('analise-funcional')" id="subnav-analise-funcional" class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-brand-main hover:bg-white/80 transition-all duration-200 flex items-center gap-1.5 active:scale-95" title="Análise molecular (ABC), molar, variáveis contextuais e hipóteses funcionais">
+      <i class="fa-solid fa-diagram-project text-xs"></i> <span>6. Análise Funcional</span>
+    </button>
+    <!-- 7. Orientação Familiar -->
+    <button onclick="alternarAbaProntuario('orientacao-familiar')" id="subnav-orientacao-familiar" class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-brand-main hover:bg-white/80 transition-all duration-200 flex items-center gap-1.5 active:scale-95" title="Orientações parentais, manejo de comportamentos e reuniões familiares">
+      <i class="fa-solid fa-people-roof text-xs"></i> <span>7. Orientação Familiar</span>
+    </button>
+    <!-- 8. Planejamento e Supervisão -->
+    <button onclick="alternarAbaProntuario('planejamento')" id="subnav-planejamento" class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-brand-main hover:bg-white/80 transition-all duration-200 flex items-center gap-1.5 active:scale-95" title="Planejamento de sessões, dúvidas, discussões de caso e hipóteses clínicas">
+      <i class="fa-solid fa-compass-drafting text-xs"></i> <span>8. Planejamento e Supervisão</span>
+    </button>
+    <!-- 9. Documentos -->
+    <button onclick="alternarAbaProntuario('documentos')" id="subnav-documentos" class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-brand-main hover:bg-white/80 transition-all duration-200 flex items-center gap-1.5 active:scale-95" title="Declarações, atestados, relatórios, laudos, pareceres e termos">
+      <i class="fa-solid fa-folder-closed text-xs"></i> <span>9. Documentos</span>
+    </button>
+    <!-- 10. Encerramento -->
+    <button onclick="alternarAbaProntuario('encerramento')" id="subnav-encerramento" class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-brand-main hover:bg-white/80 transition-all duration-200 flex items-center gap-1.5 active:scale-95" title="Alta, interrupção, encaminhamentos e transferência do atendimento">
+      <i class="fa-solid fa-box-archive text-xs"></i> <span>10. Encerramento</span>
+    </button>
+  </div>
+
+  <!-- CONTEÚDO DOS 10 MÓDULOS DO PRONTUÁRIO -->
+
+  <!-- 1. ABA ANAMNESE -->
+  <div id="aba-conteudo-anamnese" class="prontuario-aba-pane space-y-6">
+    <div class="flex justify-end space-x-2 bg-white p-4 rounded-2xl border border-rose-100 card-shadow">
+      <button onclick="salvarRascunhoAnamnese()" class="bg-white text-gray-700 border border-gray-300 font-semibold px-4 py-2 rounded-xl text-xs hover:bg-gray-50 transition-all flex items-center">
+        <i class="fa-solid fa-floppy-disk mr-1.5 text-brand-main"></i> Salvar Rascunho
+      </button>
+      <button onclick="concluirAnamnese()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-2 rounded-xl text-xs shadow transition-all flex items-center">
+        <i class="fa-solid fa-check-circle mr-1.5"></i> Concluir Anamnese
+      </button>
+      <button onclick="gerarPDFAnamnese()" class="bg-brand-main hover:bg-brand-alt text-white font-bold px-4 py-2 rounded-xl text-xs shadow transition-all flex items-center">
+        <i class="fa-solid fa-file-pdf mr-1.5"></i> Gerar PDF da Anamnese
+      </button>
+    </div>
+    <div id="container-formulario-anamnese" class="bg-white p-6 rounded-2xl border border-rose-100 card-shadow space-y-4">
+      <h3 class="font-bold text-brand-dark text-sm">Formulário de Anamnese Psicológica</h3>
+      <textarea rows="8" class="w-full p-3 text-xs border border-rose-200 rounded-xl outline-none" placeholder="Histórico de desenvolvimento, queixa principal, antecedentes..."></textarea>
+    </div>
+  </div>
+
+  <!-- 2. ABA EVOLUÇÕES -->
+  <div id="aba-conteudo-evolucoes" class="prontuario-aba-pane hidden space-y-6">
+    <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow flex justify-between items-center">
+      <div>
+        <h3 class="text-md font-bold text-brand-dark flex items-center">
+          <i class="fa-solid fa-file-waveform text-brand-main mr-2"></i> Histórico de Evoluções Clínicas
+        </h3>
+        <p class="text-xs text-gray-500 mt-0.5">Registros cronológicos e evoluções de atendimento do paciente.</p>
+      </div>
+      <button onclick="abrirModalEvolucao()" class="bg-brand-main text-white font-bold px-4 py-2.5 rounded-xl text-xs shadow hover:bg-brand-alt transition-all flex items-center">
+        <i class="fa-solid fa-plus mr-1.5"></i> Fazer Evolução
+      </button>
+    </div>
+    <div id="lista-evolucoes-paciente" class="space-y-4">
+      <div class="p-6 bg-white rounded-2xl border border-rose-100 card-shadow text-xs text-gray-500 text-center">Nenhuma evolução registrada.</div>
+    </div>
+  </div>
+
+  <!-- 3. ABA FOLHAS DE SESSÃO -->
+  <div id="aba-conteudo-anotacoes" class="prontuario-aba-pane hidden space-y-6">
+    <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
+      <div class="flex justify-between items-center border-b border-rose-100 pb-2">
+        <h3 class="text-md font-bold text-brand-dark flex items-center">
+          <i class="fa-solid fa-pen-to-square text-brand-main mr-2"></i> Folha de Anotações da Sessão
+        </h3>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-xs">
         <div>
-          <h2 class="text-2xl font-bold text-brand-dark tracking-tight">Prontuários e Pacientes</h2>
-          <p class="text-sm text-gray-500 mt-0.5">Cadastre e acompanhe o histórico, anamneses, evoluções e planejamentos dos clientes.</p>
+          <label class="block font-semibold text-gray-700 mb-1">Data da Sessão *</label>
+          <input type="date" id="nota-sessao-data" class="w-full px-3 py-2 text-sm border border-gray-200 rounded-xl outline-none">
         </div>
-        <button 
-          onclick="abrirModalNovoPaciente()" 
-          class="bg-brand-main text-white px-4 py-2.5 rounded-xl font-medium text-sm shadow-md hover:bg-brand-alt active:scale-95 transition-all flex items-center justify-center gap-2 flex-shrink-0">
-          <i class="fa-solid fa-user-plus text-xs"></i> 
-          <span>Cadastrar Paciente</span>
-        </button>
-      </div>
-
-      <!-- Barra de Pesquisa Rápida -->
-      <div class="bg-white p-4 rounded-xl border border-rose-100 card-shadow flex items-center gap-3">
-        <div class="text-gray-400 pl-1">
-          <i class="fa-solid fa-search"></i>
-        </div>
-        <input 
-          type="text" 
-          id="input-busca-paciente" 
-          oninput="filtrarPacientes(this.value)"
-          placeholder="Pesquisar paciente por nome..." 
-          class="w-full text-sm bg-transparent border-none focus:outline-none text-brand-dark placeholder-gray-400">
-      </div>
-
-      <!-- Grid de Cards de Pacientes (Preenchido dinamicamente via JS) -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="grid-pacientes">
-        <!-- Estado vazio padrão (caso não haja pacientes cadastrados) -->
-        <div class="col-span-full bg-white rounded-xl p-8 text-center border border-dashed border-rose-200">
-          <div class="w-12 h-12 bg-rose-50 text-brand-main rounded-full flex items-center justify-center mx-auto mb-3 text-xl">
-            <i class="fa-solid fa-folder-open"></i>
-          </div>
-          <h3 class="text-base font-semibold text-brand-dark">Nenhum paciente cadastrado</h3>
-          <p class="text-xs text-gray-500 mt-1">Cadastre um paciente para visualizar as informações do prontuário.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- VIEW 2.1: DETALHE DO PRONTUÁRIO -->
-    <section id="view-prontuario-detalhe" class="tab-content hidden space-y-6">
-      <!-- Cabeçalho do Prontuário -->
-      <div class="bg-white rounded-2xl p-5 border border-rose-100 card-shadow flex flex-wrap justify-between items-center gap-4">
-        <div class="flex items-center gap-3.5">
-          <!-- Botão Voltar com micro-interação -->
-          <button 
-            onclick="switchTab('pacientes')" 
-            class="p-2.5 bg-rose-50 text-brand-main rounded-xl hover:bg-rose-100 active:scale-95 transition-all flex items-center justify-center"
-            title="Voltar para a lista de pacientes">
-            <i class="fa-solid fa-arrow-left text-sm"></i>
-          </button>
-          
-          <div>
-            <!-- Badges de Status e Faixa Etária -->
-            <div class="flex items-center gap-2">
-              <span id="prontuario-badge-faixa" class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-rose-100 text-brand-main tracking-wide uppercase">
-                Faixa Etária
-              </span>
-              <span id="prontuario-status-ficha" class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 tracking-wide uppercase">
-                Ativo
-              </span>
-            </div>
-
-            <!-- Nome e Informações do Paciente -->
-            <h2 class="text-xl font-bold text-brand-dark mt-1 tracking-tight" id="prontuario-nome-paciente">
-              Nome do Paciente
-            </h2>
-            <p class="text-xs text-gray-500 mt-0.5" id="prontuario-sub-info">
-              Data de Nascimento: --/--/---- • Idade: -- anos
-            </p>
-          </div>
-        </div>
-        <div class="flex flex-wrap items-center gap-2">
-          <button onclick="adicionarSessaoAgendaPacienteAtual()" class="bg-brand-main hover:bg-brand-alt text-white font-bold py-2 px-3.5 rounded-xl text-xs transition-all shadow flex items-center gap-1.5">
-            <i class="fa-solid fa-calendar-plus"></i> Agendar Sessão
-          </button>
-          <button onclick="abrirModalEditarPacienteAtual()" class="bg-rose-50 text-brand-main border border-rose-200 hover:bg-rose-100 font-bold py-2 px-3 rounded-xl text-xs transition-all shadow-xs flex items-center gap-1.5" title="Editar Paciente">
-            <i class="fa-solid fa-pen-to-square"></i> Editar
-          </button>
-          <button onclick="inativarPacienteAtual()" class="bg-amber-50 text-amber-700 border border-amber-200 hover:bg-amber-100 font-bold py-2 px-3 rounded-xl text-xs transition-all shadow-xs flex items-center gap-1.5" title="Inativar Paciente">
-            <i class="fa-solid fa-user-slash"></i> Inativar
-          </button>
-          <button onclick="excluirPacienteAtual()" class="bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 font-bold py-2 px-3 rounded-xl text-xs transition-all shadow-xs flex items-center gap-1.5" title="Excluir Paciente">
-            <i class="fa-solid fa-trash"></i> Excluir
-          </button>
-        </div>
-      </div>
-        
-      <!-- NAVEGAÇÃO INTERNA DO PRONTUÁRIO -->
-      <div class="flex flex-wrap gap-1.5 bg-rose-50/50 p-2 rounded-xl border border-rose-100 shadow-xs" aria-label="Navegação do Prontuário">
-        <button 
-          onclick="alternarAbaProntuario('anamnese')" 
-          id="subnav-anamnese" 
-          class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-white text-brand-main shadow-xs transition-all duration-200 flex items-center gap-1.5 active:scale-95"
-          title="Anamnese de adultos, crianças, responsáveis e histórico completo">
-          <i class="fa-solid fa-notes-medical text-xs"></i> 
-          <span>Anamnese</span>
-        </button>
-      </div>
-    </section>
-
-
-        <!-- 2. Evoluções -->
-        <button 
-          onclick="alternarAbaProntuario('evolucoes')" 
-          id="subnav-evolucoes" 
-          class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-brand-main hover:bg-white/80 transition-all duration-200 flex items-center gap-1.5 active:scale-95"
-          title="Evoluções das sessões, faltas, atendimentos com responsáveis e devolutivas">
-          <i class="fa-solid fa-file-waveform text-xs"></i> 
-          <span>Evoluções</span>
-        </button>
-
-        <!-- 3. Folhas de Sessão -->
-        <button 
-          onclick="alternarAbaProntuario('anotacoes')" 
-          id="subnav-anotacoes" 
-          class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-brand-main hover:bg-white/80 transition-all duration-200 flex items-center gap-1.5 active:scale-95"
-          title="Anotações clínicas, relatos, intervenções e acompanhamento de tarefas">
-          <i class="fa-solid fa-book-open-reader text-xs"></i> 
-          <span>Folhas de Sessão</span>
-        </button>
-
-        <!-- 4. Avaliação Psicológica -->
-        <button 
-          onclick="alternarAbaProntuario('avaliacao')" 
-          id="subnav-avaliacao" 
-          class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-brand-main hover:bg-white/80 transition-all duration-200 flex items-center gap-1.5 active:scale-95"
-          title="Planejamento, instrumentos, aplicação de escalas, inventários e análise integrada">
-          <i class="fa-solid fa-clipboard-check text-xs"></i> 
-          <span>Avaliação Psicológica</span>
-        </button>
-
-        <!-- 5. Plano Terapêutico -->
-        <button 
-          onclick="alternarAbaProntuario('plano-terapeutico')" 
-          id="subnav-plano-terapeutico" 
-          class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-brand-main hover:bg-white/80 transition-all duration-200 flex items-center gap-1.5 active:scale-95"
-          title="Demandas, objetivos, metas, indicadores e estratégias de intervenção">
-          <i class="fa-solid fa-bullseye text-xs"></i> 
-          <span>Plano Terapêutico</span>
-        </button>
-
-        <!-- 6. Análise Funcional -->
-        <button 
-          onclick="alternarAbaProntuario('analise-funcional')" 
-          id="subnav-analise-funcional" 
-          class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-brand-main hover:bg-white/80 transition-all duration-200 flex items-center gap-1.5 active:scale-95"
-          title="Análise molecular (ABC), molar, variáveis contextuais e hipóteses funcionais">
-          <i class="fa-solid fa-diagram-project text-xs"></i> 
-          <span>Análise Funcional</span>
-        </button>
-
-        <!-- 7. Orientação Familiar -->
-        <button 
-          onclick="alternarAbaProntuario('orientacao-familiar')" 
-          id="subnav-orientacao-familiar" 
-          class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-brand-main hover:bg-white/80 transition-all duration-200 flex items-center gap-1.5 active:scale-95"
-          title="Orientações parentais, manejo de comportamentos e reuniões familiares">
-          <i class="fa-solid fa-people-roof text-xs"></i> 
-          <span>Orientação Familiar</span>
-        </button>
-
-        <!-- 8. Planejamento & Supervisão -->
-        <button 
-          onclick="alternarAbaProntuario('planejamento')" 
-          id="subnav-planejamento" 
-          class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-brand-main hover:bg-white/80 transition-all duration-200 flex items-center gap-1.5 active:scale-95"
-          title="Planejamento de sessões, dúvidas, discussões de caso e hipóteses clínicas">
-          <i class="fa-solid fa-compass-drafting text-xs"></i> 
-          <span>Planejamento & Supervisão</span>
-        </button>
-
-        <!-- 9. Documentos Psicológicos -->
-        <button 
-          onclick="alternarAbaProntuario('documentos')" 
-          id="subnav-documentos" 
-          class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-brand-main hover:bg-white/80 transition-all duration-200 flex items-center gap-1.5 active:scale-95"
-          title="Declarações, atestados, relatórios, laudos, pareceres e termos">
-          <i class="fa-solid fa-folder-closed text-xs"></i> 
-          <span>Documentos</span>
-        </button>
-
-        <!-- 10. Encerramento e Histórico -->
-        <button 
-          onclick="alternarAbaProntuario('encerramento')" 
-          id="subnav-encerramento" 
-          class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-brand-main hover:bg-white/80 transition-all duration-200 flex items-center gap-1.5 active:scale-95"
-          title="Alta, interrupção, encaminhamentos e transferência do atendimento">
-          <i class="fa-solid fa-box-archive text-xs"></i> 
-          <span>Encerramento</span>
-        </button>
-
-      </div>
-
-      <!-- ABA 1: ANAMNESE PSICOLÓGICA -->
-      <div id="aba-conteudo-anamnese" class="space-y-6">
-        <div class="flex justify-end space-x-2 bg-white p-4 rounded-2xl border border-rose-100 card-shadow">
-          <button onclick="salvarRascunhoAnamnese()" class="bg-white text-gray-700 border border-gray-300 font-semibold px-4 py-2 rounded-xl text-xs hover:bg-gray-50 transition-all flex items-center">
-            <i class="fa-solid fa-floppy-disk mr-1.5 text-brand-main"></i> Salvar Rascunho
-          </button>
-          <button onclick="concluirAnamnese()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-2 rounded-xl text-xs shadow transition-all flex items-center">
-            <i class="fa-solid fa-check-circle mr-1.5"></i> Concluir Anamnese
-          </button>
-          <button onclick="gerarPDFAnamnese()" class="bg-brand-main hover:bg-brand-alt text-white font-bold px-4 py-2 rounded-xl text-xs shadow transition-all flex items-center">
-            <i class="fa-solid fa-file-pdf mr-1.5"></i> Gerar PDF da Anamnese
-          </button>
-        </div>
-
-        <div id="container-formulario-anamnese">
-          <!-- Inserido dinamicamente pelo JS -->
-        </div>
-      </div>
-
-      <!-- ABA 2: EVOLUÇÕES CLÍNICAS -->
-      <div id="aba-conteudo-evolucoes" class="hidden space-y-6">
-        <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow flex justify-between items-center">
-          <div>
-            <h3 class="text-md font-bold text-brand-dark flex items-center">
-              <i class="fa-solid fa-file-waveform text-brand-main mr-2"></i> Histórico de Evoluções Clínicas
-            </h3>
-            <p class="text-xs text-gray-500 mt-0.5">Registros cronológicos e evoluções de atendimento do paciente.</p>
-          </div>
-          <button onclick="abrirModalEvolucao()" class="bg-brand-main text-white font-bold px-4 py-2.5 rounded-xl text-xs shadow hover:bg-brand-alt transition-all flex items-center">
-            <i class="fa-solid fa-plus mr-1.5"></i> Fazer Evolução
-          </button>
-        </div>
-
-        <div id="lista-evolucoes-paciente" class="space-y-4">
-          <!-- Renderizado via JS -->
-        </div>
-      </div>
-
-      <!-- ABA 3: FOLHA DE ANOTAÇÕES POR SESSÃO & ANEXOS -->
-      <div id="aba-conteudo-anotacoes" class="hidden space-y-6">
-        <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
-          <div class="flex justify-between items-center border-b border-rose-100 pb-2">
-            <h3 class="text-md font-bold text-brand-dark flex items-center">
-              <i class="fa-solid fa-pen-to-square text-brand-main mr-2"></i> Folha de Anotações da Sessão
-            </h3>
-            <button onclick="abrirModalEvolucao()" class="bg-brand-alt text-white font-semibold px-3 py-1.5 rounded-xl text-xs shadow transition-all">
-              <i class="fa-solid fa-file-waveform mr-1"></i> Fazer Evolução desta Sessão
-            </button>
-          </div>
-          
-          <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-xs">
-            <div>
-              <label class="block font-semibold text-gray-700 mb-1">Data da Sessão *</label>
-              <input type="date" id="nota-sessao-data" class="w-full px-3 py-2 text-sm border border-gray-200 rounded-xl outline-none">
-            </div>
-            <div>
-              <label class="block font-semibold text-gray-700 mb-1">Horário</label>
-              <input type="time" id="nota-sessao-horario" class="w-full px-3 py-2 text-sm border border-gray-200 rounded-xl outline-none">
-            </div>
-            <div>
-              <label class="block font-semibold text-gray-700 mb-1">Nº da Sessão</label>
-              <input type="text" id="nota-sessao-numero" class="w-full px-3 py-2 text-sm border border-gray-200 rounded-xl outline-none" placeholder="Ex: 05">
-            </div>
-            <div>
-              <label class="block font-semibold text-gray-700 mb-1">Anexar Arquivo (PDF, JPG, PNG)</label>
-              <input type="file" id="nota-sessao-arquivo" accept=".pdf,.jpg,.jpeg,.png" class="w-full px-2 py-1 text-xs border border-gray-200 rounded-xl bg-gray-50 outline-none">
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-            <div>
-              <label class="block font-semibold text-gray-700 mb-1">Anotações Livres da Sessão</label>
-              <textarea id="nota-sessao-texto" rows="4" class="w-full p-3 border border-gray-200 rounded-xl outline-none" placeholder="Observações clínicas individualizadas..."></textarea>
-            </div>
-            <div>
-              <label class="block font-semibold text-gray-700 mb-1">Pontos Importantes para o Próximo Atendimento</label>
-              <textarea id="nota-sessao-proximo" rows="4" class="w-full p-3 border border-gray-200 rounded-xl outline-none" placeholder="Tarefas, combinados ou alertas..."></textarea>
-            </div>
-          </div>
-
-          <div class="flex justify-end space-x-2">
-            <button onclick="salvarFolhaSessao('Rascunho')" class="bg-white text-gray-700 border border-gray-300 font-semibold px-4 py-2 rounded-xl text-xs hover:bg-gray-50 transition-all">
-              Salvar como Rascunho
-            </button>
-            <button onclick="salvarFolhaSessao('Concluída')" class="bg-brand-main text-white font-bold px-5 py-2 rounded-xl text-xs shadow hover:bg-brand-alt transition-all">
-              <i class="fa-solid fa-floppy-disk mr-1"></i> Salvar e Concluir Folha
-            </button>
-          </div>
-        </div>
-
-        <!-- HISTÓRICO DE FOLHAS DE SESSÃO -->
-        <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
-          <h3 class="text-md font-bold text-brand-dark border-b border-rose-100 pb-2 flex items-center">
-            <i class="fa-solid fa-clock-rotate-left text-brand-main mr-2"></i> Histórico Cronológico de Folhas de Sessão
-          </h3>
-
-          <div id="lista-folhas-sessao" class="space-y-3">
-            <!-- Renderizado via JS -->
-          </div>
-        </div>
-      </div>
-
-      <!-- ABA 4: PLANEJAMENTO E SUPERVISÃO DAS PRÓXIMAS SESSÕES -->
-      <div id="aba-conteudo-planejamento" class="hidden space-y-6">
-        <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow flex justify-between items-center">
-          <div>
-            <h3 class="text-md font-bold text-brand-dark flex items-center">
-              <i class="fa-solid fa-compass-drafting text-brand-main mr-2"></i> Planejamento Clínico e Supervisão
-            </h3>
-            <p class="text-xs text-gray-500 mt-0.5">Organize objetivos, estratégias futuras e registros de supervisão clínica.</p>
-          </div>
-          <button onclick="abrirModalPlanejamento()" class="bg-brand-main text-white font-bold px-4 py-2.5 rounded-xl text-xs shadow hover:bg-brand-alt transition-all flex items-center">
-            <i class="fa-solid fa-plus mr-1.5"></i> Adicionar Novo Planejamento
-          </button>
-        </div>
-
-        <div id="lista-planejamentos-paciente" class="space-y-4">
-          <!-- Renderizado via JS -->
-        </div>
-      </div>
-    </section>
-
-    <!-- VIEW 3: FORMULÁRIO DE ANÁLISE FUNCIONAL -->
-    <section id="view-analise" class="tab-content hidden space-y-6">
-      <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <div class="flex items-center space-x-2">
-            <span class="bg-rose-100 text-brand-main text-xs font-bold px-2.5 py-0.5 rounded-full">Análise Comportamental</span>
-            <span class="text-xs text-gray-400">• Modelo Tríplice Contingência</span>
-          </div>
-          <h2 class="text-2xl font-bold text-brand-dark mt-1">Análise Funcional Molecular</h2>
-          <p class="text-xs text-gray-500 mt-0.5">Preencha os termos operacionais com rigor funcional e linguagem técnica.</p>
+          <label class="block font-semibold text-gray-700 mb-1">Horário</label>
+          <input type="time" id="nota-sessao-horario" class="w-full px-3 py-2 text-sm border border-gray-200 rounded-xl outline-none">
         </div>
-        <div class="flex flex-wrap gap-2">
-          <button onclick="carregarExemploModelo()" class="bg-rose-50 text-brand-main border border-rose-200 px-3 py-2 rounded-xl text-xs font-semibold hover:bg-rose-100 transition-all">
-            <i class="fa-solid fa-lightbulb mr-1"></i> Carregar Exemplo Técnico
-          </button>
-          <button onclick="gerarEExibirPDF()" class="bg-brand-main text-white px-5 py-2 rounded-xl text-xs font-bold shadow-md hover:bg-brand-alt transition-all flex items-center">
-            <i class="fa-solid fa-eye mr-2"></i> Pré-visualizar & Exportar PDF
-          </button>
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Nº da Sessão</label>
+          <input type="text" id="nota-sessao-numero" class="w-full px-3 py-2 text-sm border border-gray-200 rounded-xl outline-none" placeholder="Ex: 05">
+        </div>
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Anexar Arquivo (PDF, JPG, PNG)</label>
+          <input type="file" id="nota-sessao-arquivo" accept=".pdf,.jpg,.jpeg,.png" class="w-full px-2 py-1 text-xs border border-gray-200 rounded-xl bg-gray-50 outline-none">
+        </div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Anotações Livres da Sessão</label>
+          <textarea id="nota-sessao-texto" rows="4" class="w-full p-3 border border-gray-200 rounded-xl outline-none" placeholder="Observações clínicas individualizadas..."></textarea>
+        </div>
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Pontos Importantes para o Próximo Atendimento</label>
+          <textarea id="nota-sessao-proximo" rows="4" class="w-full p-3 border border-gray-200 rounded-xl outline-none" placeholder="Tarefas, combinados ou alertas..."></textarea>
+        </div>
+      </div>
+      <div class="flex justify-end space-x-2">
+        <button onclick="salvarFolhaSessao('Concluída')" class="bg-brand-main text-white font-bold px-5 py-2 rounded-xl text-xs shadow hover:bg-brand-alt transition-all">
+          <i class="fa-solid fa-floppy-disk mr-1"></i> Salvar Folha de Sessão
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. ABA AVALIAÇÃO PSICOLÓGICA -->
+  <div id="aba-conteudo-avaliacao" class="prontuario-aba-pane hidden space-y-6">
+    <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
+      <h3 class="text-md font-bold text-brand-dark border-b border-rose-100 pb-2 flex items-center">
+        <i class="fa-solid fa-clipboard-check text-brand-main mr-2"></i> Avaliação Psicológica & Instrumentos
+      </h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Procedimentos e Instrumentos Utilizados</label>
+          <textarea rows="4" class="w-full p-3 border border-gray-200 rounded-xl outline-none" placeholder="Testes, escalas e inventários aplicados..."></textarea>
+        </div>
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Resultados e Análise Integrada</label>
+          <textarea rows="4" class="w-full p-3 border border-gray-200 rounded-xl outline-none" placeholder="Análise dos resultados e conclusões diagnósticas/funcionais..."></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. ABA PLANO TERAPÊUTICO -->
+  <div id="aba-conteudo-plano-terapeutico" class="prontuario-aba-pane hidden space-y-6">
+    <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
+      <h3 class="text-md font-bold text-brand-dark border-b border-rose-100 pb-2 flex items-center">
+        <i class="fa-solid fa-bullseye text-brand-main mr-2"></i> Plano Terapêutico e Metas
+      </h3>
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Objetivos e Metas Terapêuticas</label>
+          <textarea rows="4" class="w-full p-3 border border-gray-200 rounded-xl outline-none" placeholder="Metas de curto e longo prazo..."></textarea>
+        </div>
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Estratégias de Intervenção e Indicadores de Progresso</label>
+          <textarea rows="4" class="w-full p-3 border border-gray-200 rounded-xl outline-none" placeholder="Estratégias adotadas e formas de mensuração..."></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. ABA ANÁLISE FUNCIONAL -->
+  <div id="aba-conteudo-analise-funcional" class="prontuario-aba-pane hidden space-y-6">
+    <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
+      <h3 class="text-md font-bold text-brand-dark border-b border-rose-100 pb-2 flex items-center">
+        <i class="fa-solid fa-diagram-project text-brand-main mr-2"></i> Análise Funcional (Molecular e Molar)
+      </h3>
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Relações Moleculares (Tríplice Contingência - ABC)</label>
+          <textarea rows="4" class="w-full p-3 border border-gray-200 rounded-xl outline-none" placeholder="Antecedente, Comportamento e Consequência..."></textarea>
+        </div>
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Variáveis Molares e Contextuais</label>
+          <textarea rows="4" class="w-full p-3 border border-gray-200 rounded-xl outline-none" placeholder="Histórico de reforçamento, regras e contexto ambiental amplo..."></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. ABA ORIENTAÇÃO FAMILIAR -->
+  <div id="aba-conteudo-orientacao-familiar" class="prontuario-aba-pane hidden space-y-6">
+    <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
+      <h3 class="text-md font-bold text-brand-dark border-b border-rose-100 pb-2 flex items-center">
+        <i class="fa-solid fa-people-roof text-brand-main mr-2"></i> Orientação Familiar e Reuniões
+      </h3>
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Participantes e Demandas Apresentadas</label>
+          <input type="text" class="w-full p-2.5 border border-gray-200 rounded-xl outline-none" placeholder="Ex: Pais, responsáveis legais...">
+        </div>
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Orientações Fornecidas e Combinados</label>
+          <textarea rows="4" class="w-full p-3 border border-gray-200 rounded-xl outline-none" placeholder="Manejo comportamental, orientações parentais..."></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8. ABA PLANEJAMENTO E SUPERVISÃO (SEPARADOS EM DUAS SEÇÕES) -->
+  <div id="aba-conteudo-planejamento" class="prontuario-aba-pane hidden space-y-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Seção 1: Planejamento de Sessão -->
+      <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-3">
+        <h3 class="text-md font-bold text-brand-dark border-b border-rose-100 pb-2 flex items-center gap-2">
+          <i class="fa-solid fa-compass-drafting text-brand-main"></i> Planejamento de Sessão
+        </h3>
+        <p class="text-xs text-gray-500">Objetivos, perguntas clínicas e atividades previstas para o próximo atendimento.</p>
+        <div class="space-y-3 text-xs">
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Objetivos e Focos da Próxima Sessão</label>
+            <textarea rows="4" class="w-full p-3 border border-gray-200 rounded-xl outline-none" placeholder="Temas prioritários..."></textarea>
+          </div>
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Estratégias e Atividades Previstas</label>
+            <textarea rows="3" class="w-full p-3 border border-gray-200 rounded-xl outline-none" placeholder="Técnicas, materiais ou recursos..."></textarea>
+          </div>
         </div>
       </div>
 
-      <form id="form-analise" onsubmit="event.preventDefault(); gerarEExibirPDF();" class="space-y-6">
-        <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow">
-          <h3 class="text-md font-bold text-brand-dark mb-4 border-b border-rose-100 pb-2 flex items-center">
-            <i class="fa-solid fa-id-card text-brand-main mr-2"></i> 1. Identificação do Atendimento
-          </h3>
-          <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div>
-              <label class="block text-xs font-semibold text-gray-700 mb-1">Nome Completo do Paciente *</label>
-              <input type="text" id="campo-paciente" required class="w-full px-3 py-2 text-sm border border-gray-200 rounded-xl outline-none" placeholder="Ex: Lucas Mendes Ribeiro">
-            </div>
-            <div>
-              <label class="block text-xs font-semibold text-gray-700 mb-1">Tema / Foco da Análise *</label>
-              <input type="text" id="campo-tema" required class="w-full px-3 py-2 text-sm border border-gray-200 rounded-xl outline-none" placeholder="Ex: Dificuldade de impor limites interpessoais">
-            </div>
-            <div>
-              <label class="block text-xs font-semibold text-gray-700 mb-1">Data da Sessão *</label>
-              <input type="date" id="campo-data" required class="w-full px-3 py-2 text-sm border border-gray-200 rounded-xl outline-none">
-            </div>
-            <div>
-              <label class="block text-xs font-semibold text-gray-700 mb-1">Status do Registro</label>
-              <select id="campo-status" class="w-full px-3 py-2 text-sm border border-gray-200 rounded-xl outline-none">
-                <option value="Concluída">Concluída</option>
-                <option value="Em Andamento">Em Andamento</option>
-                <option value="Revisão Interpsicólogos">Revisão Interpsicólogos</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow">
-          <h3 class="text-md font-bold text-brand-dark mb-2 flex items-center">
-            <i class="fa-solid fa-bullseye text-brand-main mr-2"></i> 2. Comportamento-Alvo (Topografia Descritiva)
-          </h3>
-          <p class="text-xs text-gray-500 mb-3">Descreva o comportamento operacionalmente, livre de inferências mentalistas.</p>
-          <textarea id="campo-comportamento-alvo" rows="3" required class="w-full p-3 text-sm border border-gray-200 rounded-xl outline-none" placeholder="Ex: Dizer 'sim' imediatamente a solicitações do irmão..."></textarea>
-        </div>
-
-        <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow">
-          <h3 class="text-md font-bold text-brand-dark mb-4 border-b border-rose-100 pb-2 flex items-center">
-            <i class="fa-solid fa-layer-group text-brand-main mr-2"></i> 3. Tríplice Contingência e Efeitos (ARCE)
-          </h3>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div class="bg-rose-50/50 p-4 rounded-xl border border-rose-100 space-y-3">
-              <span class="font-bold text-brand-dark text-sm border-b pb-1 block">ANTECEDENTE (A)</span>
-              <input type="text" id="campo-antecedente-tipo" class="w-full px-2.5 py-1.5 text-xs border rounded-lg" placeholder="Sᴰ / SΔ">
-              <textarea id="campo-antecedente-itens" rows="6" class="w-full p-2.5 text-xs border rounded-lg outline-none" placeholder="Itens um por linha"></textarea>
-            </div>
-
-            <div class="bg-rose-50/50 p-4 rounded-xl border border-rose-100 space-y-3">
-              <span class="font-bold text-brand-dark text-sm border-b pb-1 block">RESPOSTA (R)</span>
-              <input type="text" id="campo-resposta-tipo" class="w-full px-2.5 py-1.5 text-xs border rounded-lg" placeholder="Classe da Resposta">
-              <textarea id="campo-resposta-itens" rows="6" class="w-full p-2.5 text-xs border rounded-lg outline-none" placeholder="Itens um por linha"></textarea>
-            </div>
-
-            <div class="bg-rose-50/50 p-4 rounded-xl border border-rose-100 space-y-3">
-              <span class="font-bold text-brand-dark text-sm border-b pb-1 block">CONSEQUÊNCIA (C)</span>
-              <input type="text" id="campo-consequencia-tipo" class="w-full px-2.5 py-1.5 text-xs border rounded-lg" placeholder="Temporalidade">
-              <textarea id="campo-consequencia-itens" rows="6" class="w-full p-2.5 text-xs border rounded-lg outline-none" placeholder="Itens um por linha"></textarea>
-            </div>
-
-            <div class="bg-rose-50/50 p-4 rounded-xl border border-rose-100 space-y-3">
-              <span class="font-bold text-brand-dark text-sm border-b pb-1 block">EFEITO / FUTURO (E)</span>
-              <input type="text" id="campo-efeito-imediato" class="w-full px-2.5 py-1.5 text-xs border rounded-lg" placeholder="Efeito Imediato">
-              <select id="campo-probabilidade" class="w-full px-2.5 py-1.5 text-xs border rounded-lg font-bold text-brand-main">
-                <option value="Aumentou (Fortalecimento do Operante)">Aumentou (Fortalecimento)</option>
-                <option value="Diminuiu (Enfraquecimento/Punição)">Diminuiu (Punição)</option>
-                <option value="Mantida em Alta Frequência">Mantida em Alta Frequência</option>
-              </select>
-              <textarea id="campo-efeito-longo" rows="3" class="w-full p-2.5 text-xs border rounded-lg outline-none" placeholder="Impacto longitudinal"></textarea>
-            </div>
-          </div>
-        </div>
-
-        <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
-          <h3 class="text-md font-bold text-brand-dark border-b border-rose-100 pb-2 flex items-center">
-            <i class="fa-solid fa-microscope text-brand-main mr-2"></i> 4. Hipótese de Processo Comportamental
-          </h3>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-              <label class="block text-xs font-semibold text-gray-700 mb-1">Processo Operante Hipotetizado *</label>
-              <select id="campo-processo" class="w-full px-3 py-2 text-sm border border-gray-200 rounded-xl font-semibold text-brand-dark outline-none">
-                <option value="Reforçamento Negativo (R-) - Esquiva/Fuga">Reforçamento Negativo (R-) - Esquiva/Fuga</option>
-                <option value="Reforçamento Positivo (R+) - Atenção/Aprovação">Reforçamento Positivo (R+) - Atenção/Aprovação</option>
-                <option value="Punição Positiva (P+)">Punição Positiva (P+)</option>
-                <option value="Punição Negativa (P-)">Punição Negativa (P-)</option>
-                <option value="Extinção Operante">Extinção Operante</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-xs font-semibold text-gray-700 mb-1">Grau de Confiança Clínica</label>
-              <select id="campo-confianca" class="w-full px-3 py-2 text-sm border border-gray-200 rounded-xl outline-none">
-                <option value="Alto (Evidências Consistentes em Múltiplos Relatos)">Alto (Evidências Consistentes)</option>
-                <option value="Médio (Necessita mais registros em diário de campo)">Médio (Necessita validação)</option>
-                <option value="Hipotético Inicial (Primeira Formulação)">Hipotético Inicial</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-xs font-semibold text-gray-700 mb-1">Evidências de Suporte</label>
-              <input type="text" id="campo-evidencias" class="w-full px-3 py-2 text-sm border border-gray-200 rounded-xl outline-none" placeholder="Ex: Relato de alívio imediato">
-            </div>
-          </div>
-        </div>
-
-        <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow grid grid-cols-1 md:grid-cols-2 gap-4">
+      <!-- Seção 2: Supervisão Clínica -->
+      <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-3">
+        <h3 class="text-md font-bold text-brand-dark border-b border-rose-100 pb-2 flex items-center gap-2">
+          <i class="fa-solid fa-user-shield text-brand-main"></i> Supervisão Clínica
+        </h3>
+        <p class="text-xs text-gray-500">Dúvidas técnicas, hipóteses e orientações recebidas em supervisão.</p>
+        <div class="space-y-3 text-xs">
           <div>
-            <h3 class="text-xs font-bold text-brand-dark uppercase tracking-wider mb-2">Intervenções e Combinados Terapêuticos</h3>
-            <textarea id="campo-intervencao" rows="4" class="w-full p-3 text-xs border border-gray-200 rounded-xl outline-none"></textarea>
+            <label class="block font-semibold text-gray-700 mb-1">Dúvidas e Casos Levados para Supervisão</label>
+            <textarea rows="4" class="w-full p-3 border border-gray-200 rounded-xl outline-none" placeholder="Dificuldades clínicas ou impasse terapêutico..."></textarea>
           </div>
           <div>
-            <h3 class="text-xs font-bold text-brand-dark uppercase tracking-wider mb-2">Síntese Clínica Breve</h3>
-            <textarea id="campo-sintese" rows="4" class="w-full p-3 text-xs border border-gray-200 rounded-xl outline-none"></textarea>
+            <label class="block font-semibold text-gray-700 mb-1">Orientações Recebidas e Decisões Clínicas</label>
+            <textarea rows="3" class="w-full p-3 border border-gray-200 rounded-xl outline-none" placeholder="Diretrizes do supervisor e novos rumos..."></textarea>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
 
-        <div class="flex justify-end space-x-3 pt-2">
-          <button type="button" onclick="salvarAnaliseNoProntuario()" class="bg-white text-gray-700 border border-gray-300 font-semibold px-5 py-2.5 rounded-xl text-sm hover:bg-gray-50 transition-all">
-            <i class="fa-solid fa-floppy-disk mr-1.5"></i> Salvar no Prontuário
-          </button>
-          <button type="submit" class="bg-brand-main text-white font-bold px-6 py-2.5 rounded-xl text-sm shadow-md hover:bg-brand-alt transition-all">
-            <i class="fa-solid fa-file-pdf mr-1.5"></i> Gerar Prévia & Exportar PDF
-          </button>
+  <!-- 9. ABA DOCUMENTOS -->
+  <div id="aba-conteudo-documentos" class="prontuario-aba-pane hidden space-y-6">
+    <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
+      <h3 class="text-md font-bold text-brand-dark border-b border-rose-100 pb-2 flex items-center">
+        <i class="fa-solid fa-folder-closed text-brand-main mr-2"></i> Documentos Psicológicos Emitidos
+      </h3>
+      <div class="flex flex-wrap gap-2 text-xs">
+        <button class="bg-rose-50 text-brand-main border border-rose-200 hover:bg-rose-100 font-bold px-3 py-2 rounded-xl transition-all">Emitir Atestado</button>
+        <button class="bg-rose-50 text-brand-main border border-rose-200 hover:bg-rose-100 font-bold px-3 py-2 rounded-xl transition-all">Emitir Declaração</button>
+        <button class="bg-rose-50 text-brand-main border border-rose-200 hover:bg-rose-100 font-bold px-3 py-2 rounded-xl transition-all">Emitir Relatório / Laudo</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 10. ABA ENCERRAMENTO -->
+  <div id="aba-conteudo-encerramento" class="prontuario-aba-pane hidden space-y-6">
+    <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
+      <h3 class="text-md font-bold text-brand-dark border-b border-rose-100 pb-2 flex items-center">
+        <i class="fa-solid fa-box-archive text-brand-main mr-2"></i> Encerramento e Síntese de Acompanhamento
+      </h3>
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Motivo do Encerramento (Alta, Abandono ou Encaminhamento)</label>
+          <input type="text" class="w-full p-2.5 border border-gray-200 rounded-xl outline-none" placeholder="Ex: Alta terapêutica por alcance de metas...">
         </div>
-      </form>
-    </section>
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Síntese dos Ganhos e Encaminhamentos Finais</label>
+          <textarea rows="4" class="w-full p-3 border border-gray-200 rounded-xl outline-none" placeholder="Resumo do processo terapêutico..."></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
+<!-- SCRIPT DE SUPORTE ÀS ABAS DO PRONTUÁRIO -->
+<script>
+  function alternarAbaProntuario(abaNome) {
+    document.querySelectorAll('.prontuario-aba-pane').forEach(el => el.classList.add('hidden'));
+    document.querySelectorAll('[id^="subnav-"]').forEach(btn => {
+      btn.className = "px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-brand-main hover:bg-white/80 transition-all duration-200 flex items-center gap-1.5 active:scale-95";
+    });
 
+    const alvoPane = document.getElementById('aba-conteudo-' + abaNome);
+    if (alvoPane) alvoPane.classList.remove('hidden');
+
+    const alvoBtn = document.getElementById('subnav-' + abaNome);
+    if (alvoBtn) {
+      alvoBtn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold bg-white text-brand-main shadow-xs transition-all duration-200 flex items-center gap-1.5 active:scale-95";
+    }
+  }
+</script>
 
 
 
