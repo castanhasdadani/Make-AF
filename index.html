@@ -816,309 +816,1133 @@
 </body>
 </html>
 
-
-      <!-- VIEW 2: GESTÃO DE PACIENTES E PRONTUÁRIOS -->
-      <section id="view-pacientes" class="tab-content hidden space-y-6">
-        <!-- Cabeçalho com Título e Ação -->
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <h2 class="text-2xl font-bold text-brand-dark tracking-tight">Prontuários e Pacientes</h2>
-            <p class="text-sm text-gray-500 mt-0.5">Cadastre e acompanhe o histórico, anamneses, evoluções e planejamentos dos clientes.</p>
-          </div>
-          <button 
-            onclick="abrirModalNovoPaciente()" 
-            class="bg-brand-main text-white px-4 py-2.5 rounded-xl font-medium text-sm shadow-md hover:bg-brand-alt active:scale-95 transition-all flex items-center justify-center gap-2 flex-shrink-0">
-            <i class="fa-solid fa-user-plus text-xs"></i> 
-            <span>Cadastrar Paciente</span>
-          </button>
-        </div>
-
-        <!-- Barra de Pesquisa Rápida -->
-        <div class="bg-white p-4 rounded-xl border border-rose-100 card-shadow flex items-center gap-3">
-          <div class="text-gray-400 pl-1">
-            <i class="fa-solid fa-search"></i>
-          </div>
-          <input 
-            type="text" 
-            id="input-busca-paciente" 
-            placeholder="Pesquisar paciente por nome..." 
-            class="w-full text-sm bg-transparent border-none focus:outline-none text-brand-dark placeholder-gray-400">
-        </div>
-
-        <!-- Grid de Cards de Pacientes (Preenchido dinamicamente via JS) -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="grid-pacientes">
-          <!-- Estado vazio padrão (caso não haja pacientes cadastrados) -->
-          <div class="col-span-full bg-white rounded-xl p-8 text-center border border-dashed border-rose-200">
-            <div class="w-12 h-12 bg-rose-50 text-brand-main rounded-full flex items-center justify-center mx-auto mb-3 text-xl">
-              <i class="fa-solid fa-folder-open"></i>
-            </div>
-            <h3 class="text-base font-semibold text-brand-dark">Nenhum paciente cadastrado</h3>
-            <p class="text-xs text-gray-500 mt-1">Clique em "Cadastrar Paciente" para iniciar o primeiro prontuário.</p>
-          </div>
-        </div>
-      </section>
+<!-- VIEW 2.1: DETALHE DO PRONTUÁRIO INTEGRAL DA CLÍNICA (ESTRUTURA EXPANDIDA) -->
+<section id="view-prontuario-detalhe" class="tab-content hidden space-y-6">
+  
+  <!-- CABEÇALHO PRINCIPAL DO PRONTUÁRIO -->
+  <div class="bg-white rounded-2xl p-5 border border-rose-100 card-shadow flex flex-wrap justify-between items-center gap-4">
+    <div class="flex items-center gap-3.5">
+      <button 
+        onclick="switchTab('pacientes')" 
+        class="p-2.5 bg-rose-50 text-brand-main rounded-xl hover:bg-rose-100 active:scale-95 transition-all flex items-center justify-center"
+        title="Voltar para a lista de pacientes">
+        <i class="fa-solid fa-arrow-left text-sm"></i>
+      </button>
       
-    <!-- VIEW 2.1: DETALHE DO PRONTUÁRIO -->
-    <section id="view-prontuario-detalhe" class="tab-content hidden space-y-6">
-      <!-- Cabeçalho do Prontuário -->
-      <div class="bg-white rounded-2xl p-5 border border-rose-100 card-shadow flex flex-wrap justify-between items-center gap-4">
-        <div class="flex items-center gap-3.5">
-          <!-- Botão Voltar com micro-interação -->
-          <button 
-            onclick="switchTab('pacientes')" 
-            class="p-2.5 bg-rose-50 text-brand-main rounded-xl hover:bg-rose-100 active:scale-95 transition-all flex items-center justify-center"
-            title="Voltar para a lista de pacientes">
-            <i class="fa-solid fa-arrow-left text-sm"></i>
-          </button>
-          
+      <div>
+        <div class="flex items-center gap-2">
+          <span id="prontuario-badge-faixa" class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-rose-100 text-brand-main tracking-wide uppercase">
+            Faixa Etária
+          </span>
+          <span id="prontuario-status-ficha" class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 tracking-wide uppercase">
+            Em Acompanhamento
+          </span>
+          <span id="prontuario-prof-responsavel" class="text-[10px] font-medium px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">
+            Responsável: Dra. Ana Paula (CRP 06/XXXXX)
+          </span>
+        </div>
+
+        <h2 class="text-xl font-bold text-brand-dark mt-1 tracking-tight" id="prontuario-nome-paciente">
+          Nome do Paciente
+        </h2>
+        <p class="text-xs text-gray-500 mt-0.5" id="prontuario-sub-info">
+          Data de Nascimento: --/--/---- • Idade: -- anos • Prontuário ID: #PR-2026-001
+        </p>
+      </div>
+    </div>
+  </div>
+    
+  <!-- NAVEGAÇÃO INTERNA DO PRONTUÁRIO (11 MÓDULOS TÉCNICOS INTEGRADOS) -->
+  <div class="flex flex-wrap gap-1.5 bg-rose-50/50 p-2 rounded-xl border border-rose-100 shadow-xs" aria-label="Navegação do Prontuário">
+    
+    <button onclick="alternarAbaProntuario('anamnese')" id="subnav-anamnese" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-white text-brand-main shadow-xs transition-all duration-200 flex items-center gap-1.5 active:scale-95">
+      <i class="fa-solid fa-notes-medical text-xs"></i> <span>Anamnese</span>
+    </button>
+
+    <button onclick="alternarAbaProntuario('evolucoes')" id="subnav-evolucoes" class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-brand-main hover:bg-white/80 transition-all duration-200 flex items-center gap-1.5 active:scale-95">
+      <i class="fa-solid fa-file-waveform text-xs"></i> <span>1. Evolução</span>
+    </button>
+
+    <button onclick="alternarAbaProntuario('planejamento')" id="subnav-planejamento" class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-brand-main hover:bg-white/80 transition-all duration-200 flex items-center gap-1.5 active:scale-95">
+      <i class="fa-solid fa-compass-drafting text-xs"></i> <span>2. Planejamento</span>
+    </button>
+
+    <button onclick="alternarAbaProntuario('supervisao')" id="subnav-supervisao" class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-brand-main hover:bg-white/80 transition-all duration-200 flex items-center gap-1.5 active:scale-95">
+      <i class="fa-solid fa-user-shield text-xs"></i> <span>3. Supervisão</span>
+    </button>
+
+    <button onclick="alternarAbaProntuario('anotacoes')" id="subnav-anotacoes" class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-brand-main hover:bg-white/80 transition-all duration-200 flex items-center gap-1.5 active:scale-95">
+      <i class="fa-solid fa-book-open-reader text-xs"></i> <span>4. Folha de Sessão</span>
+    </button>
+
+    <button onclick="alternarAbaProntuario('plano-terapeutico')" id="subnav-plano-terapeutico" class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-brand-main hover:bg-white/80 transition-all duration-200 flex items-center gap-1.5 active:scale-95">
+      <i class="fa-solid fa-bullseye text-xs"></i> <span>5. Plano Terapêutico</span>
+    </button>
+
+    <button onclick="alternarAbaProntuario('analise-funcional')" id="subnav-analise-funcional" class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-brand-main hover:bg-white/80 transition-all duration-200 flex items-center gap-1.5 active:scale-95">
+      <i class="fa-solid fa-diagram-project text-xs"></i> <span>6/7. Análises Funcionais</span>
+    </button>
+
+    <button onclick="alternarAbaProntuario('avaliacao')" id="subnav-avaliacao" class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-brand-main hover:bg-white/80 transition-all duration-200 flex items-center gap-1.5 active:scale-95">
+      <i class="fa-solid fa-clipboard-check text-xs"></i> <span>8. Avaliação</span>
+    </button>
+
+    <button onclick="alternarAbaProntuario('orientacao-familiar')" id="subnav-orientacao-familiar" class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-brand-main hover:bg-white/80 transition-all duration-200 flex items-center gap-1.5 active:scale-95">
+      <i class="fa-solid fa-people-roof text-xs"></i> <span>9. Orient. Familiar</span>
+    </button>
+
+    <button onclick="alternarAbaProntuario('documentos')" id="subnav-documentos" class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-brand-main hover:bg-white/80 transition-all duration-200 flex items-center gap-1.5 active:scale-95">
+      <i class="fa-solid fa-folder-closed text-xs"></i> <span>10. Documentos CFP</span>
+    </button>
+
+    <button onclick="alternarAbaProntuario('encerramento')" id="subnav-encerramento" class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-brand-main hover:bg-white/80 transition-all duration-200 flex items-center gap-1.5 active:scale-95">
+      <i class="fa-solid fa-box-archive text-xs"></i> <span>11. Encerramento</span>
+    </button>
+
+  </div>
+
+  <!-- CONTAINER DE ABAS DE CONTEÚDO -->
+
+  <!-- MÓDULO BASE: ANAMNESE -->
+  <div id="aba-conteudo-anamnese" class="space-y-6">
+    <div class="flex justify-end space-x-2 bg-white p-4 rounded-2xl border border-rose-100 card-shadow">
+      <button onclick="salvarRascunho('Anamnese')" class="bg-white text-gray-700 border border-gray-300 font-semibold px-4 py-2 rounded-xl text-xs hover:bg-gray-50 transition-all flex items-center">
+        <i class="fa-solid fa-floppy-disk mr-1.5 text-brand-main"></i> Salvar Rascunho
+      </button>
+      <button onclick="concluirAnamnese()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-2 rounded-xl text-xs shadow transition-all flex items-center">
+        <i class="fa-solid fa-check-circle mr-1.5"></i> Concluir Anamnese
+      </button>
+      <button onclick="gerarPDFAnamnese()" class="bg-brand-main hover:bg-brand-alt text-white font-bold px-4 py-2 rounded-xl text-xs shadow transition-all flex items-center">
+        <i class="fa-solid fa-file-pdf mr-1.5"></i> Gerar PDF
+      </button>
+    </div>
+    <div id="container-formulario-anamnese">
+      <!-- Inserido dinamicamente via JS -->
+    </div>
+  </div>
+
+  <!-- MÓDULO 1: EVOLUÇÃO PSICOLÓGICA INDIVIDUAL -->
+  <div id="aba-conteudo-evolucoes" class="hidden space-y-6">
+    <!-- BARRA DE AÇÕES DO MÓDULO -->
+    <div class="bg-white rounded-2xl p-5 border border-rose-100 card-shadow flex justify-between items-center flex-wrap gap-4">
+      <div>
+        <h3 class="text-md font-bold text-brand-dark flex items-center">
+          <i class="fa-solid fa-file-waveform text-brand-main mr-2"></i> Evolução Psicológica (Registro Individual)
+        </h3>
+        <p class="text-xs text-gray-500 mt-0.5">Gerenciamento de evoluções técnicas obrigatórias por sessão.</p>
+      </div>
+      <div class="flex gap-2">
+        <button onclick="duplicarEstrutura('form-evolucao')" class="bg-rose-50 text-brand-main border border-rose-200 font-semibold px-3 py-2 rounded-xl text-xs hover:bg-rose-100 transition-all">
+          <i class="fa-solid fa-copy mr-1"></i> Duplicar Estrutura Limpa
+        </button>
+        <button onclick="salvarRascunho('Evolucao')" class="bg-white text-gray-700 border border-gray-300 font-semibold px-4 py-2 rounded-xl text-xs hover:bg-gray-50 transition-all">
+          <i class="fa-solid fa-floppy-disk mr-1"></i> Salvar Rascunho
+        </button>
+        <button onclick="salvarRegistroEvolucao()" class="bg-brand-main text-white font-bold px-4 py-2 rounded-xl text-xs shadow hover:bg-brand-alt transition-all">
+          <i class="fa-solid fa-check mr-1"></i> Salvar Registro Final
+        </button>
+      </div>
+    </div>
+
+    <!-- FORMULÁRIO DE EVOLUÇÃO -->
+    <form id="form-evolucao" class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-6">
+      <!-- Identificação do Atendimento -->
+      <div>
+        <h4 class="text-xs font-bold text-brand-dark uppercase tracking-wider mb-3 border-b pb-1">Identificação do Atendimento</h4>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-xs">
           <div>
-            <!-- Badges de Status e Faixa Etária -->
+            <label class="block font-semibold text-gray-700 mb-1">Paciente</label>
+            <input type="text" id="evo-paciente" readonly class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl outline-none" value="Carregado automaticamente...">
+          </div>
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Data *</label>
+            <input type="date" id="evo-data" class="w-full px-3 py-2 border border-gray-200 rounded-xl outline-none">
+          </div>
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Horário (Início - Término) *</label>
+            <div class="flex gap-1">
+              <input type="time" id="evo-inicio" class="w-1/2 px-2 py-2 border border-gray-200 rounded-xl outline-none">
+              <input type="time" id="evo-fim" class="w-1/2 px-2 py-2 border border-gray-200 rounded-xl outline-none">
+            </div>
+          </div>
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Nº da Sessão / Modalidade</label>
+            <div class="flex gap-1">
+              <input type="text" id="evo-numero-sessao" placeholder="Ex: 12" class="w-1/2 px-2 py-2 border border-gray-200 rounded-xl outline-none">
+              <select id="evo-modalidade" class="w-1/2 px-2 py-2 border border-gray-200 rounded-xl outline-none">
+                <option value="Presencial">Presencial</option>
+                <option value="Online">Online</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Tipo de Atendimento</label>
+            <select id="evo-tipo" class="w-full px-3 py-2 border border-gray-200 rounded-xl outline-none">
+              <option value="Individual">Individual</option>
+              <option value="Com Responsável">Com Responsável</option>
+              <option value="Orientação Familiar">Orientação Familiar</option>
+              <option value="Devolutiva">Devolutiva</option>
+              <option value="Outro">Outro</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Participantes Presentes</label>
+            <input type="text" id="evo-participantes" placeholder="Ex: Paciente e mãe" class="w-full px-3 py-2 border border-gray-200 rounded-xl outline-none">
+          </div>
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Status da Sessão</label>
+            <select id="evo-status" class="w-full px-3 py-2 border border-gray-200 rounded-xl outline-none font-semibold text-brand-main">
+              <option value="Realizada">Realizada</option>
+              <option value="Falta">Falta</option>
+              <option value="Cancelada">Cancelada</option>
+              <option value="Remarcada">Remarcada</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Profissional Responsável</label>
+            <input type="text" id="evo-profissional" readonly class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl outline-none" value="Dra. Ana Paula (CRP 06/XXXXX)">
+          </div>
+        </div>
+      </div>
+
+      <!-- Registro Técnico da Evolução -->
+      <div class="space-y-4 text-xs">
+        <h4 class="text-xs font-bold text-brand-dark uppercase tracking-wider border-b pb-1">Registro Detalhado da Evolução</h4>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Objetivo Principal do Encontro</label>
+            <textarea id="evo-objetivo" rows="2" class="w-full p-2.5 border border-gray-200 rounded-xl outline-none" placeholder="Qual o foco central estabelecido para esta sessão?"></textarea>
+          </div>
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Demandas e Acontecimentos Relatados (Inter-séries)</label>
+            <textarea id="evo-demandas-relatadas" rows="2" class="w-full p-2.5 border border-gray-200 rounded-xl outline-none" placeholder="Fatos relevantes ocorridos desde o último atendimento..."></textarea>
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Temas Trabalhados (Permite múltiplos temas)</label>
+          <input type="text" id="evo-temas" class="w-full px-3 py-2 border border-gray-200 rounded-xl outline-none" placeholder="Ex: Regulação emocional, limites parentais, ansiedade social (separe por vírgulas)">
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Descrição dos Comportamentos e Situações Observadas</label>
+            <textarea id="evo-comportamentos-observados" rows="3" class="w-full p-2.5 border border-gray-200 rounded-xl outline-none" placeholder="Topografia comportamental, afetos expressos, postura verbal/não-verbal..."></textarea>
+          </div>
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Relatos Significativos do Paciente</label>
+            <textarea id="evo-relatos-significativos" rows="3" class="w-full p-2.5 border border-gray-200 rounded-xl outline-none" placeholder="Falas diretas, metáforas ou verbalizações-chave do cliente..."></textarea>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Intervenções e Estratégias Utilizadas</label>
+            <textarea id="evo-intervencoes" rows="3" class="w-full p-2.5 border border-gray-200 rounded-xl outline-none" placeholder="Técnicas aplicadas, questionamento socrático, psicoeducação..."></textarea>
+          </div>
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Participação e Resposta às Intervenções</label>
+            <textarea id="evo-resposta-paciente" rows="3" class="w-full p-2.5 border border-gray-200 rounded-xl outline-none" placeholder="Engajamento, adesão, esquivas ou receptividade às propostas..."></textarea>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Mudanças em Relação a Encontros Anteriores</label>
+            <textarea id="evo-mudancas" rows="2" class="w-full p-2.5 border border-gray-200 rounded-xl outline-none"></textarea>
+          </div>
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Dificuldades Identificadas</label>
+            <textarea id="evo-dificuldades" rows="2" class="w-full p-2.5 border border-gray-200 rounded-xl outline-none"></textarea>
+          </div>
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Habilidades Trabalhadas / Desenvolvidas</label>
+            <textarea id="evo-habilidades" rows="2" class="w-full p-2.5 border border-gray-200 rounded-xl outline-none"></textarea>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Análise Clínica e Hipóteses Pertinentes</label>
+            <textarea id="evo-analise-hipoteses" rows="3" class="w-full p-2.5 border border-gray-200 rounded-xl outline-none" placeholder="Raciocínio clínico e relação funcional observada..."></textarea>
+          </div>
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Encaminhamentos / Orientações Realizados</label>
+            <textarea id="evo-encaminhamentos" rows="3" class="w-full p-2.5 border border-gray-200 rounded-xl outline-none" placeholder="Orientações dadas ou encaminhamentos multiprofissionais..."></textarea>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Tarefas / Combinados Inter-sintoma</label>
+            <textarea id="evo-tarefas" rows="2" class="w-full p-2.5 border border-gray-200 rounded-xl outline-none"></textarea>
+          </div>
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Pontos a Retomar no Próximo Encontro</label>
+            <textarea id="evo-pontos-retomar" rows="2" class="w-full p-2.5 border border-gray-200 rounded-xl outline-none"></textarea>
+          </div>
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Observações Complementares / Texto Livre</label>
+            <textarea id="evo-texto-livre" rows="2" class="w-full p-2.5 border border-gray-200 rounded-xl outline-none"></textarea>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <!-- HISTÓRICO CRONOLÓGICO COM PRESERVAÇÃO DE VERSÕES E EDIÇÃO -->
+    <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
+      <div class="flex justify-between items-center border-b pb-2">
+        <h4 class="text-sm font-bold text-brand-dark flex items-center">
+          <i class="fa-solid fa-clock-rotate-left text-brand-main mr-2"></i> Histórico Cronológico de Evoluções
+        </h4>
+        <span class="text-xs text-gray-400">Preservação de histórico conforme Resolução CFP</span>
+      </div>
+      <div id="lista-historico-evolucoes" class="space-y-3">
+        <!-- Item de Exemplo no Histórico -->
+        <div class="p-4 bg-rose-50/40 border border-rose-100 rounded-xl text-xs space-y-2">
+          <div class="flex justify-between items-center font-bold text-brand-dark">
+            <span>Sessão Nº 11 — 24/10/2026 (Presencial)</span>
             <div class="flex items-center gap-2">
-              <span id="prontuario-badge-faixa" class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-rose-100 text-brand-main tracking-wide uppercase">
-                Faixa Etária
-              </span>
-              <span id="prontuario-status-ficha" class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 tracking-wide uppercase">
-                Pendente
-              </span>
+              <span class="bg-emerald-100 text-emerald-800 text-[10px] px-2 py-0.5 rounded-full uppercase">Concluído</span>
+              <button onclick="editarRegistroEvolucao(11)" class="text-brand-main hover:underline"><i class="fa-solid fa-pen-to-square"></i> Editar (Cria Versão)</button>
+              <button onclick="imprimirRegistro('evolucao', 11)" class="text-gray-600 hover:underline"><i class="fa-solid fa-print"></i> Exportar</button>
             </div>
-
-            <!-- Nome e Informações do Paciente -->
-            <h2 class="text-xl font-bold text-brand-dark mt-1 tracking-tight" id="prontuario-nome-paciente">
-              Nome do Paciente
-            </h2>
-            <p class="text-xs text-gray-500 mt-0.5" id="prontuario-sub-info">
-              Data de Nascimento: --/--/---- • Idade: -- anos
-            </p>
           </div>
+          <p class="text-gray-600"><strong>Objetivo:</strong> Reestruturação de crenças de desvalor e treino de assertividade com pares.</p>
+          <div class="text-[11px] text-gray-400 italic">Registrado por Dra. Ana Paula em 24/10/2026 às 17:30 (Versão 1.0 Original)</div>
         </div>
       </div>
-        
-      <!-- NAVEGAÇÃO INTERNA DO PRONTUÁRIO (ESTRUTURA COMPLETA - 10 MÓDULOS) -->
-      <div class="flex flex-wrap gap-1.5 bg-rose-50/50 p-2 rounded-xl border border-rose-100 shadow-xs" aria-label="Navegação do Prontuário">
-        
-        <!-- 1. Anamnese -->
-        <button 
-          onclick="alternarAbaProntuario('anamnese')" 
-          id="subnav-anamnese" 
-          class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-white text-brand-main shadow-xs transition-all duration-200 flex items-center gap-1.5 active:scale-95"
-          title="Anamnese de adultos, crianças, responsáveis e histórico completo">
-          <i class="fa-solid fa-notes-medical text-xs"></i> 
-          <span>Anamnese</span>
-        </button>
+    </div>
+  </div>
 
-        <!-- 2. Evoluções -->
-        <button 
-          onclick="alternarAbaProntuario('evolucoes')" 
-          id="subnav-evolucoes" 
-          class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-brand-main hover:bg-white/80 transition-all duration-200 flex items-center gap-1.5 active:scale-95"
-          title="Evoluções das sessões, faltas, atendimentos com responsáveis e devolutivas">
-          <i class="fa-solid fa-file-waveform text-xs"></i> 
-          <span>Evoluções</span>
-        </button>
-
-        <!-- 3. Folhas de Sessão -->
-        <button 
-          onclick="alternarAbaProntuario('anotacoes')" 
-          id="subnav-anotacoes" 
-          class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-brand-main hover:bg-white/80 transition-all duration-200 flex items-center gap-1.5 active:scale-95"
-          title="Anotações clínicas, relatos, intervenções e acompanhamento de tarefas">
-          <i class="fa-solid fa-book-open-reader text-xs"></i> 
-          <span>Folhas de Sessão</span>
-        </button>
-
-        <!-- 4. Avaliação Psicológica -->
-        <button 
-          onclick="alternarAbaProntuario('avaliacao')" 
-          id="subnav-avaliacao" 
-          class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-brand-main hover:bg-white/80 transition-all duration-200 flex items-center gap-1.5 active:scale-95"
-          title="Planejamento, instrumentos, aplicação de escalas, inventários e análise integrada">
-          <i class="fa-solid fa-clipboard-check text-xs"></i> 
-          <span>Avaliação Psicológica</span>
-        </button>
-
-        <!-- 5. Plano Terapêutico -->
-        <button 
-          onclick="alternarAbaProntuario('plano-terapeutico')" 
-          id="subnav-plano-terapeutico" 
-          class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-brand-main hover:bg-white/80 transition-all duration-200 flex items-center gap-1.5 active:scale-95"
-          title="Demandas, objetivos, metas, indicadores e estratégias de intervenção">
-          <i class="fa-solid fa-bullseye text-xs"></i> 
-          <span>Plano Terapêutico</span>
-        </button>
-
-        <!-- 6. Análise Funcional -->
-        <button 
-          onclick="alternarAbaProntuario('analise-funcional')" 
-          id="subnav-analise-funcional" 
-          class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-brand-main hover:bg-white/80 transition-all duration-200 flex items-center gap-1.5 active:scale-95"
-          title="Análise molecular (ABC), molar, variáveis contextuais e hipóteses funcionais">
-          <i class="fa-solid fa-diagram-project text-xs"></i> 
-          <span>Análise Funcional</span>
-        </button>
-
-        <!-- 7. Orientação Familiar -->
-        <button 
-          onclick="alternarAbaProntuario('orientacao-familiar')" 
-          id="subnav-orientacao-familiar" 
-          class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-brand-main hover:bg-white/80 transition-all duration-200 flex items-center gap-1.5 active:scale-95"
-          title="Orientações parentais, manejo de comportamentos e reuniões familiares">
-          <i class="fa-solid fa-people-roof text-xs"></i> 
-          <span>Orientação Familiar</span>
-        </button>
-
-        <!-- 8. Planejamento & Supervisão -->
-        <button 
-          onclick="alternarAbaProntuario('planejamento')" 
-          id="subnav-planejamento" 
-          class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-brand-main hover:bg-white/80 transition-all duration-200 flex items-center gap-1.5 active:scale-95"
-          title="Planejamento de sessões, dúvidas, discussões de caso e hipóteses clínicas">
-          <i class="fa-solid fa-compass-drafting text-xs"></i> 
-          <span>Planejamento & Supervisão</span>
-        </button>
-
-        <!-- 9. Documentos Psicológicos -->
-        <button 
-          onclick="alternarAbaProntuario('documentos')" 
-          id="subnav-documentos" 
-          class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-brand-main hover:bg-white/80 transition-all duration-200 flex items-center gap-1.5 active:scale-95"
-          title="Declarações, atestados, relatórios, laudos, pareceres e termos">
-          <i class="fa-solid fa-folder-closed text-xs"></i> 
-          <span>Documentos</span>
-        </button>
-
-        <!-- 10. Encerramento e Histórico -->
-        <button 
-          onclick="alternarAbaProntuario('encerramento')" 
-          id="subnav-encerramento" 
-          class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-brand-main hover:bg-white/80 transition-all duration-200 flex items-center gap-1.5 active:scale-95"
-          title="Alta, interrupção, encaminhamentos e transferência do atendimento">
-          <i class="fa-solid fa-box-archive text-xs"></i> 
-          <span>Encerramento</span>
-        </button>
-
+  <!-- MÓDULO 2: FOLHA DE PLANEJAMENTO DE SESSÃO -->
+  <div id="aba-conteudo-planejamento" class="hidden space-y-6">
+    <div class="bg-white rounded-2xl p-5 border border-rose-100 card-shadow flex justify-between items-center flex-wrap gap-4">
+      <div>
+        <h3 class="text-md font-bold text-brand-dark flex items-center">
+          <i class="fa-solid fa-compass-drafting text-brand-main mr-2"></i> Planejamento Clínico de Sessão (Pré e Pós Atendimento)
+        </h3>
+        <p class="text-xs text-gray-500 mt-0.5">Prepare os objetivos e condução técnica antes de realizar a sessão.</p>
       </div>
-
-      <!-- ABA 1: ANAMNESE PSICOLÓGICA -->
-      <div id="aba-conteudo-anamnese" class="space-y-6">
-        <div class="flex justify-end space-x-2 bg-white p-4 rounded-2xl border border-rose-100 card-shadow">
-          <button onclick="salvarRascunhoAnamnese()" class="bg-white text-gray-700 border border-gray-300 font-semibold px-4 py-2 rounded-xl text-xs hover:bg-gray-50 transition-all flex items-center">
-            <i class="fa-solid fa-floppy-disk mr-1.5 text-brand-main"></i> Salvar Rascunho
-          </button>
-          <button onclick="concluirAnamnese()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-2 rounded-xl text-xs shadow transition-all flex items-center">
-            <i class="fa-solid fa-check-circle mr-1.5"></i> Concluir Anamnese
-          </button>
-          <button onclick="gerarPDFAnamnese()" class="bg-brand-main hover:bg-brand-alt text-white font-bold px-4 py-2 rounded-xl text-xs shadow transition-all flex items-center">
-            <i class="fa-solid fa-file-pdf mr-1.5"></i> Gerar PDF da Anamnese
-          </button>
-        </div>
-
-        <div id="container-formulario-anamnese">
-          <!-- Inserido dinamicamente pelo JS -->
-        </div>
+      <div class="flex gap-2">
+        <button onclick="duplicarEstrutura('form-planejamento')" class="bg-rose-50 text-brand-main border border-rose-200 font-semibold px-3 py-2 rounded-xl text-xs hover:bg-rose-100 transition-all">
+          <i class="fa-solid fa-copy mr-1"></i> Duplicar Estrutura Limpa
+        </button>
+        <button onclick="salvarRascunho('Planejamento')" class="bg-white text-gray-700 border border-gray-300 font-semibold px-4 py-2 rounded-xl text-xs hover:bg-gray-50 transition-all">
+          <i class="fa-solid fa-floppy-disk mr-1"></i> Salvar Rascunho
+        </button>
+        <button onclick="salvarPlanejamentoSessao()" class="bg-brand-main text-white font-bold px-4 py-2 rounded-xl text-xs shadow hover:bg-brand-alt transition-all">
+          <i class="fa-solid fa-floppy-disk mr-1"></i> Salvar Planejamento
+        </button>
       </div>
+    </div>
 
-      <!-- ABA 2: EVOLUÇÕES CLÍNICAS -->
-      <div id="aba-conteudo-evolucoes" class="hidden space-y-6">
-        <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow flex justify-between items-center">
+    <form id="form-planejamento" class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-6">
+      <!-- Identificação Pré-Sessão -->
+      <div class="text-xs space-y-4">
+        <h4 class="text-xs font-bold text-brand-dark uppercase tracking-wider border-b pb-1">1. Identificação e Estrutura Prévia</h4>
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
           <div>
-            <h3 class="text-md font-bold text-brand-dark flex items-center">
-              <i class="fa-solid fa-file-waveform text-brand-main mr-2"></i> Histórico de Evoluções Clínicas
-            </h3>
-            <p class="text-xs text-gray-500 mt-0.5">Registros cronológicos e evoluções de atendimento do paciente.</p>
+            <label class="block font-semibold text-gray-700 mb-1">Paciente</label>
+            <input type="text" id="plan-paciente" readonly class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl outline-none" value="Nome do Paciente">
           </div>
-          <button onclick="abrirModalEvolucao()" class="bg-brand-main text-white font-bold px-4 py-2.5 rounded-xl text-xs shadow hover:bg-brand-alt transition-all flex items-center">
-            <i class="fa-solid fa-plus mr-1.5"></i> Fazer Evolução
-          </button>
-        </div>
-
-        <div id="lista-evolucoes-paciente" class="space-y-4">
-          <!-- Renderizado via JS -->
-        </div>
-      </div>
-
-      <!-- ABA 3: FOLHA DE ANOTAÇÕES POR SESSÃO & ANEXOS -->
-      <div id="aba-conteudo-anotacoes" class="hidden space-y-6">
-        <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
-          <div class="flex justify-between items-center border-b border-rose-100 pb-2">
-            <h3 class="text-md font-bold text-brand-dark flex items-center">
-              <i class="fa-solid fa-pen-to-square text-brand-main mr-2"></i> Folha de Anotações da Sessão
-            </h3>
-            <button onclick="abrirModalEvolucao()" class="bg-brand-alt text-white font-semibold px-3 py-1.5 rounded-xl text-xs shadow transition-all">
-              <i class="fa-solid fa-file-waveform mr-1"></i> Fazer Evolução desta Sessão
-            </button>
-          </div>
-          
-          <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-xs">
-            <div>
-              <label class="block font-semibold text-gray-700 mb-1">Data da Sessão *</label>
-              <input type="date" id="nota-sessao-data" class="w-full px-3 py-2 text-sm border border-gray-200 rounded-xl outline-none">
-            </div>
-            <div>
-              <label class="block font-semibold text-gray-700 mb-1">Horário</label>
-              <input type="time" id="nota-sessao-horario" class="w-full px-3 py-2 text-sm border border-gray-200 rounded-xl outline-none">
-            </div>
-            <div>
-              <label class="block font-semibold text-gray-700 mb-1">Nº da Sessão</label>
-              <input type="text" id="nota-sessao-numero" class="w-full px-3 py-2 text-sm border border-gray-200 rounded-xl outline-none" placeholder="Ex: 05">
-            </div>
-            <div>
-              <label class="block font-semibold text-gray-700 mb-1">Anexar Arquivo (PDF, JPG, PNG)</label>
-              <input type="file" id="nota-sessao-arquivo" accept=".pdf,.jpg,.jpeg,.png" class="w-full px-2 py-1 text-xs border border-gray-200 rounded-xl bg-gray-50 outline-none">
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-            <div>
-              <label class="block font-semibold text-gray-700 mb-1">Anotações Livres da Sessão</label>
-              <textarea id="nota-sessao-texto" rows="4" class="w-full p-3 border border-gray-200 rounded-xl outline-none" placeholder="Observações clínicas individualizadas..."></textarea>
-            </div>
-            <div>
-              <label class="block font-semibold text-gray-700 mb-1">Pontos Importantes para o Próximo Atendimento</label>
-              <textarea id="nota-sessao-proximo" rows="4" class="w-full p-3 border border-gray-200 rounded-xl outline-none" placeholder="Tarefas, combinados ou alertas..."></textarea>
-            </div>
-          </div>
-
-          <div class="flex justify-end space-x-2">
-            <button onclick="salvarFolhaSessao('Rascunho')" class="bg-white text-gray-700 border border-gray-300 font-semibold px-4 py-2 rounded-xl text-xs hover:bg-gray-50 transition-all">
-              Salvar como Rascunho
-            </button>
-            <button onclick="salvarFolhaSessao('Concluída')" class="bg-brand-main text-white font-bold px-5 py-2 rounded-xl text-xs shadow hover:bg-brand-alt transition-all">
-              <i class="fa-solid fa-floppy-disk mr-1"></i> Salvar e Concluir Folha
-            </button>
-          </div>
-        </div>
-
-        <!-- HISTÓRICO DE FOLHAS DE SESSÃO -->
-        <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
-          <h3 class="text-md font-bold text-brand-dark border-b border-rose-100 pb-2 flex items-center">
-            <i class="fa-solid fa-clock-rotate-left text-brand-main mr-2"></i> Histórico Cronológico de Folhas de Sessão
-          </h3>
-
-          <div id="lista-folhas-sessao" class="space-y-3">
-            <!-- Renderizado via JS -->
-          </div>
-        </div>
-      </div>
-
-      <!-- ABA 4: PLANEJAMENTO E SUPERVISÃO DAS PRÓXIMAS SESSÕES -->
-      <div id="aba-conteudo-planejamento" class="hidden space-y-6">
-        <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow flex justify-between items-center">
           <div>
-            <h3 class="text-md font-bold text-brand-dark flex items-center">
-              <i class="fa-solid fa-compass-drafting text-brand-main mr-2"></i> Planejamento Clínico e Supervisão
-            </h3>
-            <p class="text-xs text-gray-500 mt-0.5">Organize objetivos, estratégias futuras e registros de supervisão clínica.</p>
+            <label class="block font-semibold text-gray-700 mb-1">Data Prevista *</label>
+            <input type="date" id="plan-data-prevista" class="w-full px-3 py-2 border border-gray-200 rounded-xl outline-none">
           </div>
-          <button onclick="abrirModalPlanejamento()" class="bg-brand-main text-white font-bold px-4 py-2.5 rounded-xl text-xs shadow hover:bg-brand-alt transition-all flex items-center">
-            <i class="fa-solid fa-plus mr-1.5"></i> Adicionar Novo Planejamento
-          </button>
-        </div>
-
-        <div id="lista-planejamentos-paciente" class="space-y-4">
-          <!-- Renderizado via JS -->
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Nº da Sessão</label>
+            <input type="text" id="plan-numero-sessao" placeholder="Ex: 13" class="w-full px-3 py-2 border border-gray-200 rounded-xl outline-none">
+          </div>
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Modalidade Prevista</label>
+            <select id="plan-modalidade" class="w-full px-3 py-2 border border-gray-200 rounded-xl outline-none">
+              <option value="Presencial">Presencial</option>
+              <option value="Online">Online</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Tempo Previsto (min)</label>
+            <input type="text" id="plan-tempo-previsto" placeholder="Ex: 50 min" class="w-full px-3 py-2 border border-gray-200 rounded-xl outline-none">
+          </div>
         </div>
       </div>
-    </section>
+
+      <!-- Planejamento Clínico (Pré-Sessão) -->
+      <div class="text-xs space-y-4">
+        <h4 class="text-xs font-bold text-brand-dark uppercase tracking-wider border-b pb-1">2. Planejamento Clínico e Estratégico</h4>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Demanda Prioritária</label>
+            <textarea id="plan-demanda-prioritaria" rows="2" class="w-full p-2.5 border border-gray-200 rounded-xl outline-none"></textarea>
+          </div>
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Objetivo Geral da Sessão</label>
+            <textarea id="plan-objetivo-geral" rows="2" class="w-full p-2.5 border border-gray-200 rounded-xl outline-none"></textarea>
+          </div>
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Objetivos Específicos</label>
+            <textarea id="plan-objetivos-especificos" rows="2" class="w-full p-2.5 border border-gray-200 rounded-xl outline-none"></textarea>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Temas a Retomar / Investigar</label>
+            <textarea id="plan-temas-retomar" rows="2" class="w-full p-2.5 border border-gray-200 rounded-xl outline-none" placeholder="Assuntos abertos em sessões anteriores..."></textarea>
+          </div>
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Perguntas Clínicas Planejadas</label>
+            <textarea id="plan-perguntas-planejadas" rows="2" class="w-full p-2.5 border border-gray-200 rounded-xl outline-none" placeholder="Questionamentos estratégicos para a sessão..."></textarea>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Comportamentos/Habilidades a Trabalhar</label>
+            <textarea id="plan-habilidades" rows="2" class="w-full p-2.5 border border-gray-200 rounded-xl outline-none"></textarea>
+          </div>
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Hipóteses Funcionais a Investigar</label>
+            <textarea id="plan-hipoteses-investigar" rows="2" class="w-full p-2.5 border border-gray-200 rounded-xl outline-none"></textarea>
+          </div>
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Estratégias / Procedimentos Previstos</label>
+            <textarea id="plan-estrategias" rows="2" class="w-full p-2.5 border border-gray-200 rounded-xl outline-none"></textarea>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Atividades / Materiais Necessários</label>
+            <textarea id="plan-materiais" rows="2" class="w-full p-2.5 border border-gray-200 rounded-xl outline-none" placeholder="Escalas, folhas de registro, brinquedos..."></textarea>
+          </div>
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Possíveis Dificuldades / Resistências</label>
+            <textarea id="plan-dificuldade-prevista" rows="2" class="w-full p-2.5 border border-gray-200 rounded-xl outline-none"></textarea>
+          </div>
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Alternativas de Condução (Plano B)</label>
+            <textarea id="plan-alternativas" rows="2" class="w-full p-2.5 border border-gray-200 rounded-xl outline-none"></textarea>
+          </div>
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Critérios de Avaliação de Sucesso</label>
+            <textarea id="plan-criterios-sucesso" rows="2" class="w-full p-2.5 border border-gray-200 rounded-xl outline-none"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Avaliação Pós-Sessão (Checagem) -->
+      <div class="text-xs space-y-4 bg-rose-50/40 p-4 rounded-xl border border-rose-100">
+        <h4 class="text-xs font-bold text-brand-dark uppercase tracking-wider border-b border-rose-200 pb-1">3. Avaliação Pós-Sessão (Preenchimento após o atendimento)</h4>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">O que foi efetivamente trabalhado?</label>
+            <textarea id="plan-pos-efetivo" rows="2" class="w-full p-2.5 bg-white border border-gray-200 rounded-xl outline-none"></textarea>
+          </div>
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">O que precisou ser modificado?</label>
+            <textarea id="plan-pos-modificado" rows="2" class="w-full p-2.5 bg-white border border-gray-200 rounded-xl outline-none"></textarea>
+          </div>
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Respostas Observadas / Retomadas</label>
+            <textarea id="plan-pos-respostas" rows="2" class="w-full p-2.5 bg-white border border-gray-200 rounded-xl outline-none"></textarea>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Status de Alcançamento do Planejamento</label>
+            <select id="plan-pos-status-alcancado" class="w-full px-3 py-2 bg-white border border-gray-200 rounded-xl font-bold text-brand-main outline-none">
+              <option value="Alcançado">Alcançado Totalmente</option>
+              <option value="Parcialmente Alcançado">Parcialmente Alcançado</option>
+              <option value="Não Realizado">Não Realizado (Remanejado)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">O que deverá ser retomado no planejamento seguinte?</label>
+            <input type="text" id="plan-pos-retomar-proximo" class="w-full px-3 py-2 bg-white border border-gray-200 rounded-xl outline-none">
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- MÓDULO 3: FOLHA DE SUPERVISÃO CLÍNICA (ACESSO RESTRITO) -->
+  <div id="aba-conteudo-supervisao" class="hidden space-y-6">
+    <div class="bg-amber-50 rounded-2xl p-5 border border-amber-200 card-shadow flex justify-between items-center flex-wrap gap-4">
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="bg-amber-200 text-amber-900 text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase">Sigilo Clínico Interno</span>
+          <span class="text-xs text-amber-800">• Acesso Restrito à Profissional</span>
+        </div>
+        <h3 class="text-md font-bold text-amber-900 mt-1 flex items-center">
+          <i class="fa-solid fa-user-shield mr-2"></i> Registro Privado de Supervisão Clínica
+        </h3>
+        <p class="text-xs text-amber-700 mt-0.5">Anotações estratégicas e éticas de supervisão. Nunca são incorporadas a laudos/documentos do paciente.</p>
+      </div>
+      <div class="flex gap-2">
+        <button onclick="salvarRascunho('Supervisao')" class="bg-white text-gray-700 border border-gray-300 font-semibold px-4 py-2 rounded-xl text-xs hover:bg-gray-50 transition-all">
+          <i class="fa-solid fa-floppy-disk mr-1"></i> Salvar Rascunho
+        </button>
+        <button onclick="salvarSupervisaoClinica()" class="bg-amber-700 text-white font-bold px-4 py-2 rounded-xl text-xs shadow hover:bg-amber-800 transition-all">
+          <i class="fa-solid fa-lock mr-1"></i> Salvar Supervisão Sigilosa
+        </button>
+      </div>
+    </div>
+
+    <form id="form-supervisao" class="bg-white rounded-2xl p-6 border border-amber-200 card-shadow space-y-6">
+      <div class="text-xs space-y-4">
+        <h4 class="text-xs font-bold text-amber-900 uppercase tracking-wider border-b pb-1">1. Identificação do Caso e Supervisão</h4>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Identificação / Código do Caso *</label>
+            <input type="text" id="sup-codigo-caso" class="w-full px-3 py-2 border border-gray-200 rounded-xl outline-none" placeholder="Ex: PAC-LM-2026 (Iniciais/Código)">
+          </div>
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Data da Supervisão *</label>
+            <input type="date" id="sup-data" class="w-full px-3 py-2 border border-gray-200 rounded-xl outline-none">
+          </div>
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Supervisor(a) Responsável</label>
+            <input type="text" id="sup-supervisor" class="w-full px-3 py-2 border border-gray-200 rounded-xl outline-none" placeholder="Nome do(a) supervisor(a)">
+          </div>
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Tema Principal da Discussão</label>
+            <input type="text" id="sup-tema-principal" class="w-full px-3 py-2 border border-gray-200 rounded-xl outline-none" placeholder="Ex: Manejo de esquiva experiencial">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Contextualização Breve e Histórico relevante</label>
+            <textarea id="sup-contextualizacao" rows="3" class="w-full p-2.5 border border-gray-200 rounded-xl outline-none"></textarea>
+          </div>
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Contingências e Hipóteses Funcionais Consideradas</label>
+            <textarea id="sup-contingencias-hipoteses" rows="3" class="w-full p-2.5 border border-gray-200 rounded-xl outline-none"></textarea>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Dificuldades Encontradas pela Profissional</label>
+            <textarea id="sup-dificuldades-profissional" rows="3" class="w-full p-2.5 border border-gray-200 rounded-xl outline-none" placeholder="Impasses na relação terapêutica, aliança, etc."></textarea>
+          </div>
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Dúvidas Clínicas Específicas</label>
+            <textarea id="sup-duvidas-clinicas" rows="3" class="w-full p-2.5 border border-gray-200 rounded-xl outline-none"></textarea>
+          </div>
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Questões Éticas Identificadas</label>
+            <textarea id="sup-questoes-eticas" rows="3" class="w-full p-2.5 border border-gray-200 rounded-xl outline-none" placeholder="Quebra de sigilo, limites do atendimento, etc."></textarea>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-amber-50/50 p-4 rounded-xl border border-amber-200">
+          <div>
+            <label class="block font-semibold text-amber-900 mb-1">Orientações, Sugestões e Intervenções Discutidas</label>
+            <textarea id="sup-orientacoes-recebidas" rows="3" class="w-full p-2.5 bg-white border border-gray-200 rounded-xl outline-none"></textarea>
+          </div>
+          <div>
+            <label class="block font-semibold text-amber-900 mb-1">Decisões, Encaminhamentos e Mudanças Previstas</label>
+            <textarea id="sup-decisoes-mudancas" rows="3" class="w-full p-2.5 bg-white border border-gray-200 rounded-xl outline-none"></textarea>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Pontos a Serem Investigados</label>
+            <textarea id="sup-pontos-investigar" rows="2" class="w-full p-2.5 border border-gray-200 rounded-xl outline-none"></textarea>
+          </div>
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Reflexões Pessoais / Pós-Supervisão</label>
+            <textarea id="sup-reflexoes-pos" rows="2" class="w-full p-2.5 border border-gray-200 rounded-xl outline-none"></textarea>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- MÓDULO 4: FOLHA DE SESSÃO / REGISTRO COMPLEMENTAR -->
+  <div id="aba-conteudo-anotacoes" class="hidden space-y-6">
+    <div class="bg-white rounded-2xl p-5 border border-rose-100 card-shadow flex justify-between items-center flex-wrap gap-4">
+      <div>
+        <h3 class="text-md font-bold text-brand-dark flex items-center">
+          <i class="fa-solid fa-pen-to-square text-brand-main mr-2"></i> Folha de Sessão (Anotações Clínicas Livres & ABC)
+        </h3>
+        <p class="text-xs text-gray-500 mt-0.5">Espaço flexível para detalhamento de relatos, dinâmicas e rascunhos de atendimento.</p>
+      </div>
+      <div class="flex gap-2">
+        <button onclick="salvarRascunho('FolhaSessao')" class="bg-white text-gray-700 border border-gray-300 font-semibold px-4 py-2 rounded-xl text-xs hover:bg-gray-50 transition-all">
+          <i class="fa-solid fa-floppy-disk mr-1"></i> Salvar Rascunho
+        </button>
+        <button onclick="salvarFolhaSessao('Concluída')" class="bg-brand-main text-white font-bold px-4 py-2 rounded-xl text-xs shadow hover:bg-brand-alt transition-all">
+          <i class="fa-solid fa-floppy-disk mr-1"></i> Salvar Folha de Sessão
+        </button>
+      </div>
+    </div>
+
+    <form id="form-folha-sessao" class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-6">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Data da Sessão *</label>
+          <input type="date" id="folha-data" class="w-full px-3 py-2 border border-gray-200 rounded-xl outline-none">
+        </div>
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Nº da Sessão</label>
+          <input type="text" id="folha-numero" placeholder="Ex: 08" class="w-full px-3 py-2 border border-gray-200 rounded-xl outline-none">
+        </div>
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Assunto / Foco Principal</label>
+          <input type="text" id="folha-assunto-principal" placeholder="Ex: Conflito conjugal relatado" class="w-full px-3 py-2 border border-gray-200 rounded-xl outline-none">
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Relatos Espontâneos do Paciente</label>
+          <textarea id="folha-relatos-espontaneos" rows="3" class="w-full p-2.5 border border-gray-200 rounded-xl outline-none" placeholder="Narrativa livre trazida pelo cliente..."></textarea>
+        </div>
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Falas Relevantes / Aspas Marcantes</label>
+          <textarea id="folha-falas-relevantes" rows="3" class="w-full p-2.5 border border-gray-200 rounded-xl outline-none" placeholder='Ex: "Senti que não tinha escolha a não ser ceder..."'></textarea>
+        </div>
+      </div>
+
+      <!-- Mapeamento Rápido de Contingência (ABC na Sessão) -->
+      <div class="bg-rose-50/30 p-4 rounded-xl border border-rose-100 text-xs space-y-3">
+        <h4 class="font-bold text-brand-dark uppercase tracking-wider">Análise de Situações Específicas Descritas na Sessão</h4>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Contexto / Antecedentes</label>
+            <textarea id="folha-abc-antecedente" rows="2" class="w-full p-2 bg-white border border-gray-200 rounded-lg outline-none"></textarea>
+          </div>
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Respostas Comportamentais</label>
+            <textarea id="folha-abc-resposta" rows="2" class="w-full p-2 bg-white border border-gray-200 rounded-lg outline-none"></textarea>
+          </div>
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Consequências Identificadas</label>
+            <textarea id="folha-abc-consequencia" rows="2" class="w-full p-2 bg-white border border-gray-200 rounded-lg outline-none"></textarea>
+          </div>
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Estratégias / Atividades Aplicadas</label>
+            <textarea id="folha-abc-estrategias" rows="2" class="w-full p-2 bg-white border border-gray-200 rounded-lg outline-none"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Respostas às Atividades Aplicadas</label>
+          <textarea id="folha-resposta-atividades" rows="2" class="w-full p-2.5 border border-gray-200 rounded-xl outline-none"></textarea>
+        </div>
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Observações da Profissional</label>
+          <textarea id="folha-observacoes-profissional" rows="2" class="w-full p-2.5 border border-gray-200 rounded-xl outline-none"></textarea>
+        </div>
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Pontos Importantes para Continuidade</label>
+          <textarea id="folha-pontos-continuidade" rows="2" class="w-full p-2.5 border border-gray-200 rounded-xl outline-none"></textarea>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- MÓDULO 5: PLANO TERAPÊUTICO INDIVIDUAL (PTI) -->
+  <div id="aba-conteudo-plano-terapeutico" class="hidden space-y-6">
+    <div class="bg-white rounded-2xl p-5 border border-rose-100 card-shadow flex justify-between items-center flex-wrap gap-4">
+      <div>
+        <h3 class="text-md font-bold text-brand-dark flex items-center">
+          <i class="fa-solid fa-bullseye text-brand-main mr-2"></i> Plano Terapêutico Individual (PTI)
+        </h3>
+        <p class="text-xs text-gray-500 mt-0.5">Definição de metas, estratégias clínicas e acompanhamento sistemático de progresso.</p>
+      </div>
+      <div class="flex gap-2">
+        <button onclick="adicionarNovoObjetivoPTI()" class="bg-rose-50 text-brand-main border border-rose-200 font-semibold px-3 py-2 rounded-xl text-xs hover:bg-rose-100 transition-all">
+          <i class="fa-solid fa-plus mr-1"></i> Adicionar Novo Objetivo
+        </button>
+        <button onclick="salvarPlanoTerapeutico()" class="bg-brand-main text-white font-bold px-4 py-2 rounded-xl text-xs shadow hover:bg-brand-alt transition-all">
+          <i class="fa-solid fa-floppy-disk mr-1"></i> Salvar Plano Terapêutico
+        </button>
+      </div>
+    </div>
+
+    <!-- Formulação Inicial do Plano -->
+    <form id="form-pti-base" class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4 text-xs">
+      <h4 class="text-xs font-bold text-brand-dark uppercase tracking-wider border-b pb-1">1. Formulacão Clínico-Contextual</h4>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Data de Elaboração *</label>
+          <input type="date" id="pti-data-elaboracao" class="w-full px-3 py-2 border border-gray-200 rounded-xl outline-none">
+        </div>
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Demandas Principais</label>
+          <input type="text" id="pti-demandas-principais" class="w-full px-3 py-2 border border-gray-200 rounded-xl outline-none">
+        </div>
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Contextos Relevantes</label>
+          <input type="text" id="pti-contextos-relevantes" class="w-full px-3 py-2 border border-gray-200 rounded-xl outline-none" placeholder="Familiar, acadêmico, laboral...">
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Repertórios & Habilidades Existentes</label>
+          <textarea id="pti-repertorios-existentes" rows="2" class="w-full p-2.5 border border-gray-200 rounded-xl outline-none"></textarea>
+        </div>
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Dificuldades Identificadas</label>
+          <textarea id="pti-dificuldades" rows="2" class="w-full p-2.5 border border-gray-200 rounded-xl outline-none"></textarea>
+        </div>
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Recursos e Potencialidades</label>
+          <textarea id="pti-recursos-potencialidades" rows="2" class="w-full p-2.5 border border-gray-200 rounded-xl outline-none"></textarea>
+        </div>
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Prioridades Terapêuticas</label>
+          <textarea id="pti-prioridades" rows="2" class="w-full p-2.5 border border-gray-200 rounded-xl outline-none"></textarea>
+        </div>
+      </div>
+    </form>
+
+    <!-- CONTAINER DE OBJETIVOS ESPECÍFICOS -->
+    <div class="space-y-4">
+      <h4 class="text-sm font-bold text-brand-dark flex items-center">
+        <i class="fa-solid fa-list-check text-brand-main mr-2"></i> Objetivos Terapêuticos Cadastrados
+      </h4>
+
+      <!-- Card de Objetivo Individuado (Estrutura Dinâmica) -->
+      <div id="container-lista-objetivos-pti" class="space-y-4">
+        <div class="bg-white rounded-2xl p-5 border border-rose-100 card-shadow space-y-4 text-xs">
+          <div class="flex justify-between items-center border-b pb-2">
+            <span class="font-bold text-brand-main">Objetivo #1</span>
+            <select class="px-2 py-1 border rounded-lg font-bold text-xs bg-amber-50 text-amber-800">
+              <option value="Em Andamento">Em Andamento</option>
+              <option value="Não Iniciado">Não Iniciado</option>
+              <option value="Alcançado">Alcançado</option>
+              <option value="Reformulado">Reformulado</option>
+              <option value="Suspenso">Suspenso</option>
+            </select>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div>
+              <label class="block font-semibold text-gray-700 mb-1">Nome do Objetivo</label>
+              <input type="text" placeholder="Ex: Desenvolver Treino de Assertividade" class="w-full p-2 border rounded-xl outline-none">
+            </div>
+            <div>
+              <label class="block font-semibold text-gray-700 mb-1">Data Início / Data Revisão</label>
+              <div class="flex gap-1">
+                <input type="date" class="w-1/2 p-2 border rounded-xl outline-none">
+                <input type="date" class="w-1/2 p-2 border rounded-xl outline-none">
+              </div>
+            </div>
+            <div>
+              <label class="block font-semibold text-gray-700 mb-1">Meta Específica Mensurável</label>
+              <input type="text" placeholder="Ex: Emitir recusa assertiva 2x por semana" class="w-full p-2 border rounded-xl outline-none">
+            </div>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div>
+              <label class="block font-semibold text-gray-700 mb-1">Descrição & Justificativa Clínica</label>
+              <textarea rows="2" class="w-full p-2 border rounded-xl outline-none"></textarea>
+            </div>
+            <div>
+              <label class="block font-semibold text-gray-700 mb-1">Estratégias de Intervenção</label>
+              <textarea rows="2" class="w-full p-2 border rounded-xl outline-none"></textarea>
+            </div>
+            <div>
+              <label class="block font-semibold text-gray-700 mb-1">Indicadores Observáveis de Acompanhamento</label>
+              <textarea rows="2" class="w-full p-2 border rounded-xl outline-none"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MÓDULO 6 & 7: ANÁLISE FUNCIONAL (MOLECULAR & MOLAR) -->
+  <div id="aba-conteudo-analise-funcional" class="hidden space-y-6">
+    <div class="bg-white rounded-2xl p-5 border border-rose-100 card-shadow flex justify-between items-center flex-wrap gap-4">
+      <div>
+        <h3 class="text-md font-bold text-brand-dark flex items-center">
+          <i class="fa-solid fa-diagram-project text-brand-main mr-2"></i> Análises Funcionais do Comportamento
+        </h3>
+        <p class="text-xs text-gray-500 mt-0.5">Formulação de contingências moleculares (ARCE) e padrões molares longitudinais.</p>
+      </div>
+      <div class="flex gap-2">
+        <button onclick="alternarSubAbaAnalise('molecular')" class="bg-rose-100 text-brand-main font-bold px-3 py-2 rounded-xl text-xs">Análise Molecular</button>
+        <button onclick="alternarSubAbaAnalise('molar')" class="bg-rose-50 text-gray-600 font-bold px-3 py-2 rounded-xl text-xs hover:bg-rose-100">Análise Molar</button>
+      </div>
+    </div>
+
+    <!-- ANÁLISE MOLAR DE PADRÕES LARGOS (NOVO) -->
+    <div id="subaba-analise-molar" class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-6 text-xs">
+      <h4 class="text-xs font-bold text-brand-dark uppercase tracking-wider border-b pb-1">Análise Funcional Molar (Padrões Longitudinais)</h4>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Padrões Comportamentais Recorrentes</label>
+          <textarea id="molar-padroes-recorrentes" rows="3" class="w-full p-2.5 border rounded-xl outline-none" placeholder="Padrões de esquiva, de submissão, explosões de raiva recorrentes..."></textarea>
+        </div>
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Contextos Globais em que os Padrões Ocorrem</label>
+          <textarea id="molar-contextos-globais" rows="3" class="w-full p-2.5 border rounded-xl outline-none" placeholder="Ambiente de trabalho, interações familiares específicas..."></textarea>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Histórico de Aprendizagem Relevante</label>
+          <textarea id="molar-historico-aprendizagem" rows="3" class="w-full p-2.5 border rounded-xl outline-none"></textarea>
+        </div>
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Repertórios de Enfrentamento vs. Esquiva</label>
+          <textarea id="molar-enfrentamento-esquiva" rows="3" class="w-full p-2.5 border rounded-xl outline-none"></textarea>
+        </div>
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Variáveis Familiares, Sociais & Profissionais</label>
+          <textarea id="molar-variaveis-contextuais" rows="3" class="w-full p-2.5 border rounded-xl outline-none"></textarea>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-rose-50/40 p-4 rounded-xl border border-rose-100">
+        <div>
+          <label class="block font-semibold text-brand-dark mb-1">Hipóteses Funcionais Molares (Visão Ampla)</label>
+          <textarea id="molar-hipoteses-amplas" rows="3" class="w-full p-2.5 bg-white border rounded-xl outline-none"></textarea>
+        </div>
+        <div>
+          <label class="block font-semibold text-brand-dark mb-1">Estratégias de Intervenção e Mudanças Observadas</label>
+          <textarea id="molar-estrategias-mudancas" rows="3" class="w-full p-2.5 bg-white border rounded-xl outline-none"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MÓDULO 8: AVALIAÇÃO PSICOLÓGICA -->
+  <div id="aba-conteudo-avaliacao" class="hidden space-y-6">
+    <div class="bg-white rounded-2xl p-5 border border-rose-100 card-shadow flex justify-between items-center flex-wrap gap-4">
+      <div>
+        <h3 class="text-md font-bold text-brand-dark flex items-center">
+          <i class="fa-solid fa-clipboard-check text-brand-main mr-2"></i> Processo de Avaliação Psicológica
+        </h3>
+        <p class="text-xs text-gray-500 mt-0.5">Mapeamento de etapas, aplicação de instrumentos e síntese sem interpretação automatizada.</p>
+      </div>
+      <button onclick="salvarAvaliacaoPsicologica()" class="bg-brand-main text-white font-bold px-4 py-2 rounded-xl text-xs shadow hover:bg-brand-alt transition-all">
+        <i class="fa-solid fa-floppy-disk mr-1"></i> Salvar Avaliação
+      </button>
+    </div>
+
+    <form id="form-avaliacao-psicologica" class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-6 text-xs">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Finalidade da Avaliação *</label>
+          <input type="text" id="aval-finalidade" placeholder="Ex: Avaliação Diagnóstica Compreensiva" class="w-full px-3 py-2 border border-gray-200 rounded-xl outline-none">
+        </div>
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Demanda Inicial</label>
+          <input type="text" id="aval-demanda-inicial" class="w-full px-3 py-2 border border-gray-200 rounded-xl outline-none">
+        </div>
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Perguntas Norteadoras</label>
+          <input type="text" id="aval-perguntas-norteadoras" class="w-full px-3 py-2 border border-gray-200 rounded-xl outline-none">
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Entrevistas Realizadas & Informações de Responsáveis</label>
+          <textarea id="aval-entrevistas-responsaveis" rows="3" class="w-full p-2.5 border rounded-xl outline-none"></textarea>
+        </div>
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Observações Clínicas e Comportamentais</label>
+          <textarea id="aval-observacoes-clinicas" rows="3" class="w-full p-2.5 border rounded-xl outline-none"></textarea>
+        </div>
+      </div>
+
+      <!-- Instrumentos Utilizados -->
+      <div class="bg-rose-50/40 p-4 rounded-xl border border-rose-100 space-y-3">
+        <h4 class="font-bold text-brand-dark uppercase tracking-wider">Instrumentos, Escalas e Inventários Aplicados</h4>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Nome do Instrumento</label>
+            <input type="text" placeholder="Ex: BDI-II, WASI" class="w-full p-2 bg-white border rounded-lg outline-none">
+          </div>
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Data da Aplicação</label>
+            <input type="date" class="w-full p-2 bg-white border rounded-lg outline-none">
+          </div>
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Condições de Aplicação</label>
+            <input type="text" placeholder="Ex: Paciente atento, sem ruídos" class="w-full p-2 bg-white border rounded-lg outline-none">
+          </div>
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Resultados & Registros Técnicos</label>
+            <input type="text" placeholder="Escore bruto / Percentil" class="w-full p-2 bg-white border rounded-lg outline-none">
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Análise Integrada dos Dados</label>
+          <textarea id="aval-analise-integrada" rows="3" class="w-full p-2.5 border rounded-xl outline-none"></textarea>
+        </div>
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Limitações do Processo Avaliativo</label>
+          <textarea id="aval-limitacoes" rows="3" class="w-full p-2.5 border rounded-xl outline-none"></textarea>
+        </div>
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Conclusões, Recomendações & Devolutiva</label>
+          <textarea id="aval-conclusoes-devolutiva" rows="3" class="w-full p-2.5 border rounded-xl outline-none"></textarea>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- MÓDULO 9: ORIENTAÇÃO FAMILIAR -->
+  <div id="aba-conteudo-orientacao-familiar" class="hidden space-y-6">
+    <div class="bg-white rounded-2xl p-5 border border-rose-100 card-shadow flex justify-between items-center flex-wrap gap-4">
+      <div>
+        <h3 class="text-md font-bold text-brand-dark flex items-center">
+          <i class="fa-solid fa-people-roof text-brand-main mr-2"></i> Orientação Familiar e Parental
+        </h3>
+        <p class="text-xs text-gray-500 mt-0.5">Registros de reuniões com pais, cuidadores e responsáveis.</p>
+      </div>
+      <button onclick="salvarOrientacaoFamiliar()" class="bg-brand-main text-white font-bold px-4 py-2 rounded-xl text-xs shadow hover:bg-brand-alt transition-all">
+        <i class="fa-solid fa-floppy-disk mr-1"></i> Salvar Orientação
+      </button>
+    </div>
+
+    <form id="form-orientacao-familiar" class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4 text-xs">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Data do Encontro *</label>
+          <input type="date" id="of-data" class="w-full px-3 py-2 border rounded-xl outline-none">
+        </div>
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Participantes Presentes</label>
+          <input type="text" id="of-participantes" placeholder="Ex: Maria (Mãe), João (Pai)" class="w-full px-3 py-2 border rounded-xl outline-none">
+        </div>
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Vínculo com o Paciente</label>
+          <input type="text" id="of-vinculo" placeholder="Ex: Pais biológicos" class="w-full px-3 py-2 border rounded-xl outline-none">
+        </div>
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Objetivo da Orientação</label>
+          <input type="text" id="of-objetivo" class="w-full px-3 py-2 border rounded-xl outline-none">
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Demandas e Situações Relatadas</label>
+          <textarea id="of-demandas-relatadas" rows="3" class="w-full p-2.5 border rounded-xl outline-none"></textarea>
+        </div>
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Dificuldades com Orientações Anteriores</label>
+          <textarea id="of-dificuldades-anteriores" rows="3" class="w-full p-2.5 border rounded-xl outline-none"></textarea>
+        </div>
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Padrões de Interação Familiar Observados</label>
+          <textarea id="of-padroes-interacao" rows="3" class="w-full p-2.5 border rounded-xl outline-none"></textarea>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Estratégias Discutidas & Orientações Dadas</label>
+          <textarea id="of-orientacoes-fornecidas" rows="3" class="w-full p-2.5 border rounded-xl outline-none"></textarea>
+        </div>
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Combinados Estabelecidos & Resposta</label>
+          <textarea id="of-combinados-resposta" rows="3" class="w-full p-2.5 border rounded-xl outline-none"></textarea>
+        </div>
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Mudanças Percebidas & Próximos Passos</label>
+          <textarea id="of-mudancas-proximos-passos" rows="3" class="w-full p-2.5 border rounded-xl outline-none"></textarea>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- MÓDULO 10: DOCUMENTOS PSICOLÓGICOS E ADMINISTRATIVOS (RESOLUÇÃO CFP 06/2019 & MANUAL 2025) -->
+  <div id="aba-conteudo-documentos" class="hidden space-y-6">
+    <div class="bg-white rounded-2xl p-5 border border-rose-100 card-shadow flex justify-between items-center flex-wrap gap-4">
+      <div>
+        <h3 class="text-md font-bold text-brand-dark flex items-center">
+          <i class="fa-solid fa-folder-closed text-brand-main mr-2"></i> Documentos Psicológicos Formais & Administrativos
+        </h3>
+        <p class="text-xs text-gray-500 mt-0.5">Modelos técnicos em conformidade estrita com a Resolução CFP nº 06/2019 e Manual 2025.</p>
+      </div>
+    </div>
+
+    <!-- SELETOR DE CATEGORIA E TIPO DE DOCUMENTO -->
+    <div class="bg-rose-50/50 p-4 rounded-2xl border border-rose-100 space-y-3">
+      <div class="flex gap-4 border-b border-rose-200 pb-2">
+        <button onclick="selecionarCategoriaDoc('formal')" id="btn-cat-doc-formal" class="text-xs font-bold text-brand-main border-b-2 border-brand-main pb-1">Documentos Psicológicos Formais (CFP)</button>
+        <button onclick="selecionarCategoriaDoc('admin')" id="btn-cat-doc-admin" class="text-xs font-semibold text-gray-500 pb-1">Documentos Administrativos / Termos</button>
+      </div>
+
+      <!-- SUB-SELETOR FORMAL -->
+      <div id="subseletor-docs-formais" class="flex flex-wrap gap-2 text-xs">
+        <button onclick="carregarFormDocumento('declaracao')" class="px-3 py-1.5 bg-white rounded-lg border border-gray-200 font-semibold hover:border-brand-main">Declaração</button>
+        <button onclick="carregarFormDocumento('atestado')" class="px-3 py-1.5 bg-white rounded-lg border border-gray-200 font-semibold hover:border-brand-main">Atestado Psicológico</button>
+        <button onclick="carregarFormDocumento('relatorio')" class="px-3 py-1.5 bg-white rounded-lg border border-gray-200 font-semibold hover:border-brand-main">Relatório Psicológico</button>
+        <button onclick="carregarFormDocumento('multiprofissional')" class="px-3 py-1.5 bg-white rounded-lg border border-gray-200 font-semibold hover:border-brand-main">Relatório Multiprofissional</button>
+        <button onclick="carregarFormDocumento('laudo')" class="px-3 py-1.5 bg-white rounded-lg border border-gray-200 font-semibold hover:border-brand-main">Laudo Psicológico</button>
+        <button onclick="carregarFormDocumento('parecer')" class="px-3 py-1.5 bg-white rounded-lg border border-gray-200 font-semibold hover:border-brand-main">Parecer Psicológico</button>
+      </div>
+
+      <!-- SUB-SELETOR ADMINISTRATIVO -->
+      <div id="subseletor-docs-admin" class="hidden flex flex-wrap gap-2 text-xs">
+        <button onclick="carregarFormDocumento('contrato')" class="px-3 py-1.5 bg-white rounded-lg border border-gray-200 font-semibold hover:border-brand-main">Contrato de Prestação de Serviços</button>
+        <button onclick="carregarFormDocumento('termo-consentimento')" class="px-3 py-1.5 bg-white rounded-lg border border-gray-200 font-semibold hover:border-brand-main">Termo de Consentimento Livre e Esclarecido</button>
+        <button onclick="carregarFormDocumento('termo-online')" class="px-3 py-1.5 bg-white rounded-lg border border-gray-200 font-semibold hover:border-brand-main">Termo Atendimento Online</button>
+        <button onclick="carregarFormDocumento('autorizacao-menores')" class="px-3 py-1.5 bg-white rounded-lg border border-gray-200 font-semibold hover:border-brand-main">Autorização para Menores</button>
+        <button onclick="carregarFormDocumento('troca-informacoes')" class="px-3 py-1.5 bg-white rounded-lg border border-gray-200 font-semibold hover:border-brand-main">Autorização Troca de Informações</button>
+        <button onclick="carregarFormDocumento('registro-entrega')" class="px-3 py-1.5 bg-white rounded-lg border border-gray-200 font-semibold hover:border-brand-main">Registro de Entrega/Recebimento</button>
+      </div>
+    </div>
+
+    <!-- PAINEL DINÂMICO DE EDICÃO DO DOCUMENTO -->
+    <div id="container-gerador-documento" class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-6 text-xs">
+      <!-- Exemplo Renderizado Dinamicamente: Relatório / Laudo Psicológico conforme Estrutura CFP -->
+      <div class="flex justify-between items-center border-b pb-3">
+        <div>
+          <h4 class="text-sm font-bold text-brand-dark" id="doc-titulo-dinamico">Relatório Psicológico (Resolução CFP 06/2019)</h4>
+          <p class="text-[11px] text-gray-400">Preencha os itens obrigatórios regulamentados pelo conselho.</p>
+        </div>
+        <button onclick="exportarDocumentoPDF()" class="bg-brand-main text-white px-4 py-2 rounded-xl font-bold shadow hover:bg-brand-alt">
+          <i class="fa-solid fa-file-pdf mr-1"></i> Gerar Documento Oficial PDF
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">1. Identificação (Nome do Paciente / Solicitante)</label>
+          <input type="text" id="doc-identificacao" class="w-full p-2 border rounded-xl outline-none">
+        </div>
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Finalidade do Documento</label>
+          <input type="text" id="doc-finalidade" class="w-full p-2 border rounded-xl outline-none">
+        </div>
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Autor(a) / CRP / Assinatura</label>
+          <input type="text" id="doc-autor" readonly class="w-full p-2 bg-gray-50 border rounded-xl outline-none" value="Dra. Ana Paula • CRP 06/XXXXX">
+        </div>
+      </div>
+
+      <div>
+        <label class="block font-semibold text-gray-700 mb-1">2. Descrição da Demanda</label>
+        <textarea id="doc-demanda" rows="3" class="w-full p-2.5 border rounded-xl outline-none" placeholder="Motivo da solicitação e fatos motivadores..."></textarea>
+      </div>
+
+      <div>
+        <label class="block font-semibold text-gray-700 mb-1">3. Procedimentos Utilizados</label>
+        <textarea id="doc-procedimentos" rows="3" class="w-full p-2.5 border rounded-xl outline-none" placeholder="Número de encontros, técnicas, testes aplicados e referenciais teóricos..."></textarea>
+      </div>
+
+      <div>
+        <label class="block font-semibold text-gray-700 mb-1">4. Análise Técnico-Científica</label>
+        <textarea id="doc-analise" rows="4" class="w-full p-2.5 border rounded-xl outline-none" placeholder="Exposição rigorosa dos dados integrados, respeitando o sigilo ético..."></textarea>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">5. Conclusão e Encaminhamentos</label>
+          <textarea id="doc-conclusao" rows="3" class="w-full p-2.5 border rounded-xl outline-none"></textarea>
+        </div>
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">6. Referências Técnicas & Registro de Devolutiva</label>
+          <textarea id="doc-referencias-devolutiva" rows="3" class="w-full p-2.5 border rounded-xl outline-none" placeholder="Indicação de literatura e registro da sessão de devolutiva realizada..."></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MÓDULO 11: ENCERRAMENTO DO ACOMPANHAMENTO -->
+  <div id="aba-conteudo-encerramento" class="hidden space-y-6">
+    <div class="bg-white rounded-2xl p-5 border border-rose-100 card-shadow flex justify-between items-center flex-wrap gap-4">
+      <div>
+        <h3 class="text-md font-bold text-brand-dark flex items-center">
+          <i class="fa-solid fa-box-archive text-brand-main mr-2"></i> Encerramento do Acompanhamento Psicológico
+        </h3>
+        <p class="text-xs text-gray-500 mt-0.5">Registro final do caso, síntese evolutiva e formalização de alta ou encaminhamento.</p>
+      </div>
+      <button onclick="finalizarEArquivarProntuario()" class="bg-rose-700 text-white font-bold px-4 py-2 rounded-xl text-xs shadow hover:bg-rose-800 transition-all">
+        <i class="fa-solid fa-box-archive mr-1"></i> Finalizar & Concluir Prontuário
+      </button>
+    </div>
+
+    <form id="form-encerramento" class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-6 text-xs">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Data de Encerramento *</label>
+          <input type="date" id="enc-data" class="w-full px-3 py-2 border rounded-xl outline-none">
+        </div>
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Tipo de Encerramento *</label>
+          <select id="enc-tipo" class="w-full px-3 py-2 border rounded-xl font-bold text-brand-main outline-none">
+            <option value="Alta Terapêutica">Alta Terapêutica</option>
+            <option value="Interrupção pelo Paciente">Interrupção pelo Paciente</option>
+            <option value="Abandono Administrativo">Abandono Administrativo</option>
+            <option value="Transferência de Profissional">Transferência de Profissional</option>
+            <option value="Encaminhamento Exclusivo">Encaminhamento Exclusivo</option>
+          </select>
+        </div>
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Motivo do Encerramento</label>
+          <input type="text" id="enc-motivo" class="w-full px-3 py-2 border rounded-xl outline-none" placeholder="Ex: Objetivos atingidos com consolidação de ganhos">
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Demanda Inicial vs. Síntese do Processo Terapêutico</label>
+          <textarea id="enc-sintese-processo" rows="4" class="w-full p-2.5 border rounded-xl outline-none"></textarea>
+        </div>
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Principais Temas Trabalhados ao longo do acompanhamento</label>
+          <textarea id="enc-temas-trabalhados" rows="4" class="w-full p-2.5 border rounded-xl outline-none"></textarea>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Objetivos Alcançados</label>
+          <textarea id="enc-objetivos-alcancados" rows="3" class="w-full p-2.5 border rounded-xl outline-none bg-emerald-50/30 border-emerald-200"></textarea>
+        </div>
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Objetivos Parcialmente Alcançados</label>
+          <textarea id="enc-objetivos-parciais" rows="3" class="w-full p-2.5 border rounded-xl outline-none bg-amber-50/30 border-amber-200"></textarea>
+        </div>
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Dificuldades / Remanescentes</label>
+          <textarea id="enc-dificuldades-remanescentes" rows="3" class="w-full p-2.5 border rounded-xl outline-none"></textarea>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Orientações Finais Fornecidas</label>
+          <textarea id="enc-orientacoes-finais" rows="3" class="w-full p-2.5 border rounded-xl outline-none"></textarea>
+        </div>
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Encaminhamentos / Necessidade Futura</label>
+          <textarea id="enc-encaminhamentos-futuros" rows="3" class="w-full p-2.5 border rounded-xl outline-none"></textarea>
+        </div>
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Registro da Sessão Devolutiva Final</label>
+          <textarea id="enc-registro-devolutiva" rows="3" class="w-full p-2.5 border rounded-xl outline-none" placeholder="Data e reações do paciente/responsáveis na devolutiva..."></textarea>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>
 
     <!-- VIEW 3: FORMULÁRIO DE ANÁLISE FUNCIONAL -->
     <section id="view-analise" class="tab-content hidden space-y-6">
