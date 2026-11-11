@@ -1,2375 +1,546 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PsiGestão - Sistema Clínico de Análise do Comportamento | Dra. Daniele Sousa Santos</title>
-  
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  
-  <!-- Fontes Google Inter e Montserrat -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
-  
-  <!-- FontAwesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
-  <!-- HTML2PDF.js para exportação PDF -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROLETA DAS EMOÇÕES – MINHA JORNADA ATÉ A ESCOLA</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Canvas Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 
-  <!-- Configuração de Cores Customizadas Tailwind -->
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            brand: {
-              main: '#C25983',
-              alt: '#B85C83',
-              soft: '#F7EBEF',
-              bg: '#FAF2F5',
-              dark: '#3D2A32',
-              sidebar: '#5E283F',
-              sidebarHover: '#763452',
-              navy: '#1A365D',
-              cardBg: '#FFFFFF'
-            }
-          },
-          fontFamily: {
-            sans: ['Inter', 'sans-serif'],
-            display: ['Montserrat', 'sans-serif']
-          }
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, #F0FDF4 0%, #FDF2F8 33%, #F3E8FF 66%, #FFF7ED 100%);
+            min-height: 100vh;
         }
-      }
-    }
-  </script>
 
-  <style>
-    body {
-      background-color: #F8F5F7;
-      color: #3D2A32;
-      font-family: 'Inter', sans-serif;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
+        h1, h2, h3, .font-heading {
+            font-family: 'Fredoka', cursive;
+        }
 
-    ::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
-    }
-    ::-webkit-scrollbar-track {
-      background: #F7EBEF;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #B85C83;
-      border-radius: 4px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: #C25983;
-    }
+        /* Shadow & Glow Effects */
+        .wheel-shadow {
+            filter: drop-shadow(0px 12px 24px rgba(0, 0, 0, 0.15));
+        }
 
-    .card-shadow {
-      box-shadow: 0 4px 20px -2px rgba(194, 89, 131, 0.08), 0 2px 6px -1px rgba(61, 42, 50, 0.04);
-      border: 1px solid rgba(244, 227, 233, 0.8);
-      border-radius: 1rem;
-    }
-
-    .sidebar-brand {
-      background-color: #5E283F;
-      color: #ffffff;
-    }
-    
-    .sidebar-item-active {
-      background: rgba(255, 255, 255, 0.15);
-      border-radius: 0.75rem;
-      font-weight: 600;
-    }
-
-    .sidebar-item {
-      transition: all 0.2s ease;
-      border-radius: 0.75rem;
-    }
-    .sidebar-item:hover {
-      background: rgba(255, 255, 255, 0.08);
-    }
-  </style>
-</head>
-<body class="flex h-screen overflow-hidden">
-
- <body class="min-h-screen bg-[#F8F5F7] text-[#3D2A32] antialiased flex overflow-hidden">
-
-  <!-- ========================================== -->
-  <!-- BARRA LATERAL (SIDEBAR) ESTILO REFERÊNCIA -->
-  <!-- ========================================== -->
-  <aside class="w-64 bg-[#5E283F] text-white flex flex-col justify-between hidden md:flex flex-shrink-0 shadow-xl z-20">
-    <div>
-      <!-- Logo e Título da Marca -->
-      <div class="p-6 flex items-center space-x-3 border-b border-white/10">
-        <div class="w-10 h-10 rounded-xl bg-white/10 text-white flex items-center justify-center font-bold text-xl shadow-inner">
-          <i class="fa-solid fa-brain"></i>
-        </div>
-        <div>
-          <h1 class="font-display font-bold text-lg leading-tight tracking-wide">PsiGestão</h1>
-          <p class="text-[10px] text-rose-200 uppercase tracking-widest font-medium">Clínica Psicológica</p>
-        </div>
-      </div>
-
-      <!-- Menu de Navegação Lateral -->
-      <nav class="p-4 space-y-1.5 font-medium text-sm">
-        <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn w-full flex items-center px-4 py-3 rounded-xl bg-white/15 text-white font-semibold transition-all">
-          <i class="fa-solid fa-house w-6 text-base"></i> Início
-        </button>
-        <button onclick="switchTab('pacientes')" id="nav-pacientes" class="nav-btn w-full flex items-center px-4 py-3 rounded-xl text-rose-100 hover:bg-white/10 transition-all">
-          <i class="fa-solid fa-user-group w-6 text-base"></i> Pacientes
-        </button>
-        <button onclick="switchTab('pacientes-inativos')" id="nav-pacientes-inativos" class="nav-btn w-full flex items-center px-4 py-3 rounded-xl text-rose-100 hover:bg-white/10 transition-all">
-          <i class="fa-solid fa-user-slash w-6 text-base"></i> Inativos
-        </button>
-        <button onclick="switchTab('analise')" id="nav-analise" class="nav-btn w-full flex items-center px-4 py-3 rounded-xl text-rose-100 hover:bg-white/10 transition-all">
-          <i class="fa-solid fa-folder-open w-6 text-base"></i> Prontuários
-        </button>
-        <button onclick="switchTab('analise')" id="nav-documentos-menu" class="nav-btn w-full flex items-center px-4 py-3 rounded-xl text-rose-100 hover:bg-white/10 transition-all">
-          <i class="fa-solid fa-file-lines w-6 text-base"></i> Documentos
-        </button>
-        <button onclick="switchTab('analise')" id="nav-relatorios-menu" class="nav-btn w-full flex items-center px-4 py-3 rounded-xl text-rose-100 hover:bg-white/10 transition-all">
-          <i class="fa-solid fa-chart-pie w-6 text-base"></i> Relatórios
-        </button>
-        <button onclick="toggleBackupModal()" class="w-full flex items-center px-4 py-3 rounded-xl text-rose-100 hover:bg-white/10 transition-all">
-          <i class="fa-solid fa-database w-6 text-base"></i> Financeiro / Backup
-        </button>
-        <button onclick="abrirModalEditarProfissional()" class="w-full flex items-center px-4 py-3 rounded-xl text-rose-100 hover:bg-white/10 transition-all">
-          <i class="fa-solid fa-gear w-6 text-base"></i> Configurações
-        </button>
-        <button onclick="switchTab('guia')" id="nav-guia" class="nav-btn w-full flex items-center px-4 py-3 rounded-xl text-rose-100 hover:bg-white/10 transition-all">
-          <i class="fa-solid fa-circle-question w-6 text-base"></i> Suporte / Guia
-        </button>
-      </nav>
-    </div>
-
-    <!-- Bloco Decorativo Inferior na Sidebar -->
-    <div class="p-4 m-4 bg-white/10 rounded-2xl border border-white/10 text-center space-y-2">
-      <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center mx-auto text-rose-200">
-        <i class="fa-solid fa-heart text-xs"></i>
-      </div>
-      <p class="text-xs text-rose-100 leading-relaxed font-medium">Cuidar também é registrar.</p>
-      <div class="w-full bg-white/20 h-1 rounded-full overflow-hidden">
-        <div class="bg-white w-2/3 h-full rounded-full"></div>
-      </div>
-    </div>
-  </aside>
-
-  <!-- ========================================== -->
-  <!-- ÁREA PRINCIPAL DO CONTEÚDO                 -->
-  <!-- ========================================== -->
-  <div class="flex-1 flex flex-col h-screen overflow-y-auto">
-    
-    <!-- CABEÇALHO SUPERIOR (TOP BAR) -->
-    <header class="bg-white border-b border-rose-100 sticky top-0 z-30 shadow-xs px-6 py-3.5 flex justify-between items-center">
-      <!-- Barra de Pesquisa Centralizada/Esquerda -->
-      <div class="relative w-full max-w-lg">
-        <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-gray-400">
-          <i class="fa-solid fa-search text-sm"></i>
-        </span>
-        <input type="text" placeholder="Buscar paciente por nome, CPF ou ID..." class="w-full bg-gray-50/80 border border-rose-100 rounded-full pl-10 pr-4 py-2 text-sm text-brand-dark focus:outline-none focus:bg-white focus:ring-2 focus:ring-brand-main/20 transition-all">
-      </div>
-
-      <!-- Ações e Perfil do Profissional à Direita -->
-      <div class="flex items-center space-x-4">
-        <!-- Notificações -->
-        <button class="relative p-2 text-gray-500 hover:text-brand-main transition-colors">
-          <i class="fa-solid fa-bell text-lg"></i>
-          <span class="absolute top-1 right-1 w-4 h-4 bg-rose-600 text-white rounded-full text-[10px] font-bold flex items-center justify-center">3</span>
-        </button>
-
-        <!-- Perfil do Usuário -->
-        <div class="flex items-center space-x-3 border-l border-gray-200 pl-4">
-          <div class="w-9 h-9 rounded-full bg-rose-200 flex items-center justify-center text-brand-main font-bold overflow-hidden border border-rose-300">
-            <i class="fa-solid fa-user text-sm"></i>
-          </div>
-          <div class="hidden sm:block text-left">
-            <h4 class="text-xs font-bold text-brand-dark leading-tight" id="header-prof-nome">Dra. Daniele Sousa Santos</h4>
-            <p class="text-[11px] text-gray-500" id="header-prof-sub">Psicóloga</p>
-          </div>
-          <button onclick="abrirModalEditarProfissional()" class="text-gray-400 hover:text-brand-main text-xs">
-            <i class="fa-solid fa-chevron-down"></i>
-          </button>
-        </div>
-      </div>
-    </header>
-
-    <!-- CONTEÚDO DINÂMICO (MAIN CONTAINER) -->
-    <main class="flex-grow max-w-7xl w-full mx-auto px-6 py-6 space-y-6">
-
-      <!-- VIEW 1: DASHBOARD (CAPA PRINCIPAL ESTILIZADA) -->
-      <section id="view-dashboard" class="tab-content space-y-6">
+        .btn-bounce:hover {
+            transform: translateY(-3px) scale(1.02);
+        }
         
-        <!-- BANNER DE BOAS-VINDAS / PERFIL DO PACIENTE ATUAL -->
-        <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow relative overflow-hidden flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
-          <div class="flex flex-col sm:flex-row items-start sm:items-center gap-5">
-            <!-- Foto / Avatar do Paciente em Destaque -->
-            <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-rose-100 border-2 border-white shadow-md flex items-center justify-center text-brand-main text-3xl font-bold overflow-hidden flex-shrink-0">
-              <i class="fa-solid fa-user-injured"></i>
-            </div>
-            <!-- Informações do Paciente em Foco -->
-            <div class="space-y-1">
-              <div class="flex items-center space-x-2">
-                <h2 class="text-xl sm:text-2xl font-bold text-brand-dark" id="dash-paciente-destaque">Ana Carolina Santos</h2>
-                <span class="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wide">Ativa</span>
-              </div>
-              <p class="text-xs text-gray-500 flex flex-wrap items-center gap-3">
-                <span><i class="fa-solid fa-user mr-1 text-brand-main"></i> <span id="dash-pac-idade">24 anos</span></span>
-                <span>•</span>
-                <span><i class="fa-solid fa-id-card mr-1 text-brand-main"></i> CPF: 123.456.789-00</span>
-              </p>
-              <p class="text-xs text-gray-500 pt-1">
-                <i class="fa-solid fa-calendar-days mr-1 text-brand-main"></i> Início do atendimento: 15/03/2025 • Frequência: Semanal
-              </p>
-            </div>
-          </div>
-
-          <!-- Indicadores Rápidos Superiores (Sessões, Faltas, Plano) -->
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 w-full lg:w-auto">
-            <div class="bg-rose-50/50 border border-rose-100 rounded-xl p-3 text-center">
-              <span class="block text-lg font-bold text-brand-dark" id="stat-sessoes-destaque">12</span>
-              <span class="text-[10px] uppercase font-semibold text-gray-500">Sessões</span>
-            </div>
-            <div class="bg-rose-50/50 border border-rose-100 rounded-xl p-3 text-center">
-              <span class="block text-lg font-bold text-emerald-600">2</span>
-              <span class="text-[10px] uppercase font-semibold text-gray-500">Faltas</span>
-            </div>
-            <div class="bg-rose-50/50 border border-rose-100 rounded-xl p-3 text-center">
-              <span class="block text-xs font-bold text-brand-main mt-1">Em andamento</span>
-              <span class="text-[10px] uppercase font-semibold text-gray-500">Plano Terapêutico</span>
-            </div>
-            <div class="bg-rose-50/50 border border-rose-100 rounded-xl p-3 text-center">
-              <span class="block text-xs font-bold text-amber-600 mt-1"><i class="fa-solid fa-star mr-1"></i> Positiva</span>
-              <span class="text-[10px] uppercase font-semibold text-gray-500">Evolução</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- ABAS DE NAVEGAÇÃO RÁPIDA DO PRONTUÁRIO NA CAPA -->
-        <div class="bg-white p-2 rounded-2xl border border-rose-100 card-shadow flex flex-wrap items-center gap-2">
-          <button onclick="switchTab('prontuario-detalhe')" class="px-4 py-2 rounded-xl text-xs font-bold bg-brand-main text-white shadow-sm transition-all flex items-center gap-1.5">
-            <i class="fa-solid fa-house-chimney"></i> Visão Geral
-          </button>
-          <button onclick="switchTab('prontuario-detalhe'); alternarAbaProntuario('anamnese')" class="px-4 py-2 rounded-xl text-xs font-semibold text-gray-600 hover:bg-rose-50 hover:text-brand-main transition-all flex items-center gap-1.5">
-            <i class="fa-solid fa-notes-medical"></i> Anamnese
-          </button>
-          <button onclick="switchTab('prontuario-detalhe'); alternarAbaProntuario('evolucoes')" class="px-4 py-2 rounded-xl text-xs font-semibold text-gray-600 hover:bg-rose-50 hover:text-brand-main transition-all flex items-center gap-1.5">
-            <i class="fa-solid fa-file-waveform"></i> Evoluções
-          </button>
-          <button onclick="switchTab('prontuario-detalhe'); alternarAbaProntuario('anotacoes')" class="px-4 py-2 rounded-xl text-xs font-semibold text-gray-600 hover:bg-rose-50 hover:text-brand-main transition-all flex items-center gap-1.5">
-            <i class="fa-solid fa-book-open-reader"></i> Folhas de Sessão
-          </button>
-          <button onclick="switchTab('analise')" class="px-4 py-2 rounded-xl text-xs font-semibold text-gray-600 hover:bg-rose-50 hover:text-brand-main transition-all flex items-center gap-1.5">
-            <i class="fa-solid fa-diagram-project"></i> Análise Funcional
-          </button>
-          <button onclick="switchTab('prontuario-detalhe'); alternarAbaProntuario('planejamento')" class="px-4 py-2 rounded-xl text-xs font-semibold text-gray-600 hover:bg-rose-50 hover:text-brand-main transition-all flex items-center gap-1.5">
-            <i class="fa-solid fa-compass-drafting"></i> Plano Terapêutico
-          </button>
-        </div>
-
-        <!-- GRID PRINCIPAL DE CARDS E BLOCOS (3 COLUNAS COMO NA IMAGEM) -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          
-          <!-- COLUNA 1: INFORMAÇÕES DO PACIENTE E RESUMO -->
-          <div class="space-y-6">
-            <!-- Informações Cadastrais -->
-            <div class="bg-white rounded-2xl p-5 border border-rose-100 card-shadow space-y-4">
-              <div class="flex justify-between items-center border-b border-rose-50 pb-3">
-                <h3 class="font-bold text-brand-dark text-sm flex items-center">
-                  <i class="fa-solid fa-id-card text-brand-main mr-2"></i> Informações do Paciente
-                </h3>
-                <button onclick="abrirModalEditarProfissional()" class="text-xs text-brand-main font-semibold hover:underline">Editar</button>
-              </div>
-              <div class="space-y-2 text-xs text-gray-600">
-                <div class="flex justify-between"><span class="font-semibold text-gray-500">Nome:</span> <span class="text-brand-dark font-medium">Ana Carolina Santos</span></div>
-                <div class="flex justify-between"><span class="font-semibold text-gray-500">Idade:</span> <span class="text-brand-dark">24 anos (10/02/2001)</span></div>
-                <div class="flex justify-between"><span class="font-semibold text-gray-500">Contato:</span> <span class="text-brand-dark">(11) 98765-4321</span></div>
-                <div class="flex justify-between"><span class="font-semibold text-gray-500">E-mail:</span> <span class="text-brand-dark">ana@email.com</span></div>
-                <div class="flex justify-between"><span class="font-semibold text-gray-500">Responsável:</span> <span class="text-brand-dark">-</span></div>
-              </div>
-              <div class="pt-2 border-t border-rose-50">
-                <span class="inline-block bg-rose-50 text-brand-main text-[11px] font-bold px-3 py-1 rounded-xl border border-rose-200">Convênio: Particular</span>
-              </div>
-            </div>
-
-            <!-- Resumo do Caso -->
-            <div class="bg-white rounded-2xl p-5 border border-rose-100 card-shadow space-y-3">
-              <div class="flex justify-between items-center border-b border-rose-50 pb-2">
-                <h3 class="font-bold text-brand-dark text-sm flex items-center">
-                  <i class="fa-solid fa-file-medical text-brand-main mr-2"></i> Resumo do Caso
-                </h3>
-              </div>
-              <p class="text-xs text-gray-600 leading-relaxed text-justify">
-                Demandas principais: ansiedade, autocobrança e dificuldades em relacionamentos. Boa adesão ao tratamento e engajamento nas sessões.
-              </p>
-              <div class="text-right">
-                <button onclick="switchTab('pacientes')" class="text-xs text-brand-main font-bold hover:underline">Ver detalhes <i class="fa-solid fa-arrow-right ml-1"></i></button>
-              </div>
-            </div>
-
-            <!-- Próximas Sessões -->
-            <div class="bg-white rounded-2xl p-5 border border-rose-100 card-shadow space-y-3">
-              <div class="flex justify-between items-center border-b border-rose-50 pb-2">
-                <h3 class="font-bold text-brand-dark text-sm flex items-center">
-                  <i class="fa-solid fa-calendar-check text-brand-main mr-2"></i> Próxima Sessão
-                </h3>
-                <span class="text-xs text-brand-main font-semibold cursor-pointer" onclick="switchTab('pacientes')">Ver agenda</span>
-              </div>
-              <div class="flex items-center gap-4 bg-rose-50/50 p-3 rounded-xl border border-rose-100">
-                <div class="bg-white px-3 py-2 rounded-xl text-center shadow-xs border border-rose-100">
-                  <span class="block text-base font-bold text-brand-dark leading-tight">24</span>
-                  <span class="text-[10px] uppercase font-bold text-brand-main">Abr</span>
-                </div>
-                <div>
-                  <h4 class="font-bold text-brand-dark text-xs">Quinta-feira • 14h00</h4>
-                  <p class="text-[11px] text-gray-500"><i class="fa-solid fa-location-dot mr-1"></i> Sessão presencial</p>
-                </div>
-              </div>
-              <button onclick="abrirModalEvolucao()" class="w-full bg-brand-main hover:bg-brand-alt text-white font-bold py-2 px-4 rounded-xl text-xs transition-all shadow">
-                Registrar Atendimento
-              </button>
-            </div>
-          </div>
-
-          <!-- COLUNA 2: EVOLUÇÃO RECENTE E GRÁFICOS -->
-          <div class="space-y-6">
-            <!-- Evolução Recente -->
-            <div class="bg-white rounded-2xl p-5 border border-rose-100 card-shadow space-y-3">
-              <div class="flex justify-between items-center border-b border-rose-50 pb-2">
-                <h3 class="font-bold text-brand-dark text-sm flex items-center">
-                  <i class="fa-solid fa-file-waveform text-brand-main mr-2"></i> Evolução Recente
-                </h3>
-                <span class="text-xs text-brand-main font-semibold cursor-pointer" onclick="switchTab('prontuario-detalhe'); alternarAbaProntuario('evolucoes')">Ver todas</span>
-              </div>
-              <div class="space-y-2 text-xs text-gray-600">
-                <div class="flex items-center justify-between text-[11px] text-gray-400">
-                  <span><i class="fa-solid fa-calendar mr-1"></i> 17/04/2025 • Sessão 12</span>
-                  <span class="bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">Finalizada</span>
-                </div>
-                <p class="text-justify leading-relaxed text-gray-700">
-                  Paciente relatou melhora na ansiedade e maior percepção sobre seus pensamentos. Trabalhado estratégias de enfrentamento e reforço positivo.
-                </p>
-                <p class="text-[11px]"><b>Técnicas utilizadas:</b> psicoeducação, reestruturação cognitiva e treino de habilidades sociais.</p>
-              </div>
-              <div class="pt-3 border-t border-rose-50 flex items-center justify-between">
-                <div class="flex items-center space-x-2">
-                  <div class="w-6 h-6 rounded-full bg-rose-200 flex items-center justify-center text-[10px] font-bold text-brand-main">DS</div>
-                  <span class="text-[11px] font-semibold text-brand-dark">Dra. Daniele Sousa Santos</span>
-                </div>
-                <button onclick="switchTab('prontuario-detalhe'); alternarAbaProntuario('evolucoes')" class="text-xs font-bold text-brand-main hover:underline">
-                  Visualizar evolução <i class="fa-solid fa-arrow-right ml-1"></i>
-                </button>
-              </div>
-            </div>
-
-            <!-- Gráficos e Acompanhamento -->
-            <div class="bg-white rounded-2xl p-5 border border-rose-100 card-shadow space-y-4">
-              <div class="flex justify-between items-center border-b border-rose-50 pb-2">
-                <h3 class="font-bold text-brand-dark text-sm flex items-center">
-                  <i class="fa-solid fa-chart-line text-brand-main mr-2"></i> Gráficos e Acompanhamento
-                </h3>
-                <span class="text-[11px] font-semibold bg-rose-50 px-2 py-1 rounded-lg text-brand-main">Últimos 6 meses</span>
-              </div>
-              
-              <!-- Simulação Gráfica Visual -->
-              <div class="bg-rose-50/30 p-4 rounded-xl border border-rose-100 space-y-3">
-                <div class="flex justify-between text-xs font-bold text-brand-dark">
-                  <span>Evolução dos Sintomas (Ansiedade vs Bem-estar)</span>
-                </div>
-                <div class="h-28 w-full flex items-end justify-between gap-2 pt-4 px-2 border-b border-rose-200">
-                  <div class="w-8 bg-brand-main/80 rounded-t-lg h-16 flex items-center justify-center text-[10px] text-white font-bold">Nov</div>
-                  <div class="w-8 bg-brand-main/80 rounded-t-lg h-20 flex items-center justify-center text-[10px] text-white font-bold">Dez</div>
-                  <div class="w-8 bg-brand-main/80 rounded-t-lg h-14 flex items-center justify-center text-[10px] text-white font-bold">Jan</div>
-                  <div class="w-8 bg-brand-main/80 rounded-t-lg h-22 flex items-center justify-center text-[10px] text-white font-bold">Fev</div>
-                  <div class="w-8 bg-brand-main/80 rounded-t-lg h-24 flex items-center justify-center text-[10px] text-white font-bold">Mar</div>
-                  <div class="w-8 bg-emerald-600 rounded-t-lg h-28 flex items-center justify-center text-[10px] text-white font-bold">Abr</div>
-                </div>
-                <div class="flex justify-between items-center text-[11px] text-gray-500 pt-1">
-                  <span><i class="fa-solid fa-circle text-brand-main text-[8px]"></i> Sintomas Reduzidos</span>
-                  <span><b>Adesão ao Tratamento:</b> 92%</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- COLUNA 3: PLANO TERAPÊUTICO, DOCUMENTOS E ATALHOS -->
-          <div class="space-y-6">
-            <!-- Plano Terapêutico -->
-            <div class="bg-white rounded-2xl p-5 border border-rose-100 card-shadow space-y-3">
-              <div class="flex justify-between items-center border-b border-rose-50 pb-2">
-                <h3 class="font-bold text-brand-dark text-sm flex items-center">
-                  <i class="fa-solid fa-bullseye text-brand-main mr-2"></i> Plano Terapêutico
-                </h3>
-                <span class="text-xs text-brand-main font-semibold cursor-pointer" onclick="switchTab('prontuario-detalhe'); alternarAbaProntuario('planejamento')">Ver completo</span>
-              </div>
-              <div class="space-y-2 text-xs text-gray-600">
-                <p class="font-semibold text-brand-dark">Objetivos Principais:</p>
-                <div class="flex items-center space-x-2 text-gray-700"><i class="fa-solid fa-check text-emerald-600 text-xs"></i> <span>Reduzir sintomas de ansiedade</span></div>
-                <div class="flex items-center space-x-2 text-gray-700"><i class="fa-solid fa-check text-emerald-600 text-xs"></i> <span>Desenvolver habilidades sociais</span></div>
-                <div class="flex items-center space-x-2 text-gray-700"><i class="fa-solid fa-check text-emerald-600 text-xs"></i> <span>Aumentar a autoconfiança</span></div>
-              </div>
-              <div class="pt-2">
-                <div class="flex justify-between text-[11px] font-bold text-gray-500 mb-1">
-                  <span>Progresso Geral</span>
-                  <span class="text-brand-main">70%</span>
-                </div>
-                <div class="w-full bg-rose-100 h-2 rounded-full overflow-hidden">
-                  <div class="bg-brand-main w-[70%] h-full rounded-full"></div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Documentos Recentes -->
-            <div class="bg-white rounded-2xl p-5 border border-rose-100 card-shadow space-y-3">
-              <div class="flex justify-between items-center border-b border-rose-50 pb-2">
-                <h3 class="font-bold text-brand-dark text-sm flex items-center">
-                  <i class="fa-solid fa-folder-closed text-brand-main mr-2"></i> Documentos
-                </h3>
-                <span class="text-xs text-brand-main font-semibold cursor-pointer" onclick="switchTab('analise')">Ver todos</span>
-              </div>
-              <div class="space-y-2 text-xs">
-                <div class="flex items-center justify-between p-2 bg-rose-50/40 rounded-xl border border-rose-100">
-                  <span class="font-medium text-gray-700 flex items-center"><i class="fa-solid fa-file-pdf text-red-500 mr-2"></i> Relatório Psicológico</span>
-                  <button onclick="gerarPDFAnamnese()" class="text-brand-main hover:text-brand-alt font-bold"><i class="fa-solid fa-download"></i></button>
-                </div>
-                <div class="flex items-center justify-between p-2 bg-rose-50/40 rounded-xl border border-rose-100">
-                  <span class="font-medium text-gray-700 flex items-center"><i class="fa-solid fa-file-pdf text-red-500 mr-2"></i> Atestado Psicológico</span>
-                  <button onclick="gerarPDFAnamnese()" class="text-brand-main hover:text-brand-alt font-bold"><i class="fa-solid fa-download"></i></button>
-                </div>
-                <div class="flex items-center justify-between p-2 bg-rose-50/40 rounded-xl border border-rose-100">
-                  <span class="font-medium text-gray-700 flex items-center"><i class="fa-solid fa-file-pdf text-red-500 mr-2"></i> Termo de Consentimento</span>
-                  <button onclick="gerarPDFAnamnese()" class="text-brand-main hover:text-brand-alt font-bold"><i class="fa-solid fa-download"></i></button>
-                </div>
-              </div>
-            </div>
-
-            <!-- Atalhos Rápidos -->
-            <div class="bg-white rounded-2xl p-5 border border-rose-100 card-shadow space-y-3">
-              <div class="border-b border-rose-50 pb-2">
-                <h3 class="font-bold text-brand-dark text-sm flex items-center">
-                  <i class="fa-solid fa-bolt text-brand-main mr-2"></i> Atalhos Rápidos
-                </h3>
-              </div>
-              <div class="space-y-2">
-                <button onclick="abrirModalEvolucao()" class="w-full bg-rose-50 hover:bg-rose-100 text-brand-main font-semibold py-2 px-3 rounded-xl text-xs flex items-center justify-center transition-all border border-rose-200">
-                  <i class="fa-solid fa-plus mr-1.5"></i> Nova Evolução
-                </button>
-                <button onclick="switchTab('analise')" class="w-full bg-rose-50 hover:bg-rose-100 text-brand-main font-semibold py-2 px-3 rounded-xl text-xs flex items-center justify-center transition-all border border-rose-200">
-                  <i class="fa-solid fa-file-pdf mr-1.5"></i> Gerar Relatório
-                </button>
-                <button onclick="abrirModalNovoPaciente()" class="w-full bg-rose-50 hover:bg-rose-100 text-brand-main font-semibold py-2 px-3 rounded-xl text-xs flex items-center justify-center transition-all border border-rose-200">
-                  <i class="fa-solid fa-user-plus mr-1.5"></i> Cadastrar Paciente
-                </button>
-              </div>
-            </div>
-
-          </div>
-
-        </div>
-      </section>
-
-<!-- VIEW 2: GESTÃO DE PACIENTES E PRONTUÁRIOS -->
-<section id="view-pacientes" class="tab-content hidden space-y-6">
-  <!-- Cabeçalho com Título e Ação -->
-  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-    <div>
-      <h2 class="text-2xl font-bold text-brand-dark tracking-tight">Prontuários e Pacientes</h2>
-      <p class="text-sm text-gray-500 mt-0.5">Cadastre e acompanhe o histórico, anamneses, evoluções e planejamentos dos clientes.</p>
-    </div>
-    <button 
-      onclick="abrirModalNovoPaciente()" 
-      class="bg-brand-main text-white px-4 py-2.5 rounded-xl font-medium text-sm shadow-md hover:bg-brand-alt active:scale-95 transition-all flex items-center justify-center gap-2 flex-shrink-0">
-      <i class="fa-solid fa-user-plus text-xs"></i> 
-      <span>Cadastrar Paciente</span>
-    </button>
-  </div>
-
-  <!-- Barra de Pesquisa Rápida -->
-  <div class="bg-white p-4 rounded-xl border border-rose-100 card-shadow flex items-center gap-3">
-    <div class="text-gray-400 pl-1">
-      <i class="fa-solid fa-search"></i>
-    </div>
-    <input 
-      type="text" 
-      id="input-busca-paciente" 
-      oninput="filtrarPacientes(this.value)"
-      placeholder="Pesquisar paciente por nome..." 
-      class="w-full text-sm bg-transparent border-none focus:outline-none text-brand-dark placeholder-gray-400">
-  </div>
-
-  <!-- Grid de Cards de Pacientes (Preenchido dinamicamente via JS) -->
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="grid-pacientes">
-    <!-- Estado vazio padrão (caso não haja pacientes cadastrados) -->
-    <div class="col-span-full bg-white rounded-xl p-8 text-center border border-dashed border-rose-200">
-      <div class="w-12 h-12 bg-rose-50 text-brand-main rounded-full flex items-center justify-center mx-auto mb-3 text-xl">
-        <i class="fa-solid fa-folder-open"></i>
-      </div>
-      <h3 class="text-base font-semibold text-brand-dark">Nenhum paciente cadastrado</h3>
-      <p class="text-xs text-gray-500 mt-1">Cadastre um paciente para visualizar as informações do prontuário.</p>
-    </div>
-  </div>
-</section>
-
-<!-- VIEW 2.1: DETALHE DO PRONTUÁRIO -->
-<section id="view-prontuario-detalhe" class="tab-content hidden space-y-6">
-  <!-- Cabeçalho do Prontuário -->
-  <div class="bg-white rounded-2xl p-5 border border-rose-100 card-shadow flex flex-wrap justify-between items-center gap-4">
-    <div class="flex items-center gap-3.5">
-      <!-- Botão Voltar com micro-interação -->
-      <button 
-        onclick="switchTab('pacientes')" 
-        class="p-2.5 bg-rose-50 text-brand-main rounded-xl hover:bg-rose-100 active:scale-95 transition-all flex items-center justify-center"
-        title="Voltar para a lista de pacientes">
-        <i class="fa-solid fa-arrow-left text-sm"></i>
-      </button>
-      <div>
-        <!-- Badges de Status e Faixa Etária -->
-        <div class="flex items-center gap-2">
-          <span id="prontuario-badge-faixa" class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-rose-100 text-brand-main tracking-wide uppercase">
-            Faixa Etária
-          </span>
-          <span id="prontuario-status-ficha" class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 tracking-wide uppercase">
-            Ativo
-          </span>
-        </div>
-        <!-- Nome e Informações do Paciente -->
-        <h2 class="text-xl font-bold text-brand-dark mt-1 tracking-tight" id="prontuario-nome-paciente">
-          Nome do Paciente
-        </h2>
-        <p class="text-xs text-gray-500 mt-0.5" id="prontuario-sub-info">
-          Data de Nascimento: --/--/---- • Idade: -- anos
-        </p>
-      </div>
-    </div>
-    <div class="flex flex-wrap items-center gap-2">
-      <button onclick="adicionarSessaoAgendaPacienteAtual()" class="bg-brand-main hover:bg-brand-alt text-white font-bold py-2 px-3.5 rounded-xl text-xs transition-all shadow flex items-center gap-1.5">
-        <i class="fa-solid fa-calendar-plus"></i> Agendar Sessão
-      </button>
-      <button onclick="abrirModalEditarPacienteAtual()" class="bg-rose-50 text-brand-main border border-rose-200 hover:bg-rose-100 font-bold py-2 px-3 rounded-xl text-xs transition-all shadow-xs flex items-center gap-1.5" title="Editar Paciente">
-        <i class="fa-solid fa-pen-to-square"></i> Editar
-      </button>
-      <button onclick="inativarPacienteAtual()" class="bg-amber-50 text-amber-700 border border-amber-200 hover:bg-amber-100 font-bold py-2 px-3 rounded-xl text-xs transition-all shadow-xs flex items-center gap-1.5" title="Inativar Paciente">
-        <i class="fa-solid fa-user-slash"></i> Inativar
-      </button>
-      <button onclick="excluirPacienteAtual()" class="bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 font-bold py-2 px-3 rounded-xl text-xs transition-all shadow-xs flex items-center gap-1.5" title="Excluir Paciente">
-        <i class="fa-solid fa-trash"></i> Excluir
-      </button>
-    </div>
-  </div>
-
-  <!-- NAVEGAÇÃO INTERNA DO PRONTUÁRIO (10 MÓDULOS) -->
-  <div class="flex flex-wrap gap-1.5 bg-rose-50/50 p-2 rounded-xl border border-rose-100 shadow-xs" aria-label="Navegação do Prontuário">
-    <!-- 1. Anamnese -->
-    <button onclick="alternarAbaProntuario('anamnese')" id="subnav-anamnese" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-white text-brand-main shadow-xs transition-all duration-200 flex items-center gap-1.5 active:scale-95" title="Anamnese de adultos, crianças, responsáveis e histórico completo">
-      <i class="fa-solid fa-notes-medical text-xs"></i> <span>1. Anamnese</span>
-    </button>
-    <!-- 2. Evoluções -->
-    <button onclick="alternarAbaProntuario('evolucoes')" id="subnav-evolucoes" class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-brand-main hover:bg-white/80 transition-all duration-200 flex items-center gap-1.5 active:scale-95" title="Evoluções das sessões, faltas, atendimentos com responsáveis e devolutivas">
-      <i class="fa-solid fa-file-waveform text-xs"></i> <span>2. Evoluções</span>
-    </button>
-    <!-- 3. Folhas de Sessão -->
-    <button onclick="alternarAbaProntuario('anotacoes')" id="subnav-anotacoes" class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-brand-main hover:bg-white/80 transition-all duration-200 flex items-center gap-1.5 active:scale-95" title="Anotações clínicas, relatos, intervenções e acompanhamento de tarefas">
-      <i class="fa-solid fa-book-open-reader text-xs"></i> <span>3. Folhas de Sessão</span>
-    </button>
-    <!-- 4. Avaliação Psicológica -->
-    <button onclick="alternarAbaProntuario('avaliacao')" id="subnav-avaliacao" class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-brand-main hover:bg-white/80 transition-all duration-200 flex items-center gap-1.5 active:scale-95" title="Planejamento, instrumentos, aplicação de escalas, inventários e análise integrada">
-      <i class="fa-solid fa-clipboard-check text-xs"></i> <span>4. Avaliação Psicológica</span>
-    </button>
-    <!-- 5. Plano Terapêutico -->
-    <button onclick="alternarAbaProntuario('plano-terapeutico')" id="subnav-plano-terapeutico" class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-brand-main hover:bg-white/80 transition-all duration-200 flex items-center gap-1.5 active:scale-95" title="Demandas, objetivos, metas, indicadores e estratégias de intervenção">
-      <i class="fa-solid fa-bullseye text-xs"></i> <span>5. Plano Terapêutico</span>
-    </button>
-    <!-- 6. Análise Funcional -->
-    <button onclick="alternarAbaProntuario('analise-funcional')" id="subnav-analise-funcional" class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-brand-main hover:bg-white/80 transition-all duration-200 flex items-center gap-1.5 active:scale-95" title="Análise molecular (ABC), molar, variáveis contextuais e hipóteses funcionais">
-      <i class="fa-solid fa-diagram-project text-xs"></i> <span>6. Análise Funcional</span>
-    </button>
-    <!-- 7. Orientação Familiar -->
-    <button onclick="alternarAbaProntuario('orientacao-familiar')" id="subnav-orientacao-familiar" class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-brand-main hover:bg-white/80 transition-all duration-200 flex items-center gap-1.5 active:scale-95" title="Orientações parentais, manejo de comportamentos e reuniões familiares">
-      <i class="fa-solid fa-people-roof text-xs"></i> <span>7. Orientação Familiar</span>
-    </button>
-    <!-- 8. Planejamento e Supervisão -->
-    <button onclick="alternarAbaProntuario('planejamento')" id="subnav-planejamento" class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-brand-main hover:bg-white/80 transition-all duration-200 flex items-center gap-1.5 active:scale-95" title="Planejamento de sessões, dúvidas, discussões de caso e hipóteses clínicas">
-      <i class="fa-solid fa-compass-drafting text-xs"></i> <span>8. Planejamento e Supervisão</span>
-    </button>
-    <!-- 9. Documentos -->
-    <button onclick="alternarAbaProntuario('documentos')" id="subnav-documentos" class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-brand-main hover:bg-white/80 transition-all duration-200 flex items-center gap-1.5 active:scale-95" title="Declarações, atestados, relatórios, laudos, pareceres e termos">
-      <i class="fa-solid fa-folder-closed text-xs"></i> <span>9. Documentos</span>
-    </button>
-    <!-- 10. Encerramento -->
-    <button onclick="alternarAbaProntuario('encerramento')" id="subnav-encerramento" class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-brand-main hover:bg-white/80 transition-all duration-200 flex items-center gap-1.5 active:scale-95" title="Alta, interrupção, encaminhamentos e transferência do atendimento">
-      <i class="fa-solid fa-box-archive text-xs"></i> <span>10. Encerramento</span>
-    </button>
-  </div>
-
-  <!-- CONTEÚDO DOS 10 MÓDULOS DO PRONTUÁRIO -->
-
-  <!-- 1. ABA ANAMNESE -->
-  <div id="aba-conteudo-anamnese" class="prontuario-aba-pane space-y-6">
-    <div class="flex justify-end space-x-2 bg-white p-4 rounded-2xl border border-rose-100 card-shadow">
-      <button onclick="salvarRascunhoAnamnese()" class="bg-white text-gray-700 border border-gray-300 font-semibold px-4 py-2 rounded-xl text-xs hover:bg-gray-50 transition-all flex items-center">
-        <i class="fa-solid fa-floppy-disk mr-1.5 text-brand-main"></i> Salvar Rascunho
-      </button>
-      <button onclick="concluirAnamnese()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-2 rounded-xl text-xs shadow transition-all flex items-center">
-        <i class="fa-solid fa-check-circle mr-1.5"></i> Concluir Anamnese
-      </button>
-      <button onclick="gerarPDFAnamnese()" class="bg-brand-main hover:bg-brand-alt text-white font-bold px-4 py-2 rounded-xl text-xs shadow transition-all flex items-center">
-        <i class="fa-solid fa-file-pdf mr-1.5"></i> Gerar PDF da Anamnese
-      </button>
-    </div>
-    <div id="container-formulario-anamnese" class="bg-white p-6 rounded-2xl border border-rose-100 card-shadow space-y-4">
-      <h3 class="font-bold text-brand-dark text-sm">Formulário de Anamnese Psicológica</h3>
-      <textarea rows="8" class="w-full p-3 text-xs border border-rose-200 rounded-xl outline-none" placeholder="Histórico de desenvolvimento, queixa principal, antecedentes..."></textarea>
-    </div>
-  </div>
-
-  <!-- 2. ABA EVOLUÇÕES -->
-  <div id="aba-conteudo-evolucoes" class="prontuario-aba-pane hidden space-y-6">
-    <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow flex justify-between items-center">
-      <div>
-        <h3 class="text-md font-bold text-brand-dark flex items-center">
-          <i class="fa-solid fa-file-waveform text-brand-main mr-2"></i> Histórico de Evoluções Clínicas
-        </h3>
-        <p class="text-xs text-gray-500 mt-0.5">Registros cronológicos e evoluções de atendimento do paciente.</p>
-      </div>
-      <button onclick="abrirModalEvolucao()" class="bg-brand-main text-white font-bold px-4 py-2.5 rounded-xl text-xs shadow hover:bg-brand-alt transition-all flex items-center">
-        <i class="fa-solid fa-plus mr-1.5"></i> Fazer Evolução
-      </button>
-    </div>
-    <div id="lista-evolucoes-paciente" class="space-y-4">
-      <div class="p-6 bg-white rounded-2xl border border-rose-100 card-shadow text-xs text-gray-500 text-center">Nenhuma evolução registrada.</div>
-    </div>
-  </div>
-
-  <!-- 3. ABA FOLHAS DE SESSÃO -->
-  <div id="aba-conteudo-anotacoes" class="prontuario-aba-pane hidden space-y-6">
-    <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
-      <div class="flex justify-between items-center border-b border-rose-100 pb-2">
-        <h3 class="text-md font-bold text-brand-dark flex items-center">
-          <i class="fa-solid fa-pen-to-square text-brand-main mr-2"></i> Folha de Anotações da Sessão
-        </h3>
-      </div>
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-xs">
-        <div>
-          <label class="block font-semibold text-gray-700 mb-1">Data da Sessão *</label>
-          <input type="date" id="nota-sessao-data" class="w-full px-3 py-2 text-sm border border-gray-200 rounded-xl outline-none">
-        </div>
-        <div>
-          <label class="block font-semibold text-gray-700 mb-1">Horário</label>
-          <input type="time" id="nota-sessao-horario" class="w-full px-3 py-2 text-sm border border-gray-200 rounded-xl outline-none">
-        </div>
-        <div>
-          <label class="block font-semibold text-gray-700 mb-1">Nº da Sessão</label>
-          <input type="text" id="nota-sessao-numero" class="w-full px-3 py-2 text-sm border border-gray-200 rounded-xl outline-none" placeholder="Ex: 05">
-        </div>
-        <div>
-          <label class="block font-semibold text-gray-700 mb-1">Anexar Arquivo (PDF, JPG, PNG)</label>
-          <input type="file" id="nota-sessao-arquivo" accept=".pdf,.jpg,.jpeg,.png" class="w-full px-2 py-1 text-xs border border-gray-200 rounded-xl bg-gray-50 outline-none">
-        </div>
-      </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-        <div>
-          <label class="block font-semibold text-gray-700 mb-1">Anotações Livres da Sessão</label>
-          <textarea id="nota-sessao-texto" rows="4" class="w-full p-3 border border-gray-200 rounded-xl outline-none" placeholder="Observações clínicas individualizadas..."></textarea>
-        </div>
-        <div>
-          <label class="block font-semibold text-gray-700 mb-1">Pontos Importantes para o Próximo Atendimento</label>
-          <textarea id="nota-sessao-proximo" rows="4" class="w-full p-3 border border-gray-200 rounded-xl outline-none" placeholder="Tarefas, combinados ou alertas..."></textarea>
-        </div>
-      </div>
-      <div class="flex justify-end space-x-2">
-        <button onclick="salvarFolhaSessao('Concluída')" class="bg-brand-main text-white font-bold px-5 py-2 rounded-xl text-xs shadow hover:bg-brand-alt transition-all">
-          <i class="fa-solid fa-floppy-disk mr-1"></i> Salvar Folha de Sessão
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- 4. ABA AVALIAÇÃO PSICOLÓGICA -->
-  <div id="aba-conteudo-avaliacao" class="prontuario-aba-pane hidden space-y-6">
-    <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
-      <h3 class="text-md font-bold text-brand-dark border-b border-rose-100 pb-2 flex items-center">
-        <i class="fa-solid fa-clipboard-check text-brand-main mr-2"></i> Avaliação Psicológica & Instrumentos
-      </h3>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-        <div>
-          <label class="block font-semibold text-gray-700 mb-1">Procedimentos e Instrumentos Utilizados</label>
-          <textarea rows="4" class="w-full p-3 border border-gray-200 rounded-xl outline-none" placeholder="Testes, escalas e inventários aplicados..."></textarea>
-        </div>
-        <div>
-          <label class="block font-semibold text-gray-700 mb-1">Resultados e Análise Integrada</label>
-          <textarea rows="4" class="w-full p-3 border border-gray-200 rounded-xl outline-none" placeholder="Análise dos resultados e conclusões diagnósticas/funcionais..."></textarea>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 5. ABA PLANO TERAPÊUTICO -->
-  <div id="aba-conteudo-plano-terapeutico" class="prontuario-aba-pane hidden space-y-6">
-    <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
-      <h3 class="text-md font-bold text-brand-dark border-b border-rose-100 pb-2 flex items-center">
-        <i class="fa-solid fa-bullseye text-brand-main mr-2"></i> Plano Terapêutico e Metas
-      </h3>
-      <div class="space-y-3 text-xs">
-        <div>
-          <label class="block font-semibold text-gray-700 mb-1">Objetivos e Metas Terapêuticas</label>
-          <textarea rows="4" class="w-full p-3 border border-gray-200 rounded-xl outline-none" placeholder="Metas de curto e longo prazo..."></textarea>
-        </div>
-        <div>
-          <label class="block font-semibold text-gray-700 mb-1">Estratégias de Intervenção e Indicadores de Progresso</label>
-          <textarea rows="4" class="w-full p-3 border border-gray-200 rounded-xl outline-none" placeholder="Estratégias adotadas e formas de mensuração..."></textarea>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 6. ABA ANÁLISE FUNCIONAL -->
-  <div id="aba-conteudo-analise-funcional" class="prontuario-aba-pane hidden space-y-6">
-    <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
-      <h3 class="text-md font-bold text-brand-dark border-b border-rose-100 pb-2 flex items-center">
-        <i class="fa-solid fa-diagram-project text-brand-main mr-2"></i> Análise Funcional (Molecular e Molar)
-      </h3>
-      <div class="space-y-3 text-xs">
-        <div>
-          <label class="block font-semibold text-gray-700 mb-1">Relações Moleculares (Tríplice Contingência - ABC)</label>
-          <textarea rows="4" class="w-full p-3 border border-gray-200 rounded-xl outline-none" placeholder="Antecedente, Comportamento e Consequência..."></textarea>
-        </div>
-        <div>
-          <label class="block font-semibold text-gray-700 mb-1">Variáveis Molares e Contextuais</label>
-          <textarea rows="4" class="w-full p-3 border border-gray-200 rounded-xl outline-none" placeholder="Histórico de reforçamento, regras e contexto ambiental amplo..."></textarea>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 7. ABA ORIENTAÇÃO FAMILIAR -->
-  <div id="aba-conteudo-orientacao-familiar" class="prontuario-aba-pane hidden space-y-6">
-    <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
-      <h3 class="text-md font-bold text-brand-dark border-b border-rose-100 pb-2 flex items-center">
-        <i class="fa-solid fa-people-roof text-brand-main mr-2"></i> Orientação Familiar e Reuniões
-      </h3>
-      <div class="space-y-3 text-xs">
-        <div>
-          <label class="block font-semibold text-gray-700 mb-1">Participantes e Demandas Apresentadas</label>
-          <input type="text" class="w-full p-2.5 border border-gray-200 rounded-xl outline-none" placeholder="Ex: Pais, responsáveis legais...">
-        </div>
-        <div>
-          <label class="block font-semibold text-gray-700 mb-1">Orientações Fornecidas e Combinados</label>
-          <textarea rows="4" class="w-full p-3 border border-gray-200 rounded-xl outline-none" placeholder="Manejo comportamental, orientações parentais..."></textarea>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 8. ABA PLANEJAMENTO E SUPERVISÃO (SEPARADOS EM DUAS SEÇÕES) -->
-  <div id="aba-conteudo-planejamento" class="prontuario-aba-pane hidden space-y-6">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <!-- Seção 1: Planejamento de Sessão -->
-      <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-3">
-        <h3 class="text-md font-bold text-brand-dark border-b border-rose-100 pb-2 flex items-center gap-2">
-          <i class="fa-solid fa-compass-drafting text-brand-main"></i> Planejamento de Sessão
-        </h3>
-        <p class="text-xs text-gray-500">Objetivos, perguntas clínicas e atividades previstas para o próximo atendimento.</p>
-        <div class="space-y-3 text-xs">
-          <div>
-            <label class="block font-semibold text-gray-700 mb-1">Objetivos e Focos da Próxima Sessão</label>
-            <textarea rows="4" class="w-full p-3 border border-gray-200 rounded-xl outline-none" placeholder="Temas prioritários..."></textarea>
-          </div>
-          <div>
-            <label class="block font-semibold text-gray-700 mb-1">Estratégias e Atividades Previstas</label>
-            <textarea rows="3" class="w-full p-3 border border-gray-200 rounded-xl outline-none" placeholder="Técnicas, materiais ou recursos..."></textarea>
-          </div>
-        </div>
-      </div>
-
-      <!-- Seção 2: Supervisão Clínica -->
-      <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-3">
-        <h3 class="text-md font-bold text-brand-dark border-b border-rose-100 pb-2 flex items-center gap-2">
-          <i class="fa-solid fa-user-shield text-brand-main"></i> Supervisão Clínica
-        </h3>
-        <p class="text-xs text-gray-500">Dúvidas técnicas, hipóteses e orientações recebidas em supervisão.</p>
-        <div class="space-y-3 text-xs">
-          <div>
-            <label class="block font-semibold text-gray-700 mb-1">Dúvidas e Casos Levados para Supervisão</label>
-            <textarea rows="4" class="w-full p-3 border border-gray-200 rounded-xl outline-none" placeholder="Dificuldades clínicas ou impasse terapêutico..."></textarea>
-          </div>
-          <div>
-            <label class="block font-semibold text-gray-700 mb-1">Orientações Recebidas e Decisões Clínicas</label>
-            <textarea rows="3" class="w-full p-3 border border-gray-200 rounded-xl outline-none" placeholder="Diretrizes do supervisor e novos rumos..."></textarea>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 9. ABA DOCUMENTOS -->
-  <div id="aba-conteudo-documentos" class="prontuario-aba-pane hidden space-y-6">
-    <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
-      <h3 class="text-md font-bold text-brand-dark border-b border-rose-100 pb-2 flex items-center">
-        <i class="fa-solid fa-folder-closed text-brand-main mr-2"></i> Documentos Psicológicos Emitidos
-      </h3>
-      <div class="flex flex-wrap gap-2 text-xs">
-        <button class="bg-rose-50 text-brand-main border border-rose-200 hover:bg-rose-100 font-bold px-3 py-2 rounded-xl transition-all">Emitir Atestado</button>
-        <button class="bg-rose-50 text-brand-main border border-rose-200 hover:bg-rose-100 font-bold px-3 py-2 rounded-xl transition-all">Emitir Declaração</button>
-        <button class="bg-rose-50 text-brand-main border border-rose-200 hover:bg-rose-100 font-bold px-3 py-2 rounded-xl transition-all">Emitir Relatório / Laudo</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- 10. ABA ENCERRAMENTO -->
-  <div id="aba-conteudo-encerramento" class="prontuario-aba-pane hidden space-y-6">
-    <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
-      <h3 class="text-md font-bold text-brand-dark border-b border-rose-100 pb-2 flex items-center">
-        <i class="fa-solid fa-box-archive text-brand-main mr-2"></i> Encerramento e Síntese de Acompanhamento
-      </h3>
-      <div class="space-y-3 text-xs">
-        <div>
-          <label class="block font-semibold text-gray-700 mb-1">Motivo do Encerramento (Alta, Abandono ou Encaminhamento)</label>
-          <input type="text" class="w-full p-2.5 border border-gray-200 rounded-xl outline-none" placeholder="Ex: Alta terapêutica por alcance de metas...">
-        </div>
-        <div>
-          <label class="block font-semibold text-gray-700 mb-1">Síntese dos Ganhos e Encaminhamentos Finais</label>
-          <textarea rows="4" class="w-full p-3 border border-gray-200 rounded-xl outline-none" placeholder="Resumo do processo terapêutico..."></textarea>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- SCRIPT DE SUPORTE ÀS ABAS DO PRONTUÁRIO -->
-<script>
-  function alternarAbaProntuario(abaNome) {
-    document.querySelectorAll('.prontuario-aba-pane').forEach(el => el.classList.add('hidden'));
-    document.querySelectorAll('[id^="subnav-"]').forEach(btn => {
-      btn.className = "px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-brand-main hover:bg-white/80 transition-all duration-200 flex items-center gap-1.5 active:scale-95";
-    });
-
-    const alvoPane = document.getElementById('aba-conteudo-' + abaNome);
-    if (alvoPane) alvoPane.classList.remove('hidden');
-
-    const alvoBtn = document.getElementById('subnav-' + abaNome);
-    if (alvoBtn) {
-      alvoBtn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold bg-white text-brand-main shadow-xs transition-all duration-200 flex items-center gap-1.5 active:scale-95";
-    }
-  }
-</script>
-
-
-
-    <!-- VIEW 4: GUIA TÉCNICO DE CONSULTA RÁPIDA -->
-    <section id="view-guia" class="tab-content hidden space-y-6">
-      <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow">
-        <h2 class="text-2xl font-bold text-brand-dark mb-2">Guia Rápido de Análise Funcional</h2>
-        <p class="text-sm text-gray-600 mb-6">Diretrizes da Análise do Comportamento para estruturação formal de contingências.</p>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div class="bg-rose-50/60 p-4 rounded-xl border border-rose-100">
-            <span class="bg-brand-main text-white text-xs font-bold px-2 py-0.5 rounded">A</span>
-            <h3 class="font-bold text-brand-dark text-base mt-2">Antecedente (Sᴰ / SΔ)</h3>
-            <p class="text-xs text-gray-600 mt-1">Estímulos ou contextos ambientais/internos que sinalizam a disponibilidade de reforçamento.</p>
-          </div>
-          <div class="bg-rose-50/60 p-4 rounded-xl border border-rose-100">
-            <span class="bg-brand-alt text-white text-xs font-bold px-2 py-0.5 rounded">R</span>
-            <h3 class="font-bold text-brand-dark text-base mt-2">Resposta Operante (R)</h3>
-            <p class="text-xs text-gray-600 mt-1">Ação observável, motora, verbal ou fisiológica/encoberta do indivíduo.</p>
-          </div>
-          <div class="bg-rose-50/60 p-4 rounded-xl border border-rose-100">
-            <span class="bg-rose-600 text-white text-xs font-bold px-2 py-0.5 rounded">C</span>
-            <h3 class="font-bold text-brand-dark text-base mt-2">Consequência (C)</h3>
-            <p class="text-xs text-gray-600 mt-1">Modificação imediata gerada no ambiente que altera a probabilidade da resposta.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <!-- MODAL DE CADASTRO / EDIÇÃO DE PACIENTE -->
-  <div id="modal-paciente" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4 border border-rose-100">
-      <div class="flex justify-between items-center border-b border-gray-100 pb-3">
-        <h3 class="font-bold text-brand-dark text-lg flex items-center">
-          <i class="fa-solid fa-user-plus text-brand-main mr-2"></i> Cadastrar Novo Paciente
-        </h3>
-        <button onclick="fecharModalPaciente()" class="text-gray-400 hover:text-gray-600 transition-colors">
-          <i class="fa-solid fa-xmark text-lg"></i>
-        </button>
-      </div>
-      <form id="form-cad-paciente" onsubmit="salvarNovoPaciente(event)" class="space-y-3 text-xs">
-        <div>
-          <label class="block font-semibold text-gray-700 mb-1">Nome Completo do Paciente *</label>
-          <input type="text" id="cad-pac-nome" required class="w-full px-3 py-2 text-sm border border-gray-200 rounded-xl outline-none" placeholder="Ex: Sofia Mendes">
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <label class="block font-semibold text-gray-700 mb-1">Data de Nascimento *</label>
-            <input type="date" id="cad-pac-nascimento" required class="w-full px-3 py-2 text-sm border border-gray-200 rounded-xl outline-none">
-          </div>
-          <div>
-            <label class="block font-semibold text-gray-700 mb-1">Telefone / Contato</label>
-            <input type="text" id="cad-pac-tel" class="w-full px-3 py-2 text-sm border border-gray-200 rounded-xl outline-none" placeholder="(98) 99999-9999">
-          </div>
-        </div>
-        <div>
-          <label class="block font-semibold text-gray-700 mb-1">Foco de Atendimento / Queixa Principal *</label>
-          <input type="text" id="cad-pac-queixa" required class="w-full px-3 py-2 text-sm border border-gray-200 rounded-xl outline-none" placeholder="Ex: Avaliação comportamental e seletividade">
-        </div>
-        <div class="flex justify-end space-x-2 pt-3 border-t border-gray-100">
-          <button type="button" onclick="fecharModalPaciente()" class="px-4 py-2 rounded-xl text-gray-600 bg-gray-100 font-semibold hover:bg-gray-200 transition-colors">
-            Cancelar
-          </button>
-          <button type="submit" class="px-5 py-2 rounded-xl text-white bg-brand-main font-bold shadow hover:bg-brand-alt transition-colors">
-            <i class="fa-solid fa-floppy-disk mr-1"></i> Salvar e Iniciar Prontuário
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- MODAL DE FAZER EVOLUÇÃO CLÍNICA -->
-  <div id="modal-evolucao" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
-    <div class="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl space-y-4 border border-rose-100 max-h-[90vh] overflow-y-auto">
-      <div class="flex justify-between items-center border-b border-rose-100 pb-3">
-        <div>
-          <h3 class="font-bold text-brand-dark text-lg flex items-center">
-            <i class="fa-solid fa-file-waveform text-brand-main mr-2"></i> Registro de Evolução Clínica
-          </h3>
-          <p class="text-xs text-gray-500">Preenchimento automático com dados da profissional e do paciente.</p>
-        </div>
-        <button onclick="fecharModalEvolucao()" class="text-gray-400 hover:text-gray-600 transition-colors">
-          <i class="fa-solid fa-xmark text-lg"></i>
-        </button>
-      </div>
-      <form id="form-evolucao-clinica" onsubmit="salvarEvolucaoClinica(event)" class="space-y-4 text-xs">
-        <div class="bg-rose-50/50 p-3 rounded-xl border border-rose-100 grid grid-cols-2 gap-2 text-[11px]">
-          <div><b>Profissional:</b> <span id="evo-prof-display">Dra. Daniele Sousa Santos</span> (CRP 22/07398)</div>
-          <div><b>Paciente:</b> <span id="evo-pac-display">--</span></div>
-          <div><b>Data da Sessão:</b> <input type="date" id="evo-data" required class="mt-1 px-2 py-1 bg-white border rounded"></div>
-          <div><b>Nº da Sessão:</b> <input type="text" id="evo-sessao-num" placeholder="Ex: 03" class="mt-1 px-2 py-1 bg-white border rounded"></div>
-        </div>
-        <div>
-          <label class="block font-semibold text-gray-700 mb-1">1. Queixa Principal *</label>
-          <textarea id="evo-queixa" rows="2" required class="w-full p-2.5 border rounded-xl outline-none" placeholder="Relato apresentado pelo paciente ou responsável..."></textarea>
-        </div>
-        <div>
-          <label class="block font-semibold text-gray-700 mb-1">2. Demanda Trabalhada *</label>
-          <textarea id="evo-demanda" rows="2" required class="w-full p-2.5 border rounded-xl outline-none" placeholder="Objetivos clínicos abordados durante a sessão..."></textarea>
-        </div>
-        <div>
-          <label class="block font-semibold text-gray-700 mb-1">3. Descrição da Sessão *</label>
-          <textarea id="evo-descricao" rows="4" required class="w-full p-2.5 border rounded-xl outline-none" placeholder="Atividades realizadas, relatos relevantes, comportamentos observados, intervenções..."></textarea>
-        </div>
-        <div>
-          <label class="block font-semibold text-gray-700 mb-1">4. Análise Técnica da Sessão *</label>
-          <textarea id="evo-analise" rows="3" required class="w-full p-2.5 border rounded-xl outline-none" placeholder="Análise clínica fundamentada, evolução observada, respostas e pontos de acompanhamento..."></textarea>
-        </div>
-        <div>
-          <label class="block font-semibold text-gray-700 mb-1">Anexar Documento Relacionado (Opcional)</label>
-          <input type="file" id="evo-arquivo" accept=".pdf,.jpg,.jpeg,.png" class="w-full p-1 border rounded-xl bg-gray-50">
-        </div>
-        <div class="flex justify-between items-center pt-3 border-t border-gray-100">
-          <select id="evo-status-select" class="px-3 py-2 border rounded-xl font-bold text-brand-main bg-white">
-            <option value="Rascunho">Salvar como Rascunho</option>
-            <option value="Concluída">Concluir Evolução</option>
-          </select>
-          <div class="space-x-2">
-            <button type="button" onclick="fecharModalEvolucao()" class="px-4 py-2 rounded-xl text-gray-600 bg-gray-100 font-semibold">Cancelar</button>
-            <button type="submit" class="px-5 py-2 rounded-xl text-white bg-brand-main font-bold shadow hover:bg-brand-alt">Salvar Evolução</button>
-          </div>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- MODAL DE PLANEJAMENTO E SUPERVISÃO -->
-  <div id="modal-planejamento" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
-    <div class="bg-white rounded-2xl max-w-3xl w-full p-6 shadow-2xl space-y-4 border border-rose-100 max-h-[90vh] overflow-y-auto">
-      <div class="flex justify-between items-center border-b border-rose-100 pb-3">
-        <div>
-          <h3 class="font-bold text-brand-dark text-lg flex items-center">
-            <i class="fa-solid fa-compass-drafting text-brand-main mr-2"></i> Folha de Planejamento e Supervisão das Próximas Sessões
-          </h3>
-          <p class="text-xs text-gray-500">Planejamento clínico estruturado e registro de supervisão.</p>
-        </div>
-        <button onclick="fecharModalPlanejamento()" class="text-gray-400 hover:text-gray-600 transition-colors">
-          <i class="fa-solid fa-xmark text-lg"></i>
-        </button>
-      </div>
-      <form id="form-planejamento-clinico" onsubmit="salvarPlanejamentoClinico(event)" class="space-y-4 text-xs">
-        <div class="bg-rose-50/50 p-3 rounded-xl border border-rose-100 grid grid-cols-2 sm:grid-cols-3 gap-2 text-[11px]">
-          <div><b>Profissional:</b> <span id="plan-prof-display">Dra. Daniele Sousa Santos</span> (CRP 22/07398)</div>
-          <div><b>Paciente:</b> <span id="plan-pac-display">--</span></div>
-          <div><b>Data Elaboração:</b> <input type="date" id="plan-data-el" required class="mt-1 px-2 py-1 bg-white border rounded"></div>
-          <div><b>Data Prevista Próxima Sessão:</b> <input type="date" id="plan-data-prev" class="mt-1 px-2 py-1 bg-white border rounded"></div>
-          <div><b>Status do Registro:</b>
-            <select id="plan-status" class="mt-1 px-2 py-1 bg-white border rounded font-bold text-brand-main">
-              <option value="Rascunho">Rascunho</option>
-              <option value="Concluída">Concluído</option>
-            </select>
-          </div>
-        </div>
-        <div class="space-y-3">
-          <h4 class="font-bold text-brand-dark border-b pb-1">1. Síntese da Sessão Anterior</h4>
-          <textarea id="plan-sintese-ant" rows="3" class="w-full p-2.5 border rounded-xl outline-none" placeholder="Principais aspectos observados, demandas trabalhadas, respostas às intervenções e pontos a retomar..."></textarea>
-        </div>
-        <div class="space-y-3">
-          <h4 class="font-bold text-brand-dark border-b pb-1">2. Objetivos para as Próximas Sessões</h4>
-          <textarea id="plan-objetivos" rows="3" class="w-full p-2.5 border rounded-xl outline-none" placeholder="Objetivo clínico principal, específicos, habilidades/repertórios e comportamentos a acompanhar..."></textarea>
-        </div>
-        <div class="space-y-3">
-          <h4 class="font-bold text-brand-dark border-b pb-1">3. Planejamento das Intervenções</h4>
-          <textarea id="plan-intervencoes" rows="3" class="w-full p-2.5 border rounded-xl outline-none" placeholder="Procedimentos previstos, atividades, perguntas/temas a explorar e generalização de repertórios..."></textarea>
-        </div>
-        <div class="space-y-3">
-          <h4 class="font-bold text-brand-dark border-b pb-1">4. Indicadores de Acompanhamento</h4>
-          <textarea id="plan-indicadores" rows="3" class="w-full p-2.5 border rounded-xl outline-none" placeholder="Comportamentos observados, indicadores de progresso e critérios para ajuste..."></textarea>
-        </div>
-        <div class="space-y-3">
-          <h4 class="font-bold text-brand-dark border-b pb-1">5. Orientações e Pontos de Atenção</h4>
-          <textarea id="plan-orientacoes" rows="3" class="w-full p-2.5 border rounded-xl outline-none" placeholder="Aspectos relevantes, orientações profissionais e pontos para discussão em supervisão..."></textarea>
-        </div>
-        <div class="bg-blue-50/40 p-4 rounded-xl border border-blue-100 space-y-3">
-          <h4 class="font-bold text-blue-900 border-b border-blue-200 pb-1 flex items-center">
-            <i class="fa-solid fa-user-shield mr-2"></i> 6. Registro de Supervisão Clínica (Opcional)
-          </h4>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div><label class="font-semibold block mb-1">Data da Supervisão</label><input type="date" id="sup-data" class="w-full p-2 bg-white border rounded-xl"></div>
-            <div><label class="font-semibold block mb-1">Questões Clínicas Apresentadas</label><input type="text" id="sup-questoes" class="w-full p-2 bg-white border rounded-xl" placeholder="Resumo das dúvidas ou casos"></div>
-          </div>
-          <div><label class="font-semibold block mb-1">Discussões e Hipóteses Funcionais</label><textarea id="sup-hipoteses" rows="2" class="w-full p-2 bg-white border rounded-xl" placeholder="Discussão teórica/analítica..."></textarea></div>
-          <div><label class="font-semibold block mb-1">Recomendações Recebidas e Ajustes Definidos</label><textarea id="sup-recomendacoes" rows="2" class="w-full p-2 bg-white border rounded-xl" placeholder="Orientações e mudanças no plano..."></textarea></div>
-        </div>
-        <div class="flex justify-end space-x-2 pt-3 border-t">
-          <button type="button" onclick="fecharModalPlanejamento()" class="px-4 py-2 rounded-xl text-gray-600 bg-gray-100 font-semibold">Cancelar</button>
-          <button type="submit" class="px-5 py-2 rounded-xl text-white bg-brand-main font-bold shadow hover:bg-brand-alt">Salvar Planejamento</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- MODAL DE EDIÇÃO DOS DADOS DA PROFISSIONAL -->
-  <div id="modal-editar-profissional" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4 border border-rose-100">
-      <div class="flex justify-between items-center border-b border-gray-100 pb-3">
-        <h3 class="font-bold text-brand-dark text-lg flex items-center">
-          <i class="fa-solid fa-user-gear text-brand-main mr-2"></i> Editar Dados da Profissional
-        </h3>
-        <button onclick="fecharModalEditarProfissional()" class="text-gray-400 hover:text-gray-600 transition-colors">
-          <i class="fa-solid fa-xmark text-lg"></i>
-        </button>
-      </div>
-      <form id="form-editar-profissional" onsubmit="salvarDadosProfissional(event)" class="space-y-4 text-xs">
-        <div>
-          <label class="block font-semibold text-gray-700 mb-1">Nome Completo com Titulação *</label>
-          <input type="text" id="prof-input-nome" required class="w-full px-3 py-2 text-sm border rounded-xl outline-none">
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <label class="block font-semibold text-gray-700 mb-1">Registro Profissional (CRP) *</label>
-            <input type="text" id="prof-input-crp" required class="w-full px-3 py-2 text-sm border rounded-xl outline-none">
-          </div>
-          <div>
-            <label class="block font-semibold text-gray-700 mb-1">Especialidade / Título *</label>
-            <input type="text" id="prof-input-especialidade" required class="w-full px-3 py-2 text-sm border rounded-xl outline-none">
-          </div>
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <label class="block font-semibold text-gray-700 mb-1">Telefone / Contato</label>
-            <input type="text" id="prof-input-telefone" class="w-full px-3 py-2 text-sm border rounded-xl outline-none">
-          </div>
-          <div>
-            <label class="block font-semibold text-gray-700 mb-1">E-mail Profissional</label>
-            <input type="email" id="prof-input-email" class="w-full px-3 py-2 text-sm border rounded-xl outline-none">
-          </div>
-        </div>
-        <div class="flex justify-end space-x-2 pt-3 border-t border-gray-100">
-          <button type="button" onclick="fecharModalEditarProfissional()" class="px-4 py-2 rounded-xl text-gray-600 bg-gray-100 font-semibold">Cancelar</button>
-          <button type="submit" class="px-5 py-2 rounded-xl text-white bg-brand-main font-bold shadow">Salvar Alterações</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- MODAL DE PRÉ-VISUALIZAÇÃO AO VIVO DO PDF (A4 IMPECÁVEL - CORRIGIDO) -->
-  <div id="modal-pdf" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 hidden flex flex-col items-center justify-start p-2 sm:p-6 overflow-y-auto">
-    <div class="w-full max-w-4xl bg-white rounded-t-2xl px-6 py-4 border-b border-gray-200 flex flex-wrap justify-between items-center gap-3 sticky top-0 z-10 shadow-md">
-      <div>
-        <h3 class="font-bold text-brand-dark text-lg flex items-center">
-          <i class="fa-solid fa-file-pdf text-brand-main mr-2"></i> Documento A4 Clínico Oficial (Corrigido)
-        </h3>
-        <p class="text-xs text-gray-500">Pré-visualização com alinhamento, margens e caixas ajustadas.</p>
-      </div>
-      <div class="flex items-center space-x-2">
-        <button onclick="baixarPDFCompletamente()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-2 rounded-xl text-xs shadow transition-all flex items-center">
-          <i class="fa-solid fa-download mr-1.5"></i> Baixar PDF
-        </button>
-        <button onclick="imprimirPDF()" class="bg-brand-navy hover:bg-slate-800 text-white font-semibold px-3 py-2 rounded-xl text-xs shadow transition-all flex items-center">
-          <i class="fa-solid fa-print mr-1.5"></i> Imprimir
-        </button>
-        <button onclick="fecharModalPDF()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold px-3 py-2 rounded-xl text-xs transition-all">
-          <i class="fa-solid fa-xmark text-sm"></i>
-        </button>
-      </div>
-    </div>
-
-    <!-- ÁREA DE RENDERIZAÇÃO A4 -->
-    <div class="w-full max-w-4xl bg-gray-200 p-2 sm:p-6 rounded-b-2xl flex justify-center">
-      <div id="pdf-render-target" class="pdf-page bg-white shadow-2xl relative font-sans text-gray-800">
-        <!-- CABEÇALHO DO DOCUMENTO CLÍNICO -->
-        <div class="flex justify-between items-start border-b-2 border-[#B85C83] pb-3 mb-3">
-          <div>
-            <h1 class="text-base font-extrabold tracking-wide text-[#1A365D] uppercase font-display" style="letter-spacing: 0.5px;" id="pdf-prof-nome">DANIELE SOUSA SANTOS</h1>
-            <p class="text-xs font-semibold text-[#B85C83] mt-0.5" id="pdf-prof-sub"><span id="pdf-prof-crp">CRP 22/07398</span> • <span id="pdf-prof-especialidade">Psicóloga Analista do Comportamento</span></p>
-            <p class="text-[9.5px] text-gray-600 font-medium mt-0.5">Clínica de Psicologia & Análise do Comportamento</p>
-            <p class="text-[9.5px] text-gray-500" id="pdf-prof-contato">(98) 98765-4321 | contato@danielesousa.psico.br</p>
-          </div>
-          <div class="text-right">
-            <span id="pdf-badge-confidencial" class="inline-block bg-[#F7EBEF] text-[#B85C83] border border-[#B85C83]/30 text-[8.5px] font-extrabold px-2 py-0.5 rounded tracking-wider uppercase">
-              DOCUMENTO CONFIDENCIAL
-            </span>
-            <p class="text-[8.5px] text-gray-500 mt-1" id="pdf-emissao-data">Emissão: --/--/----, --:--</p>
-          </div>
-        </div>
-
-        <div class="bg-[#F0F4F8] border-l-4 border-[#B85C83] p-2.5 rounded-r-lg mb-3">
-          <h2 class="text-xs font-bold text-[#1A365D] uppercase tracking-wide" id="pdf-titulo-relatorio">
-            RELATÓRIO CLÍNICO
-          </h2>
-        </div>
-
-        <!-- QUADRO CORRIGIDO DE IDENTIFICAÇÃO DO PACIENTE -->
-        <div class="border border-gray-200 rounded-lg overflow-hidden mb-3 bg-gray-50/50">
-          <div class="grid grid-cols-2 text-xs">
-            <div class="pdf-grid-box border-r border-b border-gray-200">
-              <span class="text-[9px] font-bold text-gray-400 uppercase tracking-wider block">Paciente</span>
-              <span class="font-bold text-[#1A365D] text-xs truncate" id="pdf-paciente-nome">--</span>
-            </div>
-            <div class="pdf-grid-box border-b border-gray-200">
-              <span class="text-[9px] font-bold text-gray-400 uppercase tracking-wider block">Tipo / Documento</span>
-              <span class="font-semibold text-gray-800 text-xs truncate" id="pdf-paciente-tema">--</span>
-            </div>
-            <div class="pdf-grid-box border-r border-gray-200">
-              <span class="text-[9px] font-bold text-gray-400 uppercase tracking-wider block">Data da Sessão / Emissão</span>
-              <span class="font-medium text-gray-700 text-xs truncate" id="pdf-paciente-data">--</span>
-            </div>
-            <div class="pdf-grid-box">
-              <span class="text-[9px] font-bold text-gray-400 uppercase tracking-wider block">Status do Registro</span>
-              <span class="inline-block bg-emerald-100 text-emerald-800 text-[9.5px] font-bold px-2 py-0.5 rounded mt-0.5 w-fit" id="pdf-paciente-status">Concluída</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- CONTEÚDO CORPO DO PDF -->
-        <div id="pdf-corpo-conteudo" class="space-y-3">
-          <!-- Dinâmico -->
-        </div>
-
-        <!-- RODAPÉ ÉTICO E ASSINATURA -->
-        <div class="mt-6 pt-3 border-t border-gray-200 text-center pdf-keep-together">
-          <div class="max-w-xs mx-auto mb-1.5">
-            <div class="border-b border-gray-400 mb-1"></div>
-            <p class="text-xs font-bold text-[#1A365D]" id="pdf-ass-nome">Daniele Sousa Santos</p>
-            <p class="text-[9.5px] text-[#B85C83] font-semibold" id="pdf-ass-crp">CRP 22/07398 • Psicóloga Analista do Comportamento</p>
-          </div>
-          <p class="text-[8px] text-gray-400 max-w-lg mx-auto leading-tight mt-2">
-            Documento confidencial para uso profissional e registro clínico. Manuseio restrito às pessoas autorizadas, observadas as normas éticas e legais aplicáveis (Código de Ética Profissional do Psicólogo).
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL DE BACKUP E DADOS -->
-  <div id="modal-backup" class="fixed inset-0 bg-slate-900/60 z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl space-y-4">
-      <div class="flex justify-between items-center border-b pb-3">
-        <h3 class="font-bold text-brand-dark text-lg">Gestão de Dados Locais</h3>
-        <button onclick="toggleBackupModal()" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-      <p class="text-xs text-gray-600">Seus registros são salvos com segurança no armazenamento do navegador (LocalStorage).</p>
-      <div class="space-y-2">
-        <button onclick="exportarDadosJSON()" class="w-full bg-brand-soft hover:bg-rose-100 text-brand-main font-semibold py-2 px-4 rounded-xl text-xs flex items-center justify-center border border-rose-200">
-          <i class="fa-solid fa-download mr-2"></i> Exportar Backup em JSON
-        </button>
-        <button onclick="restaurarDadosPadrao()" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-xl text-xs flex items-center justify-center">
-          <i class="fa-solid fa-rotate-left mr-2"></i> Restaurar Dados Demonstrativos
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- LÓGICA JAVASCRIPT INTEGRADA -->
-  <script>
-    // --- DADOS DA PROFISSIONAL
-    let profissional = {
-      nome: 'Dra. Daniele Sousa Santos',
-      crp: 'CRP 22/07398',
-      especialidade: 'Análise do Comportamento',
-      telefone: '(98) 98765-4321',
-      email: 'contato@danielesousa.psico.br'
-    };
-
-    // --- ESTADO E BANCO LOCAL
-    let MOCK_PACIENTES = [
-      { id: 'pac-1', nome: 'Lucas Mendes Ribeiro', nascimento: '1998-05-12', idade: 28, queixa: 'Dificuldades assertivas e esquiva interpessoal', ultimaSessao: '2026-10-21' },
-      { id: 'pac-2', nome: 'Mariana Costa Silva', nascimento: '1992-09-15', idade: 34, queixa: 'Ansiedade de desempenho e esquiva experiencial', ultimaSessao: '2026-10-18' },
-      { id: 'pac-3', nome: 'Sofia Mendes Santos', nascimento: '2016-03-10', idade: 10, queixa: 'Seletividade alimentar e rigidez de rotina', ultimaSessao: '2026-10-15' },
-      { id: 'pac-4', nome: 'Raul teixeira Noleto', nascimento: '1995-04-20', idade: 31, queixa: 'Procrastinação e fusão cognitiva', ultimaSessao: '2026-10-22' }
-    ];
-
-    let bancoAnamneses = {};
-    let bancoAnotacoesSessao = {};
-    let bancoEvolucoes = {};
-    let bancoPlanejamentos = {};
-
-    const EXEMPLO_ANALISE_TECNICA = {
-      paciente: "Lucas Mendes Ribeiro",
-      tema: "Conflitos de assertividade na relação com irmão",
-      data: "2026-10-21",
-      status: "Concluída",
-      comportamentoAlvo: "Aceitar prontamente demandas adicionais de favorecimento feitas pelo irmão...",
-      antecedenteTipo: "Estímulo Discriminativo (Sᴰ)",
-      antecedenteItens: ["Irmão aproxima-se com tom de urgência solicitando favores."],
-      respostaTipo: "Motora / Verbal",
-      respostaItens: ["Vocalização imediata: 'Pode deixar que eu resolvo'."],
-      consequenciaTipo: "Imediata / Reforço Negativo",
-      consequenciaItens: ["Cessação imediata do tom urgente do irmão."],
-      efeitoImediato: "Alívio imediato do estado ansioso.",
-      probabilidade: "Aumentou (Fortalecimento do Operante)",
-      efeitoLongo: "Instalação de ressentimento reprimido.",
-      processo: "Reforçamento Negativo (R-) - Esquiva/Fuga",
-      confianca: "Alto",
-      evidencias: "Múltiplos episódios semanais.",
-      intervencao: "Treino de Comunicação Assertiva.",
-      sintese: "O paciente apresenta operante assertivo deficitário."
-    };
-
-    let historicoAnalises = [EXEMPLO_ANALISE_TECNICA];
-    let pacienteAtualId = null;
-
-    // --- INICIALIZAÇÃO ---
-    window.onload = function() {
-      carregarDadosLocalStorage();
-      atualizarInterfaceProfissional();
-      renderizarDashboard();
-      renderizarPacientes();
-      carregarExemploModelo();
-    };
-
-    function salvarDadosLocalStorage() {
-      localStorage.setItem('daniele_pacientes', JSON.stringify(MOCK_PACIENTES));
-      localStorage.setItem('daniele_anamneses', JSON.stringify(bancoAnamneses));
-      localStorage.setItem('daniele_anotacoes', JSON.stringify(bancoAnotacoesSessao));
-      localStorage.setItem('daniele_evolucoes', JSON.stringify(bancoEvolucoes));
-      localStorage.setItem('daniele_planejamentos', JSON.stringify(bancoPlanejamentos));
-      localStorage.setItem('daniele_analises', JSON.stringify(historicoAnalises));
-      localStorage.setItem('daniele_profissional', JSON.stringify(profissional));
-    }
-
-    function carregarDadosLocalStorage() {
-      const pacs = localStorage.getItem('daniele_pacientes');
-      if (pacs) MOCK_PACIENTES = JSON.parse(pacs);
-      const anams = localStorage.getItem('daniele_anamneses');
-      if (anams) bancoAnamneses = JSON.parse(anams);
-      const anots = localStorage.getItem('daniele_anotacoes');
-      if (anots) bancoAnotacoesSessao = JSON.parse(anots);
-      const evols = localStorage.getItem('daniele_evolucoes');
-      if (evols) bancoEvolucoes = JSON.parse(evols);
-      const plans = localStorage.getItem('daniele_planejamentos');
-      if (plans) bancoPlanejamentos = JSON.parse(plans);
-      const anals = localStorage.getItem('daniele_analises');
-      if (anals) historicoAnalises = JSON.parse(anals);
-      const prof = localStorage.getItem('daniele_profissional');
-      if (prof) profissional = JSON.parse(prof);
-    }
-
-    function calcularIdade(dataNascimento) {
-      if (!dataNascimento) return 0;
-      const hoje = new Date();
-      const nascimento = new Date(dataNascimento);
-      let idade = hoje.getFullYear() - nascimento.getFullYear();
-      const m = hoje.getMonth() - nascimento.getMonth();
-      if (m < 0 || (m === 0 && hoje.getDate() < nascimento.getDate())) idade--;
-      return idade;
-    }
-
-    function atualizarInterfaceProfissional() {
-      document.getElementById('header-prof-nome').innerText = profissional.nome;
-      document.getElementById('header-prof-crp').innerText = profissional.crp;
-      document.getElementById('header-prof-especialidade').innerText = profissional.especialidade;
-      document.getElementById('dash-prof-nome').innerText = profissional.nome;
-      document.getElementById('evo-prof-display').innerText = profissional.nome;
-      document.getElementById('plan-prof-display').innerText = profissional.nome;
-
-      const nomeSemTitulo = profissional.nome.replace(/^(Dra?\.\s*|Profª?\.\s*)/i, "").toUpperCase();
-      document.getElementById('pdf-prof-nome').innerText = nomeSemTitulo;
-      document.getElementById('pdf-prof-crp').innerText = profissional.crp;
-      document.getElementById('pdf-prof-especialidade').innerText = profissional.especialidade;
-      document.getElementById('pdf-prof-contato').innerText = `${profissional.telefone} | ${profissional.email}`;
-      document.getElementById('pdf-ass-nome').innerText = profissional.nome;
-      document.getElementById('pdf-ass-crp').innerText = `${profissional.crp} • ${profissional.especialidade}`;
-    }
-
-    function abrirModalEditarProfissional() {
-      document.getElementById('prof-input-nome').value = profissional.nome;
-      document.getElementById('prof-input-crp').value = profissional.crp;
-      document.getElementById('prof-input-especialidade').value = profissional.especialidade;
-      document.getElementById('prof-input-telefone').value = profissional.telefone;
-      document.getElementById('prof-input-email').value = profissional.email;
-      document.getElementById('modal-editar-profissional').classList.remove('hidden');
-    }
-
-    function fecharModalEditarProfissional() {
-      document.getElementById('modal-editar-profissional').classList.add('hidden');
-    }
-
-    function salvarDadosProfissional(e) {
-      e.preventDefault();
-      profissional.nome = document.getElementById('prof-input-nome').value;
-      profissional.crp = document.getElementById('prof-input-crp').value;
-      profissional.especialidade = document.getElementById('prof-input-especialidade').value;
-      profissional.telefone = document.getElementById('prof-input-telefone').value;
-      profissional.email = document.getElementById('prof-input-email').value;
-      atualizarInterfaceProfissional();
-      salvarDadosLocalStorage();
-      fecharModalEditarProfissional();
-    }
-
-    function abrirModalNovoPaciente() {
-      document.getElementById('form-cad-paciente').reset();
-      document.getElementById('modal-paciente').classList.remove('hidden');
-    }
-
-    function fecharModalPaciente() {
-      document.getElementById('modal-paciente').classList.add('hidden');
-    }
-
-    function salvarNovoPaciente(e) {
-      e.preventDefault();
-      const nome = document.getElementById('cad-pac-nome').value;
-      const nascimento = document.getElementById('cad-pac-nascimento').value;
-      const queixa = document.getElementById('cad-pac-queixa').value;
-      const telefone = document.getElementById('cad-pac-tel').value;
-      const idade = calcularIdade(nascimento);
-
-      const novoPac = {
-        id: `pac-${Date.now()}`,
-        nome: nome,
-        nascimento: nascimento,
-        idade: idade,
-        telefone: telefone,
-        queixa: queixa,
-        ultimaSessao: new Date().toISOString().split('T')[0]
-      };
-
-      MOCK_PACIENTES.push(novoPac);
-      salvarDadosLocalStorage();
-      renderizarPacientes();
-      renderizarDashboard();
-      fecharModalPaciente();
-      alert(`Paciente "${nome}" cadastrado com sucesso!`);
-    }
-
-    function switchTab(tabId) {
-      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-      document.querySelectorAll('.nav-btn').forEach(btn => {
-        btn.classList.remove('bg-brand-soft', 'text-brand-main');
-        btn.classList.add('text-gray-600');
-      });
-      const targetView = document.getElementById(`view-${tabId}`);
-      if (targetView) targetView.classList.remove('hidden');
-
-      const activeNav = document.getElementById(`nav-${tabId}`);
-      if (activeNav) {
-        activeNav.classList.add('bg-brand-soft', 'text-brand-main');
-        activeNav.classList.remove('text-gray-600');
-      }
-    }
-
-    function renderizarDashboard() {
-      const tbody = document.getElementById('recentes-table-body');
-      tbody.innerHTML = '';
-      historicoAnalises.forEach((item, idx) => {
-        const tr = document.createElement('tr');
-        tr.className = 'hover:bg-rose-50/30 transition-colors';
-        tr.innerHTML = `
-          <td class="px-6 py-4 font-bold text-brand-dark">${item.paciente}</td>
-          <td class="px-6 py-4 text-xs">${item.tema}</td>
-          <td class="px-6 py-4 text-xs font-medium">${formatarDataBR(item.data)}</td>
-          <td class="px-6 py-4">
-            <span class="bg-rose-100 text-brand-main text-xs font-semibold px-2.5 py-1 rounded-full">
-              ${item.processo.split('-')[0]}
-            </span>
-          </td>
-          <td class="px-6 py-4 text-right">
-            <button onclick="carregarEVisualizarAnalise(${idx})" class="text-brand-main hover:text-brand-alt font-bold text-xs bg-rose-50 px-3 py-1.5 rounded-lg border border-rose-200">
-              <i class="fa-solid fa-file-pdf mr-1"></i> Ver PDF
-            </button>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-      document.getElementById('stat-pacientes').innerText = MOCK_PACIENTES.length;
-      document.getElementById('stat-relatorios').innerText = historicoAnalises.length;
-    }
-
-    function renderizarPacientes() {
-      const grid = document.getElementById('grid-pacientes');
-      grid.innerHTML = '';
-      MOCK_PACIENTES.forEach(pac => {
-        const idadeReal = pac.nascimento ? calcularIdade(pac.nascimento) : (pac.idade || 25);
-        const tipoAnamnese = idadeReal <= 17 ? 'Infantil/Infantojuvenil (0-17 anos)' : 'Adulta (18+ anos)';
-        const anamneseSalva = bancoAnamneses[pac.id];
-        const statusFicha = anamneseSalva ? anamneseSalva.status : 'Pendente';
-        let badgeColor = 'bg-amber-100 text-amber-800';
-        if (statusFicha === 'Concluída') badgeColor = 'bg-emerald-100 text-emerald-800';
-        else if (statusFicha === 'Rascunho') badgeColor = 'bg-blue-100 text-blue-800';
-
-        const card = document.createElement('div');
-        card.className = 'bg-white rounded-2xl p-5 border border-rose-100 card-shadow space-y-3 flex flex-col justify-between';
-        card.innerHTML = `
-          <div class="space-y-3">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-full bg-rose-100 text-brand-main font-bold flex items-center justify-center text-sm">
-                  ${pac.nome.split(' ').map(n=>n[0]).join('').substring(0,2)}
-                </div>
-                <div>
-                  <h3 class="font-bold text-brand-dark text-sm">${pac.nome}</h3>
-                  <p class="text-xs text-gray-400">${idadeReal} anos • Nasc: ${formatarDataBR(pac.nascimento || '2000-01-01')}</p>
-                </div>
-              </div>
-              <span class="text-[10px] font-bold px-2 py-0.5 rounded-full badgeColor">{statusFicha}</span>
-            </div>
-            <div class="text-xs text-gray-600 bg-rose-50/50 p-2.5 rounded-xl border border-rose-100 space-y-1">
-              <div><span class="font-semibold text-brand-dark">Foco:</span> ${pac.queixa}</div>
-              <div class="text-[10px] text-brand-alt font-medium"><i class="fa-solid fa-file-medical mr-1"></i> Ficha: ${tipoAnamnese}</div>
-            </div>
-          </div>
-          <div class="space-y-2 pt-2 border-t border-rose-50">
-            <button onclick="abrirProntuarioAnamnese('${pac.id}')" class="w-full bg-brand-main hover:bg-brand-alt text-white font-bold py-2 px-3 rounded-xl transition-all flex items-center justify-center shadow text-xs">
-              <i class="fa-solid fa-folder-open mr-1.5"></i> Abrir Prontuário Completo
-            </button>
-            <div class="flex justify-between items-center text-[11px] pt-1">
-              <span class="text-gray-400">Última: ${formatarDataBR(pac.ultimaSessao)}</span>
-              <button onclick="iniciarAnaliseParaPaciente('${pac.nome}')" class="text-brand-main font-semibold hover:underline">
-                Nova Análise <i class="fa-solid fa-arrow-right ml-0.5"></i>
-              </button>
-            </div>
-          </div>
-        `;
-        grid.appendChild(card);
-      });
-    }
-
-    function abrirProntuarioAnamnese(pacId) {
-      pacienteAtualId = pacId;
-      const pac = MOCK_PACIENTES.find(p => p.id === pacId);
-      if (!pac) return;
-
-      const idade = pac.nascimento ? calcularIdade(pac.nascimento) : (pac.idade || 25);
-      document.getElementById('prontuario-nome-paciente').innerText = pac.nome;
-      document.getElementById('prontuario-sub-info').innerText = `Data de Nascimento: ${formatarDataBR(pac.nascimento || '2000-01-01')} • Idade: ${idade} anos • Contato: ${pac.telefone || 'Não informado'}`;
-      document.getElementById('evo-pac-display').innerText = pac.nome;
-      document.getElementById('plan-pac-display').innerText = pac.nome;
-
-      const badgeFaixa = document.getElementById('prontuario-badge-faixa');
-      const container = document.getElementById('container-formulario-anamnese');
-      container.innerHTML = '';
-
-      const anamneseSalva = bancoAnamneses[pacId] || { status: 'Pendente', dados: {} };
-      const statusFichaEl = document.getElementById('prontuario-status-ficha');
-      statusFichaEl.innerText = anamneseSalva.status;
-      statusFichaEl.className = `text-[10px] font-bold px-2 py-0.5 rounded-full ${anamneseSalva.status === 'Concluída' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}`;
-
-      if (idade <= 17) {
-        badgeFaixa.innerText = 'Ficha: Infantil / Infantojuvenil (0 a 17 anos)';
-        badgeFaixa.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-100 text-purple-800';
-        container.innerHTML = renderizarFormularioInfantil(pac, anamneseSalva.dados);
-      } else {
-        badgeFaixa.innerText = 'Ficha: Adulta (18 anos ou mais)';
-        badgeFaixa.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-100 text-blue-800';
-        container.innerHTML = renderizarFormularioAdulto(pac, anamneseSalva.dados);
-      }
-
-      document.getElementById('nota-sessao-data').value = new Date().toISOString().split('T')[0];
-      document.getElementById('evo-data').value = new Date().toISOString().split('T')[0];
-      document.getElementById('plan-data-el').value = new Date().toISOString().split('T')[0];
-
-      renderizarListaAnotacoes();
-      renderizarListaEvolucoes();
-      renderizarListaPlanejamentos();
-
-      alternarAbaProntuario('anamnese');
-      switchTab('prontuario-detalhe');
-    }
-
-    function alternarAbaProntuario(aba) {
-      document.getElementById('aba-conteudo-anamnese').classList.add('hidden');
-      document.getElementById('aba-conteudo-evolucoes').classList.add('hidden');
-      document.getElementById('aba-conteudo-anotacoes').classList.add('hidden');
-      document.getElementById('aba-conteudo-planejamento').classList.add('hidden');
-
-      document.getElementById('subnav-anamnese').className = 'px-3 py-1.5 rounded-lg text-xs font-bold text-gray-600 hover:text-brand-main transition-all';
-      document.getElementById('subnav-evolucoes').className = 'px-3 py-1.5 rounded-lg text-xs font-bold text-gray-600 hover:text-brand-main transition-all';
-      document.getElementById('subnav-anotacoes').className = 'px-3 py-1.5 rounded-lg text-xs font-bold text-gray-600 hover:text-brand-main transition-all';
-      document.getElementById('subnav-planejamento').className = 'px-3 py-1.5 rounded-lg text-xs font-bold text-gray-600 hover:text-brand-main transition-all';
-
-      document.getElementById(`aba-conteudo-${aba}`).classList.remove('hidden');
-      document.getElementById(`subnav-${aba}`).className = 'px-3 py-1.5 rounded-lg text-xs font-bold bg-white text-brand-main shadow-sm transition-all';
-    }
-
-    // --- FORMULÁRIO INFANTIL (12 TÓPICOS)
-  function renderizarFormularioInfantil(pac, d = {}) {
-  return `
-    <form id="form-anamnese-ativa" class="space-y-6 text-xs">
-      <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
-        <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-address-card text-brand-main mr-2"></i> 1. Identificação da criança, pais e responsável legal</h3>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-          <div><label class="font-semibold block mb-1">Nome Completo</label><input type="text" name="nome" value="${d.nome || pac.nome}" class="w-full p-2 border rounded-xl"></div>
-          <div><label class="font-semibold block mb-1">Idade</label><input type="text" name="idade" value="${d.idade || pac.idade || ''}" class="w-full p-2 border rounded-xl"></div>
-          <div><label class="font-semibold block mb-1">Sexo</label><input type="text" name="sexo" value="${d.sexo || ''}" class="w-full p-2 border rounded-xl"></div>
-          <div><label class="font-semibold block mb-1">Nascimento</label><input type="date" name="nasc" value="${d.nasc || pac.nascimento || ''}" class="w-full p-2 border rounded-xl"></div>
-          <div><label class="font-semibold block mb-1">Endereço e Cidade</label><input type="text" name="endereco" value="${d.endereco || ''}" class="w-full p-2 border rounded-xl"></div>
-          <div><label class="font-semibold block mb-1">Telefone</label><input type="text" name="telefone" value="${d.telefone || pac.telefone || ''}" class="w-full p-2 border rounded-xl"></div>
-          <div><label class="font-semibold block mb-1">Escola / Série</label><input type="text" name="escola" value="${d.escola || ''}" class="w-full p-2 border rounded-xl"></div>
-          <div><label class="font-semibold block mb-1">Dados dos Pais (Idade e Profissão)</label><input type="text" name="paisDados" value="${d.paisDados || ''}" class="w-full p-2 border rounded-xl"></div>
-          <div><label class="font-semibold block mb-1">Responsável Legal</label><input type="text" name="respLegal" value="${d.respLegal || ''}" class="w-full p-2 border rounded-xl"></div>
-          <div><label class="font-semibold block mb-1">Posição na Família e Irmãos</label><input type="text" name="posicaoIrmaos" value="${d.posicaoIrmaos || ''}" class="w-full p-2 border rounded-xl"></div>
-          <div><label class="font-semibold block mb-1">Separação dos Pais</label><input type="text" name="separacao" value="${d.separacao || ''}" class="w-full p-2 border rounded-xl"></div>
-          <div><label class="font-semibold block mb-1">Uso de Medicação</label><input type="text" name="medicacao" value="${d.medicacao || ''}" class="w-full p-2 border rounded-xl"></div>
-        </div>
-      </div>
-      <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
-        <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-share text-brand-main mr-2"></i> 2. Encaminhamento e referência</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-          <div><label class="font-semibold block mb-1">Origem do Encaminhamento</label><input type="text" name="origemEncaminhamento" value="${d.origemEncaminhamento || ''}" class="w-full p-2 border rounded-xl"></div>
-          <div><label class="font-semibold block mb-1">Profissional Responsável</label><input type="text" name="profEncaminhamento" value="${d.profEncaminhamento || ''}" class="w-full p-2 border rounded-xl"></div>
-        </div>
-      </div>
-      <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
-        <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-circle-question text-brand-main mr-2"></i> 3. Queixa principal</h3>
-        <div class="space-y-3">
-          <div><label class="font-semibold block mb-1">Motivo da Procura e Dificuldades Relatadas</label><textarea name="queixa" rows="3" class="w-full p-2 border rounded-xl">${d.queixa || pac.queixa || ''}</textarea></div>
-          <div><label class="font-semibold block mb-1">Expectativas Familiares</label><input type="text" name="expectativas" value="${d.expectativas || ''}" class="w-full p-2 border rounded-xl"></div>
-        </div>
-      </div>
-      <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
-        <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-clock-rotate-left text-brand-main mr-2"></i> 4. Histórico do quadro atual</h3>
-        <div><label class="font-semibold block mb-1">Início, Frequência, Intensidade, Contextos, Evolução e Diagnósticos Anteriores</label><textarea name="histQuadro" rows="4" class="w-full p-2 border rounded-xl">${d.histQuadro || ''}</textarea></div>
-      </div>
-      <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
-        <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-user-doctor text-brand-main mr-2"></i> 5. Acompanhamento com outros profissionais</h3>
-        <div><label class="font-semibold block mb-1">Especialidades, Tratamentos, Medicações e Resultados</label><textarea name="outrosProf" rows="3" class="w-full p-2 border rounded-xl">${d.outrosProf || ''}</textarea></div>
-      </div>
-      <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
-        <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-baby text-brand-main mr-2"></i> 6. Antecedentes pessoais e gestacionais</h3>
-        <div><label class="font-semibold block mb-1">Gestação, Concepção, Pré-natal, Intercorrências, Medicações, Parto, Condições ao Nascer e Histórico de Adoção</label><textarea name="antecedentesPessoais" rows="4" class="w-full p-2 border rounded-xl">${d.antecedentesPessoais || ''}</textarea></div>
-      </div>
-      <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
-        <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-child-reaching text-brand-main mr-2"></i> 7. Desenvolvimento: alimentação, sono, psicomotricidade, higiene, desfralde e saúde familiar</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-          <div><label class="font-semibold block mb-1">Alimentação (Amamentação, Seletividade, Autonomia, Alergias, Dietas)</label><textarea name="devAlimentacao" rows="3" class="w-full p-2 border rounded-xl">${d.devAlimentacao || ''}</textarea></div>
-          <div><label class="font-semibold block mb-1">Sono (Insônia, Sonambulismo, Bruxismo, Sono Agitado, Medos)</label><textarea name="devSono" rows="3" class="w-full p-2 border rounded-xl">${d.devSono || ''}</textarea></div>
-          <div><label class="font-semibold block mb-1">Psicomotricidade (Sustentação, Sentar, Engatinhar, Passos, Coordenação)</label><textarea name="devPsicomotricidade" rows="3" class="w-full p-2 border rounded-xl">${d.devPsicomotricidade || ''}</textarea></div>
-          <div><label class="font-semibold block mb-1">Higiene e Desfralde (Autonomia, Controle Esfincteriano, Enurese)</label><textarea name="devHigiene" rows="3" class="w-full p-2 border rounded-xl">${d.devHigiene || ''}</textarea></div>
-        </div>
-        <div><label class="font-semibold block mb-1">Saúde e Histórico Familiar Relevante</label><input type="text" name="devSaudeFamilia" value="${d.devSaudeFamilia || ''}" class="w-full p-2 border rounded-xl"></div>
-      </div>
-      <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
-        <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-people-arrows text-brand-main mr-2"></i> 8. Interações sociais e comunicação</h3>
-        <div><label class="font-semibold block mb-1">Interação com Pares, Comunicação Vocal/Não Vocal, Linguagem e Brincadeiras Funcionais/Simbólicas</label><textarea name="interacaoComunicacao" rows="3" class="w-full p-2 border rounded-xl">${d.interacaoComunicacao || ''}</textarea></div>
-      </div>
-      <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
-        <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-arrows-rotate text-brand-main mr-2"></i> 9. Padrões repetitivos e comportamentos</h3>
-        <div><label class="font-semibold block mb-1">Movimentos Repetitivos, Reação a Mudanças, Interesses Restritos e Comportamento diante da Frustração</label><textarea name="padroesRepetitivos" rows="3" class="w-full p-2 border rounded-xl">${d.padroesRepetitivos || ''}</textarea></div>
-      </div>
-      <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
-        <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-graduation-cap text-brand-main mr-2"></i> 10. Habilidades acadêmicas</h3>
-        <div><label class="font-semibold block mb-1">Histórico Escolar, Adaptação, Aprendizagem, Organização, Reprovações, Suporte Pedagógico e Rotina de Estudos</label><textarea name="habilidadesAcademicas" rows="3" class="w-full p-2 border rounded-xl">${d.habilidadesAcademicas || ''}</textarea></div>
-      </div>
-      <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
-        <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-star text-brand-main mr-2"></i> 11. Reforçadores, preferências e interesses</h3>
-        <div><label class="font-semibold block mb-1">Brinquedos, Atividades, Itens Preferidos, Aversões e Situações de Engajamento</label><textarea name="reforcadoresInteresses" rows="3" class="w-full p-2 border rounded-xl">${d.reforcadoresInteresses || ''}</textarea></div>
-      </div>
-      <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
-        <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-circle-info text-brand-main mr-2"></i> 12. Informações complementares, rotina e observações</h3>
-        <div><label class="font-semibold block mb-1">Características Comportamentais Relatadas, Relações Familiares, Rotina Diária, Rede de Apoio e Observações</label><textarea name="infoComplementares" rows="4" class="w-full p-2 border rounded-xl">${d.infoComplementares || ''}</textarea></div>
-      </div>
-    </form>
-  `;
-}
-
-    // --- FORMULÁRIO ADULTO (8 TÓPICOS) ---
-    function renderizarFormularioAdulto(pac, d = {}) {
-      return `
-        <form id="form-anamnese-ativa" class="space-y-6 text-xs">
-          <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
-            <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-id-card text-brand-main mr-2"></i> 1. Identificação</h3>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-              <div><label class="font-semibold block mb-1">Nome Completo</label><input type="text" name="nome" value="${d.nome || pac.nome}" class="w-full p-2 border rounded-xl"></div>
-              <div><label class="font-semibold block mb-1">Nascimento</label><input type="date" name="nasc" value="${d.nasc || pac.nascimento || ''}" class="w-full p-2 border rounded-xl"></div>
-              <div><label class="font-semibold block mb-1">Idade</label><input type="text" name="idade" value="${d.idade || pac.idade || ''}" class="w-full p-2 border rounded-xl"></div>
-              <div><label class="font-semibold block mb-1">CPF</label><input type="text" name="cpf" value="${d.cpf || ''}" class="w-full p-2 border rounded-xl"></div>
-              <div><label class="font-semibold block mb-1">Gênero / Identidade</label><input type="text" name="genero" value="${d.genero || ''}" class="w-full p-2 border rounded-xl"></div>
-              <div><label class="font-semibold block mb-1">Estado Civil</label><input type="text" name="estadoCivil" value="${d.estadoCivil || ''}" class="w-full p-2 border rounded-xl"></div>
-              <div><label class="font-semibold block mb-1">Profissão</label><input type="text" name="profissao" value="${d.profissao || ''}" class="w-full p-2 border rounded-xl"></div>
-              <div><label class="font-semibold block mb-1">Escolaridade</label><input type="text" name="escolaridade" value="${d.escolaridade || ''}" class="w-full p-2 border rounded-xl"></div>
-              <div><label class="font-semibold block mb-1">Telefone</label><input type="text" name="telefone" value="${d.telefone || pac.telefone || ''}" class="w-full p-2 border rounded-xl"></div>
-              <div><label class="font-semibold block mb-1">E-mail</label><input type="email" name="email" value="${d.email || ''}" class="w-full p-2 border rounded-xl"></div>
-              <div><label class="font-semibold block mb-1">Endereço Completo</label><input type="text" name="endereco" value="${d.endereco || ''}" class="w-full p-2 border rounded-xl"></div>
-              <div><label class="font-semibold block mb-1">Contato de Emergência</label><input type="text" name="contatoEmergencia" value="${d.contatoEmergencia || ''}" class="w-full p-2 border rounded-xl"></div>
-            </div>
-          </div>
-          <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
-            <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-circle-question text-brand-main mr-2"></i> 2. Queixa principal</h3>
-            <div><label class="font-semibold block mb-1">Motivo da Procura e Expectativas em Relação ao Atendimento</label><textarea name="queixa" rows="3" class="w-full p-2 border rounded-xl">${d.queixa || pac.queixa || ''}</textarea></div>
-          </div>
-          <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
-            <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-clock-rotate-left text-brand-main mr-2"></i> 3. História da demanda atual</h3>
-            <div><label class="font-semibold block mb-1">Início, Frequência, Intensidade, Gatilhos, Evolução, Impactos na Rotina e Tratamentos Prévios</label><textarea name="historiaDemanda" rows="4" class="w-full p-2 border rounded-xl">${d.historiaDemanda || ''}</textarea></div>
-          </div>
-          <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
-            <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-notes-medical text-brand-main mr-2"></i> 4. Histórico médico pregresso</h3>
-            <div><label class="font-semibold block mb-1">Doenças, Internações, Cirurgias, Alergias e Medicações em Uso</label><textarea name="histMedico" rows="3" class="w-full p-2 border rounded-xl">${d.histMedico || ''}</textarea></div>
-          </div>
-          <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
-            <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-brain text-brand-main mr-2"></i> 5. Histórico psicológico e psiquiátrico</h3>
-            <div><label class="font-semibold block mb-1">Acompanhamentos Anteriores, Diagnósticos Informados, Psicotrópicos e Tratamentos Realizados</label><textarea name="histPsic" rows="3" class="w-full p-2 border rounded-xl">${d.histPsic || ''}</textarea></div>
-          </div>
-          <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
-            <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-users text-brand-main mr-2"></i> 6. Histórico familiar</h3>
-            <div><label class="font-semibold block mb-1">Condições de Saúde Relevantes, Transtornos Mentais e Dependência de Substâncias na Família</label><textarea name="histFamiliar" rows="3" class="w-full p-2 border rounded-xl">${d.histFamiliar || ''}</textarea></div>
-          </div>
-          <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
-            <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-heart-pulse text-brand-main mr-2"></i> 7. Estilo e hábitos de vida</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-              <div><label class="font-semibold block mb-1">Sono e Qualidade do Descanso</label><textarea name="habitosSono" rows="2" class="w-full p-2 border rounded-xl">${d.habitosSono || ''}</textarea></div>
-              <div><label class="font-semibold block mb-1">Alimentação e Atividade Física</label><textarea name="habitosAlimFis" rows="2" class="w-full p-2 border rounded-xl">${d.habitosAlimFis || ''}</textarea></div>
-              <div><label class="font-semibold block mb-1">Uso de Tabaco, Álcool e Outras Substâncias</label><textarea name="substancias" rows="2" class="w-full p-2 border rounded-xl">${d.substancias || ''}</textarea></div>
-              <div><label class="font-semibold block mb-1">Trabalho, Estudos, Estresse e Satisfação Profissional</label><textarea name="trabalhoEstresse" rows="2" class="w-full p-2 border rounded-xl">${d.trabalhoEstresse || ''}</textarea></div>
-            </div>
-          </div>
-          <div class="bg-white rounded-2xl p-6 border border-rose-100 card-shadow space-y-4">
-            <h3 class="text-md font-bold text-brand-dark border-b pb-2 flex items-center"><i class="fa-solid fa-handshake text-brand-main mr-2"></i> 8. Relacionamentos e rede de apoio</h3>
-            <div><label class="font-semibold block mb-1">Relacionamentos Afetivos, Vínculos Familiares, Amizades, Suporte Social, Lutos, Separações e Transições</label><textarea name="relacionamentosApoio" rows="3" class="w-full p-2 border rounded-xl">${d.relacionamentosApoio || ''}</textarea></div>
-          </div>
-        </form>
-      `;
-    }
-
-    function extrairDadosFormAnamnese() {
-      const form = document.getElementById('form-anamnese-ativa');
-      if (!form) return {};
-      const formData = new FormData(form);
-      const objeto = {};
-      formData.forEach((value, key) => { objeto[key] = value; });
-      return objeto;
-    }
-
-    function salvarRascunhoAnamnese() {
-      if (!pacienteAtualId) return;
-      const dados = extrairDadosFormAnamnese();
-      bancoAnamneses[pacienteAtualId] = { status: 'Rascunho', dataAtualizacao: new Date().toISOString(), dados: dados };
-      salvarDadosLocalStorage();
-      renderizarPacientes();
-      document.getElementById('prontuario-status-ficha').innerText = 'Rascunho';
-      document.getElementById('prontuario-status-ficha').className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800';
-      alert('Rascunho da Anamnese salvo com sucesso!');
-    }
-
-    function concluirAnamnese() {
-      if (!pacienteAtualId) return;
-      const dados = extrairDadosFormAnamnese();
-      bancoAnamneses[pacienteAtualId] = { status: 'Concluída', dataAtualizacao: new Date().toISOString(), dados: dados };
-      salvarDadosLocalStorage();
-      renderizarPacientes();
-      document.getElementById('prontuario-status-ficha').innerText = 'Concluída';
-      document.getElementById('prontuario-status-ficha').className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800';
-      alert('Anamnese concluída e registrada no prontuário!');
-    }
-
-    // --- FOLHA DE ANOTAÇÕES DE SESSÃO & ANEXOS ---
-    function salvarFolhaSessao(statusSessao) {
-      if (!pacienteAtualId) return;
-      const data = document.getElementById('nota-sessao-data').value;
-      const horario = document.getElementById('nota-sessao-horario').value;
-      const numero = document.getElementById('nota-sessao-numero').value;
-      const texto = document.getElementById('nota-sessao-texto').value;
-      const proximo = document.getElementById('nota-sessao-proximo').value;
-      const fileInput = document.getElementById('nota-sessao-arquivo');
-
-      if (!data) {
-        alert("Preencha a data da sessão.");
-        return;
-      }
-
-      if (!bancoAnotacoesSessao[pacienteAtualId]) bancoAnotacoesSessao[pacienteAtualId] = [];
-
-      const arquivoObj = fileInput.files.length > 0 ? {
-        nome: fileInput.files[0].name,
-        tipo: fileInput.files[0].type,
-        tamanho: fileInput.files[0].size
-      } : null;
-
-      const novaNota = {
-        id: `nota-${Date.now()}`,
-        data: data,
-        horario: horario,
-        numero: numero || '1',
-        texto: texto,
-        proximo: proximo,
-        status: statusSessao,
-        arquivo: arquivoObj
-      };
-
-      bancoAnotacoesSessao[pacienteAtualId].unshift(novaNota);
-      salvarDadosLocalStorage();
-
-      document.getElementById('nota-sessao-texto').value = '';
-      document.getElementById('nota-sessao-proximo').value = '';
-      document.getElementById('nota-sessao-numero').value = '';
-      document.getElementById('nota-sessao-arquivo').value = '';
-
-      renderizarListaAnotacoes();
-      alert(`Folha de Anotação da Sessão salva (${statusSessao})!`);
-    }
-
-    function renderizarListaAnotacoes() {
-      const lista = document.getElementById('lista-folhas-sessao');
-      lista.innerHTML = '';
-      const notas = bancoAnotacoesSessao[pacienteAtualId] || [];
-      if (notas.length === 0) {
-        lista.innerHTML = '<p class="text-xs text-gray-400 italic">Nenhuma folha de anotação de sessão registrada ainda.</p>';
-        return;
-      }
-      notas.forEach((nota) => {
-        const badgeBg = nota.status === 'Concluída' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800';
-        const item = document.createElement('div');
-        item.className = 'bg-rose-50/50 p-4 rounded-xl border border-rose-100 text-xs space-y-2';
-        item.innerHTML = `
-          <div class="flex justify-between items-center border-b border-rose-100 pb-1.5">
-            <div class="flex items-center space-x-2">
-              <span class="font-bold text-brand-dark text-sm">Sessão nº nota.numero({formatarDataBR(nota.data)}${nota.horario?' às '+nota.horario:''})</span>
-              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold badgeBg">{nota.status}</span>
-            </div>
-            <div class="space-x-2">
-              <button onclick="gerarPDFFolhaSessao('${nota.id}')" class="text-brand-main font-semibold hover:underline"><i class="fa-solid fa-file-pdf mr-1"></i> PDF</button>
-              <button onclick="removerFolhaSessao('${nota.id}')" class="text-red-500 font-semibold hover:underline"><i class="fa-solid fa-trash mr-1"></i> Excluir</button>
-            </div>
-          </div>
-          <p class="text-gray-700 whitespace-pre-line leading-relaxed text-justify"><b>Anotações da Sessão:</b> ${nota.texto || 'Nenhuma anotação registrada.'}</p>
-          ${nota.proximo ? `<p class="text-gray-700 text-justify"><b>Próximo Atendimento:</b> ${nota.proximo}</p>` : ''}
-          ${nota.arquivo ? `<div class="pt-1 flex items-center justify-between text-[11px] text-brand-navy bg-white p-2 rounded border"><span><i class="fa-solid fa-paperclip mr-1"></i> Anexo: <b>${nota.arquivo.nome}</b></span><button onclick="baixarAnexo('${nota.id}')" class="text-brand-main font-bold hover:underline"><i class="fa-solid fa-download mr-1"></i> Baixar Anexo</button></div>` : ''}
-        `;
-        lista.appendChild(item);
-      });
-    }
-
-    function removerFolhaSessao(notaId) {
-      if (!confirm("Deseja realmente remover esta folha de anotação?")) return;
-      bancoAnotacoesSessao[pacienteAtualId] = bancoAnotacoesSessao[pacienteAtualId].filter(n => n.id !== notaId);
-      salvarDadosLocalStorage();
-      renderizarListaAnotacoes();
-    }
-
-    function baixarAnexo(notaId) {
-      const nota = (bancoAnotacoesSessao[pacienteAtualId] || []).find(n => n.id === notaId);
-      if (nota && nota.arquivo) {
-        alert(`Iniciando download do arquivo anexo: ${nota.arquivo.nome}`);
-      }
-    }
-
-    // --- EVOLUÇÕES CLÍNICAS
-    function abrirModalEvolucao() {
-      document.getElementById('form-evolucao-clinica').reset();
-      document.getElementById('evo-data').value = new Date().toISOString().split('T')[0];
-      const pac = MOCK_PACIENTES.find(p => p.id === pacienteAtualId);
-      if (pac) document.getElementById('evo-queixa').value = pac.queixa || '';
-      document.getElementById('modal-evolucao').classList.remove('hidden');
-    }
-
-    function fecharModalEvolucao() {
-      document.getElementById('modal-evolucao').classList.add('hidden');
-    }
-
-    function salvarEvolucaoClinica(e) {
-      e.preventDefault();
-      if (!pacienteAtualId) return;
-      const data = document.getElementById('evo-data').value;
-      const sessaoNum = document.getElementById('evo-sessao-num').value || '1';
-      const queixa = document.getElementById('evo-queixa').value;
-      const demanda = document.getElementById('evo-demanda').value;
-      const descricao = document.getElementById('evo-descricao').value;
-      const analise = document.getElementById('evo-analise').value;
-      const status = document.getElementById('evo-status-select').value;
-      const fileInput = document.getElementById('evo-arquivo');
-
-      if (!bancoEvolucoes[pacienteAtualId]) bancoEvolucoes[pacienteAtualId] = [];
-
-      const arquivoObj = fileInput.files.length > 0 ? {
-        nome: fileInput.files[0].name
-      } : null;
-
-      const novaEvo = {
-        id: `evo-${Date.now()}`,
-        data: data,
-        sessaoNum: sessaoNum,
-        queixa: queixa,
-        demanda: demanda,
-        descricao: descricao,
-        analise: analise,
-        status: status,
-        arquivo: arquivoObj,
-        profissional: profissional.nome,
-        crp: profissional.crp
-      };
-
-      bancoEvolucoes[pacienteAtualId].unshift(novaEvo);
-      salvarDadosLocalStorage();
-      renderizarListaEvolucoes();
-      fecharModalEvolucao();
-      alert(`Evolução clínica salva com sucesso (${status})!`);
-    }
-
-    function renderizarListaEvolucoes() {
-      const lista = document.getElementById('lista-evolucoes-paciente');
-      lista.innerHTML = '';
-      const evols = bancoEvolucoes[pacienteAtualId] || [];
-      if (evols.length === 0) {
-        lista.innerHTML = '<div class="bg-white rounded-2xl p-6 border text-center text-xs text-gray-400 italic">Nenhuma evolução clínica registrada para este paciente. Clique em "Fazer Evolução" para iniciar.</div>';
-        return;
-      }
-      evols.forEach(evo => {
-        const badgeBg = evo.status === 'Concluída' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800';
-        const card = document.createElement('div');
-        card.className = 'bg-white rounded-2xl p-5 border border-rose-100 card-shadow space-y-3 text-xs';
-        card.innerHTML = `
-          <div class="flex justify-between items-center border-b border-rose-50 pb-2">
-            <div class="flex items-center space-x-2">
-              <span class="font-bold text-brand-dark text-sm">Evolução Sessão nº ${evo.sessaoNum}</span>
-              <span class="text-gray-400">• ${formatarDataBR(evo.data)}</span>
-              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold badgeBg">{evo.status}</span>
-            </div>
-            <div class="space-x-2">
-              <button onclick="gerarPDFEvolucao('${evo.id}')" class="bg-rose-50 text-brand-main px-3 py-1.5 rounded-lg font-bold border border-rose-200 hover:bg-rose-100 transition-colors">
-                <i class="fa-solid fa-file-pdf mr-1"></i> Gerar PDF
-              </button>
-              <button onclick="removerEvolucao('${evo.id}')" class="text-red-500 hover:text-red-700 font-semibold p-1"><i class="fa-solid fa-trash"></i></button>
-            </div>
-          </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <div class="bg-rose-50/40 p-3 rounded-xl border border-rose-100">
-              <b class="text-brand-dark block mb-1">Queixa Principal:</b>
-              <p class="text-gray-700 text-justify">${evo.queixa}</p>
-            </div>
-            <div class="bg-rose-50/40 p-3 rounded-xl border border-rose-100">
-              <b class="text-brand-dark block mb-1">Demanda Trabalhada:</b>
-              <p class="text-gray-700 text-justify">${evo.demanda}</p>
-            </div>
-          </div>
-          <div>
-            <b class="text-brand-dark block mb-1">Descrição da Sessão:</b>
-            <p class="text-gray-700 bg-gray-50 p-3 rounded-xl border text-justify">${evo.descricao}</p>
-          </div>
-          <div>
-            <b class="text-brand-dark block mb-1">Análise Técnica:</b>
-            <p class="text-gray-700 bg-gray-50 p-3 rounded-xl border text-justify">${evo.analise}</p>
-          </div>
-          ${evo.arquivo ? `<div class="text-brand-navy font-semibold"><i class="fa-solid fa-paperclip mr-1"></i> Anexo: ${evo.arquivo.nome}</div>` : ''}
-        `;
-        lista.appendChild(card);
-      });
-    }
-
-    function removerEvolucao(evoId) {
-      if (!confirm("Deseja realmente remover esta evolução clínica?")) return;
-      bancoEvolucoes[pacienteAtualId] = bancoEvolucoes[pacienteAtualId].filter(e => e.id !== evoId);
-      salvarDadosLocalStorage();
-      renderizarListaEvolucoes();
-    }
-
-    // --- PLANEJAMENTO CLÍNICO E SUPERVISÃO
-    function abrirModalPlanejamento() {
-      document.getElementById('form-planejamento-clinico').reset();
-      document.getElementById('plan-data-el').value = new Date().toISOString().split('T')[0];
-      document.getElementById('modal-planejamento').classList.remove('hidden');
-    }
-
-    function fecharModalPlanejamento() {
-      document.getElementById('modal-planejamento').classList.add('hidden');
-    }
-
-    function salvarPlanejamentoClinico(e) {
-      e.preventDefault();
-      if (!pacienteAtualId) return;
-      const dataEl = document.getElementById('plan-data-el').value;
-      const dataPrev = document.getElementById('plan-data-prev').value;
-      const status = document.getElementById('plan-status').value;
-      const sinteseAnt = document.getElementById('plan-sintese-ant').value;
-      const objetivos = document.getElementById('plan-objetivos').value;
-      const intervencoes = document.getElementById('plan-intervencoes').value;
-      const indicadores = document.getElementById('plan-indicadores').value;
-      const orientacoes = document.getElementById('plan-orientacoes').value;
-      const supData = document.getElementById('sup-data').value;
-      const supQuestoes = document.getElementById('sup-questoes').value;
-      const supHipoteses = document.getElementById('sup-hipoteses').value;
-      const supRecomendacoes = document.getElementById('sup-recomendacoes').value;
-
-      if (!bancoPlanejamentos[pacienteAtualId]) bancoPlanejamentos[pacienteAtualId] = [];
-
-      const novoPlan = {
-        id: `plan-${Date.now()}`,
-        dataElaboracao: dataEl,
-        dataPrevista: dataPrev,
-        status: status,
-        sinteseAnterior: sinteseAnt,
-        objetivos: objetivos,
-        intervencoes: intervencoes,
-        indicadores: indicadores,
-        orientacoes: orientacoes,
-        supervisao: (supData || supQuestoes || supHipoteses || supRecomendacoes) ? {
-          data: supData,
-          questoes: supQuestoes,
-          hipoteses: supHipoteses,
-          recomendacoes: supRecomendacoes
-        } : null
-      };
-
-      bancoPlanejamentos[pacienteAtualId].unshift(novoPlan);
-      salvarDadosLocalStorage();
-      renderizarListaPlanejamentos();
-      fecharModalPlanejamento();
-      alert(`Planejamento clínico salvo com sucesso (${status})!`);
-    }
-
-    function renderizarListaPlanejamentos() {
-      const lista = document.getElementById('lista-planejamentos-paciente');
-      lista.innerHTML = '';
-      const plans = bancoPlanejamentos[pacienteAtualId] || [];
-      if (plans.length === 0) {
-        lista.innerHTML = '<div class="bg-white rounded-2xl p-6 border text-center text-xs text-gray-400 italic">Nenhum planejamento ou supervisão registrado para este paciente.</div>';
-        return;
-      }
-      plans.forEach(plan => {
-        const badgeBg = plan.status === 'Concluída' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800';
-        const card = document.createElement('div');
-        card.className = 'bg-white rounded-2xl p-5 border border-rose-100 card-shadow space-y-3 text-xs';
-        card.innerHTML = `
-          <div class="flex justify-between items-center border-b border-rose-50 pb-2">
-            <div class="flex items-center space-x-2">
-              <span class="font-bold text-brand-dark text-sm">Planejamento Clínico</span>
-              <span class="text-gray-400">• Elaboração: ${formatarDataBR(plan.dataElaboracao)}</span>
-              ${plan.dataPrevista ? `<span class="text-gray-400">• Próxima Sessão: ${formatarDataBR(plan.dataPrevista)}</span>` : ''}
-              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold badgeBg">{plan.status}</span>
-            </div>
-            <div class="space-x-2">
-              <button onclick="gerarPDFPlanejamento('${plan.id}')" class="bg-rose-50 text-brand-main px-3 py-1.5 rounded-lg font-bold border border-rose-200 hover:bg-rose-100 transition-colors">
-                <i class="fa-solid fa-file-pdf mr-1"></i> Gerar PDF
-              </button>
-              <button onclick="removerPlanejamento('${plan.id}')" class="text-red-500 hover:text-red-700 font-semibold p-1"><i class="fa-solid fa-trash"></i></button>
-            </div>
-          </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <div class="bg-rose-50/40 p-3 rounded-xl border border-rose-100">
-              <b class="text-brand-dark block mb-1">1. Síntese da Sessão Anterior:</b>
-              <p class="text-gray-700 text-justify">${plan.sinteseAnterior || 'Não informada.'}</p>
-            </div>
-            <div class="bg-rose-50/40 p-3 rounded-xl border border-rose-100">
-              <b class="text-brand-dark block mb-1">2. Objetivos Próximas Sessões:</b>
-              <p class="text-gray-700 text-justify">${plan.objetivos || 'Não informados.'}</p>
-            </div>
-          </div>
-          <div>
-            <b class="text-brand-dark block mb-1">3. Planejamento das Intervenções:</b>
-            <p class="text-gray-700 bg-gray-50 p-3 rounded-xl border text-justify">${plan.intervencoes || 'Não informadas.'}</p>
-          </div>
-          ${plan.supervisao ? `
-            <div class="bg-blue-50/50 p-3 rounded-xl border border-blue-100 space-y-1">
-              <b class="text-blue-900 block"><i class="fa-solid fa-user-shield mr-1"></i> Registro de Supervisão Clínica (${formatarDataBR(plan.supervisao.data || plan.dataElaboracao)})</b>
-              <p class="text-gray-700 text-justify"><b>Questões:</b> ${plan.supervisao.questoes || 'N/A'} | <b>Hipóteses:</b> ${plan.supervisao.hipoteses || 'N/A'}</p>
-              <p class="text-gray-700 text-justify"><b>Recomendações:</b> ${plan.supervisao.recomendacoes || 'N/A'}</p>
-            </div>
-          ` : ''}
-        `;
-        lista.appendChild(card);
-      });
-    }
-
-    function removerPlanejamento(planId) {
-      if (!confirm("Deseja realmente remover este planejamento?")) return;
-      bancoPlanejamentos[pacienteAtualId] = bancoPlanejamentos[pacienteAtualId].filter(p => p.id !== planId);
-      salvarDadosLocalStorage();
-      renderizarListaPlanejamentos();
-    }
-
-    // --- GERAR PDFS DOS REGISTROS (COM CORREÇÃO DE FORMATAÇÃO E ALINHAMENTO) ---
-    function gerarPDFAnamnese() {
-      if (!pacienteAtualId) return;
-      const pac = MOCK_PACIENTES.find(p => p.id === pacienteAtualId);
-      const ficha = bancoAnamneses[pacienteAtualId] || { status: 'Rascunho', dados: extrairDadosFormAnamnese() };
-      const d = ficha.dados;
-
-      document.getElementById('pdf-emissao-data').innerText = `Emissão: ${new Date().toLocaleString('pt-BR')}`;
-      document.getElementById('pdf-paciente-nome').innerText = pac.nome;
-      document.getElementById('pdf-paciente-tema').innerText = `Ficha de Anamnese (${ficha.status})`;
-      document.getElementById('pdf-paciente-data').innerText = formatarDataBR(new Date().toISOString().split('T')[0]);
-      document.getElementById('pdf-paciente-status').innerText = ficha.status;
-      document.getElementById('pdf-titulo-relatorio').innerText = `FICHA DE ANAMNESE PSICOLÓGICA - ${ficha.status.toUpperCase()}`;
-
-      const badgeConfidencial = document.getElementById('pdf-badge-confidencial');
-      if (ficha.status === 'Rascunho') {
-        badgeConfidencial.innerText = 'DOCUMENTO EM RASCUNHO / INCOMPLETO';
-        badgeConfidencial.className = 'inline-block bg-amber-100 text-amber-800 border border-amber-300 text-[8.5px] font-extrabold px-2 py-0.5 rounded tracking-wider uppercase';
-      } else {
-        badgeConfidencial.innerText = 'DOCUMENTO CONFIDENCIAL CONCLUÍDO';
-        badgeConfidencial.className = 'inline-block bg-[#F7EBEF] text-[#B85C83] border border-[#B85C83]/30 text-[8.5px] font-extrabold px-2 py-0.5 rounded tracking-wider uppercase';
-      }
-
-      const corpo = document.getElementById('pdf-corpo-conteudo');
-      corpo.innerHTML = '';
-      Object.keys(d).forEach(chave => {
-        if (d[chave] && d[chave].trim().length > 0) {
-          const div = document.createElement('div');
-          div.className = 'bg-gray-50 border border-gray-100 p-2.5 rounded text-xs pdf-keep-together';
-          div.innerHTML = `
-            <span class="font-bold text-[#1A365D] uppercase text-[9.5px] block border-b pb-0.5 mb-1">${chave.replace(/([A-Z])/g, ' $1')}</span>
-            <p class="text-gray-700 leading-relaxed text-justify">${d[chave]}</p>
-          `;
-          corpo.appendChild(div);
+        .btn-bounce:active {
+            transform: translateY(1px) scale(0.98);
         }
-      });
 
-      atualizarInterfaceProfissional();
-      document.getElementById('modal-pdf').classList.remove('hidden');
-    }
+        /* Floating background items animation */
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-12px) rotate(5deg); }
+        }
 
-    function gerarPDFEvolucao(evoId) {
-      const evo = (bancoEvolucoes[pacienteAtualId] || []).find(e => e.id === evoId);
-      if (!evo) return;
-      const pac = MOCK_PACIENTES.find(p => p.id === pacienteAtualId);
+        .animate-float {
+            animation: floatSlow 6s ease-in-out infinite;
+        }
 
-      document.getElementById('pdf-emissao-data').innerText = `Emissão: ${new Date().toLocaleString('pt-BR')}`;
-      document.getElementById('pdf-paciente-nome').innerText = pac ? pac.nome : 'Paciente';
-      document.getElementById('pdf-paciente-tema').innerText = `Evolução Clínica (Sessão nº ${evo.sessaoNum})`;
-      document.getElementById('pdf-paciente-data').innerText = formatarDataBR(evo.data);
-      document.getElementById('pdf-paciente-status').innerText = evo.status;
-      document.getElementById('pdf-titulo-relatorio').innerText = `REGISTRO DE EVOLUÇÃO CLÍNICA - ${evo.status.toUpperCase()}`;
+        .animate-float-delayed {
+            animation: floatSlow 7s ease-in-out 2s infinite;
+        }
 
-      const badgeConfidencial = document.getElementById('pdf-badge-confidencial');
-      if (evo.status === 'Rascunho') {
-        badgeConfidencial.innerText = 'RASCUNHO DE EVOLUÇÃO';
-        badgeConfidencial.className = 'inline-block bg-amber-100 text-amber-800 border text-[8.5px] font-extrabold px-2 py-0.5 rounded uppercase';
-      } else {
-        badgeConfidencial.innerText = 'DOCUMENTO CONCLUÍDO';
-        badgeConfidencial.className = 'inline-block bg-emerald-100 text-emerald-800 border text-[8.5px] font-extrabold px-2 py-0.5 rounded uppercase';
-      }
+        /* Modal backdrop animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
 
-      const corpo = document.getElementById('pdf-corpo-conteudo');
-      corpo.innerHTML = `
-        <div class="bg-gray-50 border p-3 rounded text-xs pdf-keep-together">
-          <b class="text-[#1A365D] block mb-1 uppercase text-[9.5px]">1. Queixa Principal:</b>
-          <p class="text-gray-700 leading-relaxed text-justify">${evo.queixa}</p>
+        .modal-animate {
+            animation: fadeIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        /* Pointer pulse animation */
+        @keyframes pointerPulse {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(5px); }
+        }
+
+        .pointer-anim {
+            animation: pointerPulse 1.5s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen text-slate-700 relative overflow-x-hidden">
+
+    <!-- Elementos Decorativos de Fundo (Ursinhos, Estrelas, Nuvens) -->
+    <div class="fixed inset-0 pointer-events-none overflow-hidden z-0 opacity-40">
+        <i class="fa-solid fa-cloud text-white text-6xl absolute top-10 left-10 animate-float drop-shadow"></i>
+        <i class="fa-solid fa-cloud text-white text-8xl absolute top-28 right-16 animate-float-delayed drop-shadow"></i>
+        <i class="fa-solid fa-star text-amber-300 text-3xl absolute top-1/4 left-1/6 animate-pulse"></i>
+        <i class="fa-solid fa-heart text-pink-300 text-3xl absolute top-1/3 right-1/5 animate-pulse"></i>
+        <i class="fa-solid fa-bear-toy text-emerald-300 text-5xl absolute bottom-20 left-12 animate-float"></i>
+        <i class="fa-solid fa-school text-purple-300 text-5xl absolute bottom-24 right-12 animate-float-delayed"></i>
+        <i class="fa-solid fa-backpack text-orange-300 text-4xl absolute top-1/2 left-8 animate-float"></i>
+    </div>
+
+    <div class="container mx-auto px-4 py-6 flex-grow flex flex-col items-center justify-between relative z-10 max-w-5xl">
+        
+        <!-- Cabeçalho / Título do Site -->
+        <header class="text-center mb-4">
+            <div class="inline-flex items-center gap-2 bg-white/80 backdrop-blur px-4 py-1.5 rounded-full shadow-sm border border-emerald-100 text-emerald-700 text-sm font-bold mb-2">
+                <i class="fa-solid fa-face-smile text-amber-400 text-lg"></i>
+                Psicoterapia Infantil Lúdica
+            </div>
+            <h1 class="text-2xl sm:text-4xl md:text-5xl font-extrabold text-slate-800 tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 via-purple-600 to-orange-500 mb-1">
+                ROLETA DAS EMOÇÕES
+            </h1>
+            <h2 class="text-lg sm:text-2xl font-bold text-slate-600 font-heading">
+                MINHA JORNADA ATÉ A ESCOLA
+            </h2>
+            <p class="text-slate-500 font-semibold text-sm sm:text-base mt-1">
+                <i class="fa-solid fa-wand-magic-sparkles text-purple-400 mr-1"></i>
+                "Vamos girar e descobrir uma pergunta para conversar?"
+            </p>
+        </header>
+
+        <!-- Seção Principal: Roleta e Pointer -->
+        <main class="w-full flex flex-col items-center justify-center my-2">
+            
+            <div class="relative flex flex-col items-center justify-center">
+                
+                <!-- Ponteiro Fixo Superior -->
+                <div class="absolute -top-6 z-30 pointer-anim flex flex-col items-center drop-shadow-md">
+                    <div class="w-10 h-10 bg-amber-400 rounded-full border-4 border-white flex items-center justify-center text-white shadow-md">
+                        <i class="fa-solid fa-arrow-down text-xl text-amber-800"></i>
+                    </div>
+                    <div class="w-0 h-0 border-l-[14px] border-l-transparent border-r-[14px] border-r-transparent border-t-[20px] border-t-amber-400 -mt-2"></div>
+                </div>
+
+                <!-- Canvas da Roleta -->
+                <div class="wheel-shadow p-3 bg-white/90 rounded-full border-8 border-white backdrop-blur shadow-2xl relative">
+                    <canvas id="wheelCanvas" width="460" height="460" class="max-w-[320px] sm:max-w-[420px] md:max-w-[460px] h-auto cursor-pointer rounded-full transition-transform duration-300"></canvas>
+                    
+                    <!-- Botão Central Decorativo/Ursinho -->
+                    <div class="absolute inset-0 m-auto w-16 h-16 sm:w-20 sm:h-20 bg-white rounded-full border-4 border-amber-300 shadow-lg flex items-center justify-center pointer-events-none z-20">
+                        <div class="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-tr from-amber-100 to-amber-200 rounded-full flex items-center justify-center text-amber-600 text-2xl sm:text-3xl">
+                            <i class="fa-solid fa-paw"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Controles da Roleta -->
+            <div class="mt-6 flex flex-col sm:flex-row items-center gap-4 w-full max-w-md justify-center">
+                <button id="spinBtn" onclick="spinWheel()" class="btn-bounce w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 text-white font-heading text-xl sm:text-2xl font-bold rounded-2xl shadow-lg hover:shadow-emerald-200 transition-all duration-200 flex items-center justify-center gap-3 border-b-4 border-emerald-700">
+                    <i class="fa-solid fa-rotate-right text-2xl"></i>
+                    <span>GIRAR A ROLETA</span>
+                </button>
+
+                <button id="resetBtn" onclick="resetQuestions()" class="btn-bounce px-5 py-4 bg-white hover:bg-slate-50 text-slate-600 font-bold rounded-2xl border-2 border-slate-200 shadow-sm hover:shadow transition-all duration-200 flex items-center justify-center gap-2 text-sm sm:text-base">
+                    <i class="fa-solid fa-arrow-rotate-left text-slate-400"></i>
+                    <span>REINICIAR PERGUNTAS</span>
+                </button>
+            </div>
+
+            <!-- Contador de Perguntas Sorvedas / Restantes -->
+            <div class="mt-4 flex items-center gap-2 bg-white/70 backdrop-blur px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold text-slate-600 border border-slate-200/60 shadow-sm">
+                <i class="fa-solid fa-list-check text-purple-500"></i>
+                <span id="counterText">Perguntas sorteadas: 0 / 24</span>
+            </div>
+
+        </main>
+
+        <!-- Legenda das Categorias -->
+        <footer class="w-full mt-6 grid grid-cols-2 md:grid-cols-4 gap-3 text-xs sm:text-sm font-bold">
+            <div class="bg-emerald-50 border-2 border-emerald-200 p-2.5 rounded-xl flex items-center gap-2 text-emerald-800 shadow-sm">
+                <div class="w-4 h-4 rounded-full bg-emerald-500 shrink-0"></div>
+                <div class="truncate">
+                    <span class="block text-[10px] text-emerald-600 uppercase font-extrabold">Verde</span>
+                    <span>Emoções</span>
+                </div>
+            </div>
+
+            <div class="bg-pink-50 border-2 border-pink-200 p-2.5 rounded-xl flex items-center gap-2 text-pink-800 shadow-sm">
+                <div class="w-4 h-4 rounded-full bg-pink-500 shrink-0"></div>
+                <div class="truncate">
+                    <span class="block text-[10px] text-pink-600 uppercase font-extrabold">Rosa</span>
+                    <span>Conversando sobre a escola</span>
+                </div>
+            </div>
+
+            <div class="bg-purple-50 border-2 border-purple-200 p-2.5 rounded-xl flex items-center gap-2 text-purple-800 shadow-sm">
+                <div class="w-4 h-4 rounded-full bg-purple-500 shrink-0"></div>
+                <div class="truncate">
+                    <span class="block text-[10px] text-purple-600 uppercase font-extrabold">Roxo</span>
+                    <span>Desafios e situações difíceis</span>
+                </div>
+            </div>
+
+            <div class="bg-orange-50 border-2 border-orange-200 p-2.5 rounded-xl flex items-center gap-2 text-orange-800 shadow-sm">
+                <div class="w-4 h-4 rounded-full bg-orange-500 shrink-0"></div>
+                <div class="truncate">
+                    <span class="block text-[10px] text-orange-600 uppercase font-extrabold">Laranja</span>
+                    <span>Minha mochila de coragem</span>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- MODAL DE EXIBIÇÃO DA PERGUNTA SORTEADA -->
+    <div id="resultModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+        <div id="modalContent" class="modal-animate bg-white w-full max-w-lg rounded-3xl p-6 sm:p-8 shadow-2xl border-4 text-center relative overflow-hidden flex flex-col items-center">
+            
+            <!-- Banner de Categoria Topo -->
+            <div id="modalCategoryBadge" class="inline-flex items-center gap-2 px-4 py-2 rounded-full font-bold text-sm sm:text-base mb-4 shadow-sm">
+                <i id="modalCategoryIcon" class="fa-solid fa-heart"></i>
+                <span id="modalCategoryName">Categoria</span>
+            </div>
+
+            <!-- Ícone Decorativo Central -->
+            <div id="modalAvatarBg" class="w-20 h-20 sm:w-24 sm:h-24 rounded-full flex items-center justify-center text-4xl sm:text-5xl my-2 shadow-inner">
+                <i id="modalAvatarIcon" class="fa-solid fa-face-smile"></i>
+            </div>
+
+            <!-- Pergunta Sorteada -->
+            <div class="my-4 w-full">
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Pergunta N.º <span id="modalQuestionNum">1</span></p>
+                <h3 id="modalQuestionText" class="text-xl sm:text-2xl md:text-3xl font-bold text-slate-800 font-heading leading-snug px-2">
+                    Texto da pergunta aqui...
+                </h3>
+            </div>
+
+            <!-- Botões do Modal -->
+            <div class="mt-6 flex flex-col sm:flex-row gap-3 w-full">
+                <button onclick="closeModalAndSpin()" class="btn-bounce flex-1 py-3.5 px-6 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-heading text-lg font-bold rounded-2xl shadow-md flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-arrows-rotate"></i>
+                    <span>GIRAR NOVAMENTE</span>
+                </button>
+                
+                <button onclick="closeModalOnly()" class="btn-bounce py-3.5 px-5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-2xl text-sm transition">
+                    Ver Roleta
+                </button>
+            </div>
+
+            <!-- Ilustração Decorativa no Canto do Modal -->
+            <div class="absolute -bottom-4 -right-4 opacity-10 pointer-events-none text-8xl text-slate-800">
+                <i class="fa-solid fa-bear-toy"></i>
+            </div>
         </div>
-        <div class="bg-gray-50 border p-3 rounded text-xs pdf-keep-together">
-          <b class="text-[#1A365D] block mb-1 uppercase text-[9.5px]">2. Demanda Trabalhada:</b>
-          <p class="text-gray-700 leading-relaxed text-justify">${evo.demanda}</p>
-        </div>
-        <div class="bg-gray-50 border p-3 rounded text-xs pdf-keep-together">
-          <b class="text-[#1A365D] block mb-1 uppercase text-[9.5px]">3. Descrição da Sessão:</b>
-          <p class="text-gray-700 leading-relaxed text-justify">${evo.descricao}</p>
-        </div>
-        <div class="bg-gray-50 border p-3 rounded text-xs pdf-keep-together">
-          <b class="text-[#1A365D] block mb-1 uppercase text-[9.5px]">4. Análise Técnica da Sessão:</b>
-          <p class="text-gray-700 leading-relaxed text-justify">${evo.analise}</p>
-        </div>
-      `;
+    </div>
 
-      atualizarInterfaceProfissional();
-      document.getElementById('modal-pdf').classList.remove('hidden');
-    }
+    <!-- SCRIPT DA ROLETA E LÓGICA DO JOGO -->
+    <script>
+        // --- 1. BANCO DE DADOS DAS 24 PERGUNTAS REGISTRADAS ---
+        const QUESTIONS_DATA = [
+            // 🟢 VERDE – Emoções
+            { id: 1, category: 'VERDE', categoryName: 'Emoções', color: '#4CAF50', lightBg: '#E8F5E9', border: '#2E7D32', icon: 'fa-face-smile', question: 'Como você se sente quando pensa em ir para a escola?' },
+            { id: 2, category: 'VERDE', categoryName: 'Emoções', color: '#4CAF50', lightBg: '#E8F5E9', border: '#2E7D32', icon: 'fa-door-open', question: 'Qual emoção aparece quando você chega ao portão?' },
+            { id: 3, category: 'VERDE', categoryName: 'Emoções', color: '#4CAF50', lightBg: '#E8F5E9', border: '#2E7D32', icon: 'fa-heart-crack', question: 'O que acontece quando você sente saudade de alguém?' },
+            { id: 4, category: 'VERDE', categoryName: 'Emoções', color: '#4CAF50', lightBg: '#E8F5E9', border: '#2E7D32', icon: 'fa-sun', question: 'Em qual momento da escola você fica mais feliz?' },
+            { id: 5, category: 'VERDE', categoryName: 'Emoções', color: '#4CAF50', lightBg: '#E8F5E9', border: '#2E7D32', icon: 'fa-comment-dots', question: 'Se sua emoção pudesse falar, o que ela diria?' },
+            { id: 6, category: 'VERDE', categoryName: 'Emoções', color: '#4CAF50', lightBg: '#E8F5E9', border: '#2E7D32', icon: 'fa-cloud-rain', question: 'O que costuma acontecer quando você começa a ficar triste ou com medo?' },
 
-    function gerarPDFFolhaSessao(notaId) {
-      const nota = (bancoAnotacoesSessao[pacienteAtualId] || []).find(n => n.id === notaId);
-      if (!nota) return;
-      const pac = MOCK_PACIENTES.find(p => p.id === pacienteAtualId);
+            // 🩷 ROSA – Conversando sobre a escola
+            { id: 7, category: 'ROSA', categoryName: 'Conversando sobre a escola', color: '#E91E63', lightBg: '#FCE4EC', border: '#C2185B', icon: 'fa-palette', question: 'O que você mais gosta de fazer na escola?' },
+            { id: 8, category: 'ROSA', categoryName: 'Conversando sobre a escola', color: '#E91E63', lightBg: '#FCE4EC', border: '#C2185B', icon: 'fa-thumbs-down', question: 'Tem alguma coisa na escola de que você não gosta?' },
+            { id: 9, category: 'ROSA', categoryName: 'Conversando sobre a escola', color: '#E91E63', lightBg: '#FCE4EC', border: '#C2185B', icon: 'fa-hand-wave', question: 'Como é o momento de se despedir de quem acompanha você?' },
+            { id: 10, category: 'ROSA', categoryName: 'Conversando sobre a escola', color: '#E91E63', lightBg: '#FCE4EC', border: '#C2185B', icon: 'fa-sparkles', question: 'O que você gostaria que acontecesse quando chega à escola?' },
+            { id: 11, category: 'ROSA', categoryName: 'Conversando sobre a escola', color: '#E91E63', lightBg: '#FCE4EC', border: '#C2185B', icon: 'fa-user-group', question: 'Tem alguém de quem você sente falta quando está lá?' },
+            { id: 12, category: 'ROSA', categoryName: 'Conversando sobre a escola', color: '#E91E63', lightBg: '#FCE4EC', border: '#C2185B', icon: 'fa-wand-magic', question: 'Se pudesse mudar alguma coisa na escola, o que mudaria?' },
 
-      document.getElementById('pdf-emissao-data').innerText = `Emissão: ${new Date().toLocaleString('pt-BR')}`;
-      document.getElementById('pdf-paciente-nome').innerText = pac ? pac.nome : 'Paciente';
-      document.getElementById('pdf-paciente-tema').innerText = `Folha de Anotação (Sessão nº ${nota.numero})`;
-      document.getElementById('pdf-paciente-data').innerText = formatarDataBR(nota.data);
-      document.getElementById('pdf-paciente-status').innerText = nota.status;
-      document.getElementById('pdf-titulo-relatorio').innerText = 'FOLHA DE ANOTAÇÕES DA SESSÃO';
+            // 🟣 ROXO – Desafios e situações difíceis
+            { id: 13, category: 'ROXO', categoryName: 'Desafios e situações difíceis', color: '#9C27B0', lightBg: '#F3E5F5', border: '#7B1FA2', icon: 'fa-mountain', question: 'O que você acha que é mais difícil na hora de entrar na escola?' },
+            { id: 14, category: 'ROXO', categoryName: 'Desafios e situações difíceis', color: '#9C27B0', lightBg: '#F3E5F5', border: '#7B1FA2', icon: 'fa-tear', question: 'O que você faz quando sente vontade de chorar?' },
+            { id: 15, category: 'ROXO', categoryName: 'Desafios e situações difíceis', color: '#9C27B0', lightBg: '#F3E5F5', border: '#7B1FA2', icon: 'fa-bear-toy', question: 'Se o ursinho não quisesse entrar na escola, o que poderia estar acontecendo?' },
+            { id: 16, category: 'ROXO', categoryName: 'Desafios e situações difíceis', color: '#9C27B0', lightBg: '#F3E5F5', border: '#7B1FA2', icon: 'fa-key', question: 'O que poderia deixar esse momento um pouquinho mais fácil?' },
+            { id: 17, category: 'ROXO', categoryName: 'Desafios e situações difíceis', color: '#9C27B0', lightBg: '#F3E5F5', border: '#7B1FA2', icon: 'fa-shield-halved', question: 'Você já conseguiu fazer alguma coisa mesmo estando com medo? Como foi?' },
+            { id: 18, category: 'ROXO', categoryName: 'Desafios e situações difíceis', color: '#9C27B0', lightBg: '#F3E5F5', border: '#7B1FA2', icon: 'fa-people-roof', question: 'O que gostaria que os adultos entendessem sobre esse momento?' },
 
-      const badgeConfidencial = document.getElementById('pdf-badge-confidencial');
-      if (nota.status === 'Rascunho') {
-        badgeConfidencial.innerText = 'RASCUNHO DE ANOTAÇÃO';
-        badgeConfidencial.className = 'inline-block bg-amber-100 text-amber-800 border text-[8.5px] font-extrabold px-2 py-0.5 rounded uppercase';
-      } else {
-        badgeConfidencial.innerText = 'DOCUMENTO CONCLUÍDO';
-        badgeConfidencial.className = 'inline-block bg-emerald-100 text-emerald-800 border text-[8.5px] font-extrabold px-2 py-0.5 rounded uppercase';
-      }
+            // 🟠 LARANJA – Minha mochila de coragem
+            { id: 19, category: 'LARANJA', categoryName: 'Minha mochila de coragem', color: '#FF9800', lightBg: '#FFF3E0', border: '#E65100', icon: 'fa-backpack', question: 'O que você levaria na mochila para se sentir mais seguro?' },
+            { id: 20, category: 'LARANJA', categoryName: 'Minha mochila de coragem', color: '#FF9800', lightBg: '#FFF3E0', border: '#E65100', icon: 'fa-user-ninja', question: 'Qual pessoa poderia ajudar você quando estivesse triste?' },
+            { id: 21, category: 'LARANJA', categoryName: 'Minha mochila de coragem', color: '#FF9800', lightBg: '#FFF3E0', border: '#E65100', icon: 'fa-lightbulb', question: 'Que lembrança boa poderia ajudar quando sentisse saudade?' },
+            { id: 22, category: 'LARANJA', categoryName: 'Minha mochila de coragem', color: '#FF9800', lightBg: '#FFF3E0', border: '#E65100', icon: 'fa-gamepad', question: 'Qual brincadeira você gostaria de fazer quando chegasse à escola?' },
+            { id: 23, category: 'LARANJA', categoryName: 'Minha mochila de coragem', color: '#FF9800', lightBg: '#FFF3E0', border: '#E65100', icon: 'fa-comment-medical', question: 'O que você poderia dizer para si mesmo quando sentisse medo?' },
+            { id: 24, category: 'LARANJA', categoryName: 'Minha mochila de coragem', color: '#FF9800', lightBg: '#FFF3E0', border: '#E65100', icon: 'fa-graduation-cap', question: 'Se pudesse ensinar uma coisa ao ursinho para ajudá-lo, o que ensinaria?' }
+        ];
 
-      const corpo = document.getElementById('pdf-corpo-conteudo');
-      corpo.innerHTML = `
-        <div class="bg-gray-50 border p-3 rounded text-xs pdf-keep-together">
-          <b class="text-[#1A365D] block mb-1 uppercase text-[9.5px]">Anotações da Sessão:</b>
-          <p class="text-gray-700 leading-relaxed text-justify">${nota.texto || 'Sem anotações.'}</p>
-        </div>
-        <div class="bg-gray-50 border p-3 rounded text-xs pdf-keep-together">
-          <b class="text-[#1A365D] block mb-1 uppercase text-[9.5px]">Pontos Importantes para o Próximo Atendimento:</b>
-          <p class="text-gray-700 leading-relaxed text-justify">${nota.proximo || 'Nenhum registro.'}</p>
-        </div>
-      `;
+        // Variáveis de Controle
+        let availableQuestions = [...QUESTIONS_DATA];
+        let drawnHistory = [];
+        let isSpinning = false;
+        let currentRotation = 0; // em radianos
 
-      atualizarInterfaceProfissional();
-      document.getElementById('modal-pdf').classList.remove('hidden');
-    }
+        // Configuração do Canvas
+        const canvas = document.getElementById('wheelCanvas');
+        const ctx = canvas.getContext('2d');
+        const totalSlices = QUESTIONS_DATA.length; // 24
+        const sliceAngle = (2 * Math.PI) / totalSlices;
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+        const radius = centerX - 10;
 
-    function gerarPDFPlanejamento(planId) {
-      const plan = (bancoPlanejamentos[pacienteAtualId] || []).find(p => p.id === planId);
-      if (!plan) return;
-      const pac = MOCK_PACIENTES.find(p => p.id === pacienteAtualId);
+        // Efeitos sonoros usando Web Audio API
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
-      document.getElementById('pdf-emissao-data').innerText = `Emissão: ${new Date().toLocaleString('pt-BR')}`;
-      document.getElementById('pdf-paciente-nome').innerText = pac ? pac.nome : 'Paciente';
-      document.getElementById('pdf-paciente-tema').innerText = 'Planejamento & Supervisão';
-      document.getElementById('pdf-paciente-data').innerText = formatarDataBR(plan.dataElaboracao);
-      document.getElementById('pdf-paciente-status').innerText = plan.status;
-      document.getElementById('pdf-titulo-relatorio').innerText = 'FOLHA DE PLANEJAMENTO CLÍNICO E SUPERVISÃO';
+        function playTickSound() {
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 0.04);
+            gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.04);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.04);
+        }
 
-      const badgeConfidencial = document.getElementById('pdf-badge-confidencial');
-      if (plan.status === 'Rascunho') {
-        badgeConfidencial.innerText = 'RASCUNHO DE PLANEJAMENTO';
-        badgeConfidencial.className = 'inline-block bg-amber-100 text-amber-800 border text-[8.5px] font-extrabold px-2 py-0.5 rounded uppercase';
-      } else {
-        badgeConfidencial.innerText = 'DOCUMENTO CONCLUÍDO';
-        badgeConfidencial.className = 'inline-block bg-emerald-100 text-emerald-800 border text-[8.5px] font-extrabold px-2 py-0.5 rounded uppercase';
-      }
+        function playVictorySound() {
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            const notes = [440, 554.37, 659.25, 880];
+            notes.forEach((freq, idx) => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime + idx * 0.1);
+                gain.gain.setValueAtTime(0.2, audioCtx.currentTime + idx * 0.1);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + idx * 0.1 + 0.3);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(audioCtx.currentTime + idx * 0.1);
+                osc.stop(audioCtx.currentTime + idx * 0.1 + 0.3);
+            });
+        }
 
-      const corpo = document.getElementById('pdf-corpo-conteudo');
-      corpo.innerHTML = `
-        <div class="bg-gray-50 border p-3 rounded text-xs pdf-keep-together">
-          <b class="text-[#1A365D] block mb-1 uppercase text-[9.5px]">1. Síntese da Sessão Anterior:</b>
-          <p class="text-gray-700 leading-relaxed text-justify">${plan.sinteseAnterior || 'Não informada.'}</p>
-        </div>
-        <div class="bg-gray-50 border p-3 rounded text-xs pdf-keep-together">
-          <b class="text-[#1A365D] block mb-1 uppercase text-[9.5px]">2. Objetivos para as Próximas Sessões:</b>
-          <p class="text-gray-700 leading-relaxed text-justify">${plan.objetivos || 'Não informados.'}</p>
-        </div>
-        <div class="bg-gray-50 border p-3 rounded text-xs pdf-keep-together">
-          <b class="text-[#1A365D] block mb-1 uppercase text-[9.5px]">3. Planejamento das Intervenções:</b>
-          <p class="text-gray-700 leading-relaxed text-justify">${plan.intervencoes || 'Não informadas.'}</p>
-        </div>
-        <div class="bg-gray-50 border p-3 rounded text-xs pdf-keep-together">
-          <b class="text-[#1A365D] block mb-1 uppercase text-[9.5px]">4. Indicadores de Acompanhamento:</b>
-          <p class="text-gray-700 leading-relaxed text-justify">${plan.indicadores || 'Não informados.'}</p>
-        </div>
-        <div class="bg-gray-50 border p-3 rounded text-xs pdf-keep-together">
-          <b class="text-[#1A365D] block mb-1 uppercase text-[9.5px]">5. Orientações e Pontos de Atenção:</b>
-          <p class="text-gray-700 leading-relaxed text-justify">${plan.orientacoes || 'Não informadas.'}</p>
-        </div>
-        ${plan.supervisao ? `
-          <div class="bg-blue-50/40 border border-blue-200 p-3 rounded text-xs pdf-keep-together">
-            <b class="text-blue-900 block mb-1 uppercase text-[9.5px]"><i class="fa-solid fa-user-shield mr-1"></i> 6. Registro de Supervisão Clínica:</b>
-            <p class="text-gray-700 text-justify mb-1"><b>Data:</b> ${formatarDataBR(plan.supervisao.data || plan.dataElaboracao)} | <b>Questões:</b> ${plan.supervisao.questoes || 'N/A'}</p>
-            <p class="text-gray-700 text-justify mb-1"><b>Discussões e Hipóteses:</b> ${plan.supervisao.hipoteses || 'N/A'}</p>
-            <p class="text-gray-700 text-justify"><b>Recomendações e Ajustes:</b> ${plan.supervisao.recomendacoes || 'N/A'}</p>
-          </div>
-        ` : ''}
-      `;
+        // --- 2. DESENHAR A ROLETA ---
+        function drawWheel() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      atualizarInterfaceProfissional();
-      document.getElementById('modal-pdf').classList.remove('hidden');
-    }
+            for (let i = 0; i < totalSlices; i++) {
+                const item = QUESTIONS_DATA[i];
+                const angle = currentRotation + i * sliceAngle;
 
-    // --- ANÁLISE FUNCIONAL (PADRÃO CORRIGIDO) ---
-    function gerarEExibirPDF() {
-      const paciente = document.getElementById('campo-paciente').value || "Paciente Não Informado";
-      const tema = document.getElementById('campo-tema').value || "Análise Geral";
-      const dataSessao = document.getElementById('campo-data').value || new Date().toISOString().split('T')[0];
-      const status = document.getElementById('campo-status').value;
-      const compAlvo = document.getElementById('campo-comportamento-alvo').value || "Não especificado.";
+                // Desenhar fatia
+                ctx.beginPath();
+                ctx.moveTo(centerX, centerY);
+                ctx.arc(centerX, centerY, radius, angle, angle + sliceAngle);
+                ctx.closePath();
 
-      document.getElementById('pdf-emissao-data').innerText = `Emissão: ${new Date().toLocaleString('pt-BR')}`;
-      document.getElementById('pdf-paciente-nome').innerText = paciente;
-      document.getElementById('pdf-paciente-tema').innerText = tema;
-      document.getElementById('pdf-paciente-data').innerText = formatarDataBR(dataSessao);
-      document.getElementById('pdf-paciente-status').innerText = status;
-      document.getElementById('pdf-titulo-relatorio').innerText = 'RELATÓRIO DE ANÁLISE FUNCIONAL MOLECULAR';
+                ctx.fillStyle = item.color;
+                ctx.fill();
 
-      const badgeConfidencial = document.getElementById('pdf-badge-confidencial');
-      badgeConfidencial.innerText = 'DOCUMENTO CONFIDENCIAL';
-      badgeConfidencial.className = 'inline-block bg-[#F7EBEF] text-[#B85C83] border border-[#B85C83]/30 text-[8.5px] font-extrabold px-2 py-0.5 rounded tracking-wider uppercase';
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = '#FFFFFF';
+                ctx.stroke();
 
-      const corpo = document.getElementById('pdf-corpo-conteudo');
-      corpo.innerHTML = `
-        <div class="pdf-keep-together mb-2">
-          <h3 class="text-xs font-bold text-[#1A365D] uppercase border-b pb-0.5 mb-1">1. COMPORTAMENTO-ALVO</h3>
-          <p class="text-xs italic bg-gray-50 p-2.5 rounded border text-justify">${compAlvo}</p>
-        </div>
-        <div class="pdf-keep-together mb-2">
-          <h3 class="text-xs font-bold text-[#1A365D] uppercase border-b pb-0.5 mb-1">2. TRÍPLICE CONTINGÊNCIA</h3>
-          <div class="grid grid-cols-2 gap-2 text-xs">
-            <div class="bg-slate-50 p-2 border rounded text-justify"><b>A:</b> ${document.getElementById('campo-antecedente-itens').value}</div>
-            <div class="bg-slate-50 p-2 border rounded text-justify"><b>R:</b> ${document.getElementById('campo-resposta-itens').value}</div>
-            <div class="bg-slate-50 p-2 border rounded text-justify"><b>C:</b> ${document.getElementById('campo-consequencia-itens').value}</div>
-            <div class="bg-slate-50 p-2 border rounded text-justify"><b>E:</b> ${document.getElementById('campo-probabilidade').value}</div>
-          </div>
-        </div>
-      `;
+                // Desenhar texto/número na fatia
+                ctx.save();
+                ctx.translate(centerX, centerY);
+                ctx.rotate(angle + sliceAngle / 2);
+                ctx.textAlign = 'right';
+                ctx.fillStyle = '#FFFFFF';
+                ctx.font = 'bold 15px Fredoka, sans-serif';
+                ctx.shadowColor = 'rgba(0,0,0,0.3)';
+                ctx.shadowBlur = 3;
+                ctx.fillText(`${item.id}`, radius - 20, 5);
+                ctx.restore();
+            }
 
-      atualizarInterfaceProfissional();
-      document.getElementById('modal-pdf').classList.remove('hidden');
-    }
+            // Anel exterior decorativo
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+            ctx.lineWidth = 6;
+            ctx.strokeStyle = '#FFFFFF';
+            ctx.stroke();
+        }
 
-    function fecharModalPDF() {
-      document.getElementById('modal-pdf').classList.add('hidden');
-    }
+        // --- 3. LÓGICA DE GIRO DE EXATAMENTE 5 SEGUNDOS ---
+        function spinWheel() {
+            if (isSpinning) return;
 
-    function baixarPDFCompletamente() {
-      const elemento = document.getElementById('pdf-render-target');
-      const nomePaciente = document.getElementById('pdf-paciente-nome').innerText.replace(/\s+/g, '_');
-      const opcoes = {
-        margin: [8, 8, 8, 8],
-        filename: `Documento_Clinico_${nomePaciente}.pdf`,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true, letterRendering: true, logging: false },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-        pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
-      };
+            // Verificar se restam perguntas
+            if (availableQuestions.length === 0) {
+                if (confirm("Todas as 24 perguntas já foram sorteadas! Deseja reiniciar a lista de perguntas agora?")) {
+                    resetQuestions();
+                }
+                return;
+            }
 
-      const btn = event.currentTarget;
-      const originalHTML = btn.innerHTML;
-      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1.5"></i> Gerando...';
-      btn.disabled = true;
+            isSpinning = true;
+            document.getElementById('spinBtn').disabled = true;
+            document.getElementById('spinBtn').classList.add('opacity-50', 'cursor-not-allowed');
 
-      html2pdf().set(opcoes).from(elemento).save().then(() => {
-        btn.innerHTML = originalHTML;
-        btn.disabled = false;
-      }).catch(err => {
-        console.error("Erro na geração do PDF:", err);
-        alert("Ocorreu um erro ao gerar o arquivo PDF.");
-        btn.innerHTML = originalHTML;
-        btn.disabled = false;
-      });
-    }
+            // Selecionar pergunta aleatória entre as disponíveis
+            const selectedIndex = Math.floor(Math.random() * availableQuestions.length);
+            const selectedQuestion = availableQuestions[selectedIndex];
+            
+            // Encontrar o índice original da pergunta na roleta (0 a 23)
+            const targetSliceIndex = QUESTIONS_DATA.findIndex(q => q.id === selectedQuestion.id);
 
-    function imprimirPDF() {
-      window.print();
-    }
+            // Calcular o ângulo exato para que a fatia sorteada pare sob o ponteiro topo (-90 graus ou 3*PI/2)
+            // Ponteiro está a -90° (Top). 
+            // O centro da fatia `targetSliceIndex` no ângulo final precisa bater com 3*PI/2.
+            const targetSliceCenterAngle = targetSliceIndex * sliceAngle + (sliceAngle / 2);
+            const pointerAngle = (3 * Math.PI) / 2; // -90 graus (topo)
 
-    function formatarDataBR(dataIso) {
-      if (!dataIso) return '--/--/----';
-      const partes = dataIso.split('-');
-      if (partes.length !== 3) return dataIso;
-      return `partes[2]/{partes[1]}/${partes[0]}`;
-    }
+            // Quantidade de voltas completas (por exemplo, 8 voltas) para animação bonita
+            const fullRotations = 8;
+            
+            // Calculando a rotação total final necessária
+            const currentMod = currentRotation % (2 * Math.PI);
+            let targetRotation = currentRotation + (fullRotations * 2 * Math.PI) + (pointerAngle - targetSliceCenterAngle - currentMod);
+            
+            // Garantir que sempre gire no sentido horário pra frente
+            while (targetRotation <= currentRotation + (fullRotations * 2 * Math.PI)) {
+                targetRotation += 2 * Math.PI;
+            }
 
-    function carregarExemploModelo() {
-      document.getElementById('campo-paciente').value = EXEMPLO_ANALISE_TECNICA.paciente;
-      document.getElementById('campo-tema').value = EXEMPLO_ANALISE_TECNICA.tema;
-      document.getElementById('campo-data').value = EXEMPLO_ANALISE_TECNICA.data;
-      document.getElementById('campo-status').value = EXEMPLO_ANALISE_TECNICA.status;
-      document.getElementById('campo-comportamento-alvo').value = EXEMPLO_ANALISE_TECNICA.comportamentoAlvo;
-      document.getElementById('campo-antecedente-tipo').value = EXEMPLO_ANALISE_TECNICA.antecedenteTipo;
-      document.getElementById('campo-antecedente-itens').value = EXEMPLO_ANALISE_TECNICA.antecedenteItens.join('\n');
-      document.getElementById('campo-resposta-tipo').value = EXEMPLO_ANALISE_TECNICA.respostaTipo;
-      document.getElementById('campo-resposta-itens').value = EXEMPLO_ANALISE_TECNICA.respostaItens.join('\n');
-      document.getElementById('campo-consequencia-tipo').value = EXEMPLO_ANALISE_TECNICA.consequenciaTipo;
-      document.getElementById('campo-consequencia-itens').value = EXEMPLO_ANALISE_TECNICA.consequenciaItens.join('\n');
-      document.getElementById('campo-efeito-imediato').value = EXEMPLO_ANALISE_TECNICA.efeitoImediato;
-      document.getElementById('campo-probabilidade').value = EXEMPLO_ANALISE_TECNICA.probabilidade;
-      document.getElementById('campo-efeito-longo').value = EXEMPLO_ANALISE_TECNICA.efeitoLongo;
-      document.getElementById('campo-processo').value = EXEMPLO_ANALISE_TECNICA.processo;
-      document.getElementById('campo-confianca').value = EXEMPLO_ANALISE_TECNICA.confianca;
-      document.getElementById('campo-evidencias').value = EXEMPLO_ANALISE_TECNICA.evidencias;
-      document.getElementById('campo-intervencao').value = EXEMPLO_ANALISE_TECNICA.intervencao;
-      document.getElementById('campo-sintese').value = EXEMPLO_ANALISE_TECNICA.sintese;
-    }
+            const duration = 5000; // Exatamente 5000ms = 5 segundos
+            const startTime = performance.now();
+            const startRotation = currentRotation;
+            const totalDeltaRotation = targetRotation - startRotation;
 
-    function novaAnaliseFuncional() {
-      document.getElementById('form-analise').reset();
-      document.getElementById('campo-data').value = new Date().toISOString().split('T')[0];
-      switchTab('analise');
-    }
+            let lastSliceSoundIndex = -1;
 
-    function iniciarAnaliseParaPaciente(nome) {
-      novaAnaliseFuncional();
-      document.getElementById('campo-paciente').value = nome;
-    }
+            // Função Easing Cubic-Bezier (Desaceleração suave de 5 segundos)
+            function easeOutCubic(t) {
+                return 1 - Math.pow(1 - t, 3);
+            }
 
-    function salvarAnaliseNoProntuario() {
-      const paciente = document.getElementById('campo-paciente').value;
-      if (!paciente) {
-        alert("Preencha o nome do paciente.");
-        return;
-      }
-      const novaAnalise = {
-        paciente: paciente,
-        tema: document.getElementById('campo-tema').value || "Análise Geral",
-        data: document.getElementById('campo-data').value || new Date().toISOString().split('T')[0],
-        status: document.getElementById('campo-status').value,
-        comportamentoAlvo: document.getElementById('campo-comportamento-alvo').value,
-        processo: document.getElementById('campo-processo').value
-      };
-      historicoAnalises.unshift(novaAnalise);
-      salvarDadosLocalStorage();
-      renderizarDashboard();
-      alert(`Análise funcional de "${paciente}" salva com sucesso!`);
-      switchTab('dashboard');
-    }
+            function animate(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const easeProgress = easeOutCubic(progress);
 
-    function carregarEVisualizarAnalise(idx) {
-      const item = historicoAnalises[idx];
-      if (!item) return;
-      document.getElementById('campo-paciente').value = item.paciente;
-      document.getElementById('campo-tema').value = item.tema;
-      document.getElementById('campo-data').value = item.data;
-      document.getElementById('campo-status').value = item.status;
-      document.getElementById('campo-comportamento-alvo').value = item.comportamentoAlvo || "";
-      document.getElementById('campo-processo').value = item.processo || "Reforçamento Negativo (R-) - Esquiva/Fuga";
-      gerarEExibirPDF();
-    }
+                currentRotation = startRotation + totalDeltaRotation * easeProgress;
+                drawWheel();
 
-    function toggleBackupModal() {
-      document.getElementById('modal-backup').classList.toggle('hidden');
-    }
+                // Reproduzir efeito sonoro a cada fatia cruzada
+                const normalizedAngle = (currentRotation % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI);
+                const currentSliceUnderPointer = Math.floor(((3 * Math.PI / 2 - normalizedAngle + 2 * Math.PI) % (2 * Math.PI)) / sliceAngle);
+                
+                if (currentSliceUnderPointer !== lastSliceSoundIndex) {
+                    playTickSound();
+                    lastSliceSoundIndex = currentSliceUnderPointer;
+                }
 
-    function exportarDadosJSON() {
-      const backup = {
-        pacientes: MOCK_PACIENTES,
-        anamneses: bancoAnamneses,
-        anotacoes: bancoAnotacoesSessao,
-        evolucoes: bancoEvolucoes,
-        planejamentos: bancoPlanejamentos,
-        analises: historicoAnalises,
-        profissional: profissional
-      };
-      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backup, null, 2));
-      const downloadAnchor = document.createElement('a');
-      downloadAnchor.setAttribute("href", dataStr);
-      downloadAnchor.setAttribute("download", `backup_sistema_daniele_${new Date().toISOString().split('T')[0]}.json`);
-      document.body.appendChild(downloadAnchor);
-      downloadAnchor.click();
-      downloadAnchor.remove();
-    }
+                if (progress < 1) {
+                    requestAnimationFrame(animate);
+                } else {
+                    // Final do Giro
+                    isSpinning = false;
+                    document.getElementById('spinBtn').disabled = false;
+                    document.getElementById('spinBtn').classList.remove('opacity-50', 'cursor-not-allowed');
 
-    function restaurarDadosPadrao() {
-      localStorage.clear();
-      location.reload();
-    }
-  </script>
+                    // Remover pergunta sorteada da lista disponível
+                    availableQuestions.splice(selectedIndex, 1);
+                    drawnHistory.push(selectedQuestion);
+
+                    // Atualizar Contador
+                    updateCounter();
+
+                    // Disparar Confetti & Som de Vitória
+                    playVictorySound();
+                    triggerConfetti();
+
+                    // Abrir Modal de Pergunta
+                    showModal(selectedQuestion);
+                }
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        // --- 4. EXIBIR MODAL DE RESULTADO ---
+        function showModal(item) {
+            const modal = document.getElementById('resultModal');
+            const modalContent = document.getElementById('modalContent');
+            const badge = document.getElementById('modalCategoryBadge');
+            const name = document.getElementById('modalCategoryName');
+            const icon = document.getElementById('modalCategoryIcon');
+            const avatarBg = document.getElementById('modalAvatarBg');
+            const avatarIcon = document.getElementById('modalAvatarIcon');
+            const qNum = document.getElementById('modalQuestionNum');
+            const qText = document.getElementById('modalQuestionText');
+
+            // Preencher Dados
+            name.textContent = item.categoryName;
+            qNum.textContent = item.id;
+            qText.textContent = item.question;
+
+            // Cores e Ícones dinâmicos
+            modalContent.style.borderColor = item.color;
+            badge.style.backgroundColor = item.lightBg;
+            badge.style.color = item.border;
+            icon.className = `fa-solid ${item.icon}`;
+
+            avatarBg.style.backgroundColor = item.lightBg;
+            avatarBg.style.color = item.color;
+            avatarIcon.className = `fa-solid ${item.icon}`;
+
+            // Exibir
+            modal.classList.remove('hidden');
+        }
+
+        function closeModalOnly() {
+            document.getElementById('resultModal').classList.add('hidden');
+        }
+
+        function closeModalAndSpin() {
+            closeModalOnly();
+            setTimeout(() => {
+                spinWheel();
+            }, 300);
+        }
+
+        // --- 5. REINICIAR PERGUNTAS ---
+        function resetQuestions() {
+            if (isSpinning) return;
+            availableQuestions = [...QUESTIONS_DATA];
+            drawnHistory = [];
+            updateCounter();
+            alert("A roleta foi reiniciada! Todas as 24 perguntas estão disponíveis novamente.");
+        }
+
+        function updateCounter() {
+            const text = document.getElementById('counterText');
+            text.textContent = `Perguntas sorteadas: ${drawnHistory.length} / ${QUESTIONS_DATA.length}`;
+        }
+
+        // --- 6. EFEITO VISUAL DE CONFETI ---
+        function triggerConfetti() {
+            if (typeof confetti === 'function') {
+                confetti({
+                    particleCount: 80,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+            }
+        }
+
+        // --- 7. INICIALIZAÇÃO NA CARGA DA PÁGINA ---
+        window.onload = function() {
+            drawWheel();
+            updateCounter();
+        };
+
+        // Redimensionar responsivo se necessário
+        window.addEventListener('resize', () => {
+            drawWheel();
+        });
+    </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
