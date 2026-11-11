@@ -156,11 +156,11 @@
         </main>
 
         <!-- Legenda das Categorias -->
-        <footer class="w-full mt-6 grid grid-cols-2 md:grid-cols-4 gap-3 text-xs sm:text-sm font-bold">
+        <footer class="w-full mt-6 grid grid-cols-2 md:grid-cols-5 gap-2.5 text-xs sm:text-sm font-bold">
             <div class="bg-emerald-50 border-2 border-emerald-200 p-2.5 rounded-xl flex items-center gap-2 text-emerald-800 shadow-sm">
                 <div class="w-4 h-4 rounded-full bg-emerald-500 shrink-0"></div>
                 <div class="truncate">
-                    <span class="block text-[10px] text-emerald-600 uppercase font-extrabold">Verde</span>
+                    <span class="block text-[10px] text-emerald-600 uppercase font-extrabold">Verde (6)</span>
                     <span>Emoções</span>
                 </div>
             </div>
@@ -168,24 +168,32 @@
             <div class="bg-pink-50 border-2 border-pink-200 p-2.5 rounded-xl flex items-center gap-2 text-pink-800 shadow-sm">
                 <div class="w-4 h-4 rounded-full bg-pink-500 shrink-0"></div>
                 <div class="truncate">
-                    <span class="block text-[10px] text-pink-600 uppercase font-extrabold">Rosa</span>
-                    <span>Conversando sobre a escola</span>
+                    <span class="block text-[10px] text-pink-600 uppercase font-extrabold">Rosa (6)</span>
+                    <span>Sobre a escola</span>
                 </div>
             </div>
 
             <div class="bg-purple-50 border-2 border-purple-200 p-2.5 rounded-xl flex items-center gap-2 text-purple-800 shadow-sm">
                 <div class="w-4 h-4 rounded-full bg-purple-500 shrink-0"></div>
                 <div class="truncate">
-                    <span class="block text-[10px] text-purple-600 uppercase font-extrabold">Roxo</span>
-                    <span>Desafios e situações difíceis</span>
+                    <span class="block text-[10px] text-purple-600 uppercase font-extrabold">Roxo (6)</span>
+                    <span>Desafios difíceis</span>
                 </div>
             </div>
 
             <div class="bg-orange-50 border-2 border-orange-200 p-2.5 rounded-xl flex items-center gap-2 text-orange-800 shadow-sm">
                 <div class="w-4 h-4 rounded-full bg-orange-500 shrink-0"></div>
                 <div class="truncate">
-                    <span class="block text-[10px] text-orange-600 uppercase font-extrabold">Laranja</span>
-                    <span>Minha mochila de coragem</span>
+                    <span class="block text-[10px] text-orange-600 uppercase font-extrabold">Laranja (6)</span>
+                    <span>Mochila coragem</span>
+                </div>
+            </div>
+
+            <div class="bg-amber-50 border-2 border-amber-300 p-2.5 rounded-xl flex items-center gap-2 text-amber-900 shadow-sm col-span-2 md:col-span-1">
+                <div class="w-4 h-4 rounded-full bg-amber-400 shrink-0 flex items-center justify-center text-[10px] text-white">⭐</div>
+                <div class="truncate">
+                    <span class="block text-[10px] text-amber-600 uppercase font-extrabold">Amarelo (4)</span>
+                    <span>Desafios Divertidos</span>
                 </div>
             </div>
         </footer>
@@ -209,7 +217,7 @@
 
             <!-- Pergunta Sorteada -->
             <div class="my-4 w-full">
-                <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Pergunta N.º <span id="modalQuestionNum">1</span></p>
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1"><span id="modalQuestionType">Pergunta / Desafio</span> N.º <span id="modalQuestionNum">1</span></p>
                 <h3 id="modalQuestionText" class="text-xl sm:text-2xl md:text-3xl font-bold text-slate-800 font-heading leading-snug px-2">
                     Texto da pergunta aqui...
                 </h3>
@@ -236,40 +244,80 @@
 
     <!-- SCRIPT DA ROLETA E LÓGICA DO JOGO -->
     <script>
-        // --- 1. BANCO DE DADOS DAS 24 PERGUNTAS REGISTRADAS ---
-        const QUESTIONS_DATA = [
-            // 🟢 VERDE – Emoções
-            { id: 1, category: 'VERDE', categoryName: 'Emoções', color: '#4CAF50', lightBg: '#E8F5E9', border: '#2E7D32', icon: 'fa-face-smile', question: 'Como você se sente quando pensa em ir para a escola?' },
-            { id: 2, category: 'VERDE', categoryName: 'Emoções', color: '#4CAF50', lightBg: '#E8F5E9', border: '#2E7D32', icon: 'fa-door-open', question: 'Qual emoção aparece quando você chega ao portão?' },
-            { id: 3, category: 'VERDE', categoryName: 'Emoções', color: '#4CAF50', lightBg: '#E8F5E9', border: '#2E7D32', icon: 'fa-heart-crack', question: 'O que acontece quando você sente saudade de alguém?' },
-            { id: 4, category: 'VERDE', categoryName: 'Emoções', color: '#4CAF50', lightBg: '#E8F5E9', border: '#2E7D32', icon: 'fa-sun', question: 'Em qual momento da escola você fica mais feliz?' },
-            { id: 5, category: 'VERDE', categoryName: 'Emoções', color: '#4CAF50', lightBg: '#E8F5E9', border: '#2E7D32', icon: 'fa-comment-dots', question: 'Se sua emoção pudesse falar, o que ela diria?' },
-            { id: 6, category: 'VERDE', categoryName: 'Emoções', color: '#4CAF50', lightBg: '#E8F5E9', border: '#2E7D32', icon: 'fa-cloud-rain', question: 'O que costuma acontecer quando você começa a ficar triste ou com medo?' },
+        // --- 1. BANCO DE DADOS COMPLETO DAS 28 CASAS DA ROLETA (INTERCALADAS EQUILIBRADAMENTE) ---
+        const RAW_QUESTIONS = [
+            // 🟢 VERDE – Emoções (6)
+            { id: 1, category: 'VERDE', categoryName: 'Emoções', color: '#4CAF50', lightBg: '#E8F5E9', border: '#2E7D32', icon: 'fa-face-smile', isChallenge: false, question: 'Como você se sente quando pensa em ir para a escola?' },
+            { id: 2, category: 'VERDE', categoryName: 'Emoções', color: '#4CAF50', lightBg: '#E8F5E9', border: '#2E7D32', icon: 'fa-door-open', isChallenge: false, question: 'Qual emoção aparece quando você chega ao portão?' },
+            { id: 3, category: 'VERDE', categoryName: 'Emoções', color: '#4CAF50', lightBg: '#E8F5E9', border: '#2E7D32', icon: 'fa-heart-crack', isChallenge: false, question: 'O que acontece quando você sente saudade de alguém?' },
+            { id: 4, category: 'VERDE', categoryName: 'Emoções', color: '#4CAF50', lightBg: '#E8F5E9', border: '#2E7D32', icon: 'fa-sun', isChallenge: false, question: 'Em qual momento da escola você fica mais feliz?' },
+            { id: 5, category: 'VERDE', categoryName: 'Emoções', color: '#4CAF50', lightBg: '#E8F5E9', border: '#2E7D32', icon: 'fa-comment-dots', isChallenge: false, question: 'Se sua emoção pudesse falar, o que ela diria?' },
+            { id: 6, category: 'VERDE', categoryName: 'Emoções', color: '#4CAF50', lightBg: '#E8F5E9', border: '#2E7D32', icon: 'fa-cloud-rain', isChallenge: false, question: 'O que costuma acontecer quando você começa a ficar triste ou com medo?' },
 
-            // 🩷 ROSA – Conversando sobre a escola
-            { id: 7, category: 'ROSA', categoryName: 'Conversando sobre a escola', color: '#E91E63', lightBg: '#FCE4EC', border: '#C2185B', icon: 'fa-palette', question: 'O que você mais gosta de fazer na escola?' },
-            { id: 8, category: 'ROSA', categoryName: 'Conversando sobre a escola', color: '#E91E63', lightBg: '#FCE4EC', border: '#C2185B', icon: 'fa-thumbs-down', question: 'Tem alguma coisa na escola de que você não gosta?' },
-            { id: 9, category: 'ROSA', categoryName: 'Conversando sobre a escola', color: '#E91E63', lightBg: '#FCE4EC', border: '#C2185B', icon: 'fa-hand-wave', question: 'Como é o momento de se despedir de quem acompanha você?' },
-            { id: 10, category: 'ROSA', categoryName: 'Conversando sobre a escola', color: '#E91E63', lightBg: '#FCE4EC', border: '#C2185B', icon: 'fa-sparkles', question: 'O que você gostaria que acontecesse quando chega à escola?' },
-            { id: 11, category: 'ROSA', categoryName: 'Conversando sobre a escola', color: '#E91E63', lightBg: '#FCE4EC', border: '#C2185B', icon: 'fa-user-group', question: 'Tem alguém de quem você sente falta quando está lá?' },
-            { id: 12, category: 'ROSA', categoryName: 'Conversando sobre a escola', color: '#E91E63', lightBg: '#FCE4EC', border: '#C2185B', icon: 'fa-wand-magic', question: 'Se pudesse mudar alguma coisa na escola, o que mudaria?' },
+            // 🩷 ROSA – Conversando sobre a escola (6)
+            { id: 7, category: 'ROSA', categoryName: 'Conversando sobre a escola', color: '#E91E63', lightBg: '#FCE4EC', border: '#C2185B', icon: 'fa-palette', isChallenge: false, question: 'O que você mais gosta de fazer na escola?' },
+            { id: 8, category: 'ROSA', categoryName: 'Conversando sobre a escola', color: '#E91E63', lightBg: '#FCE4EC', border: '#C2185B', icon: 'fa-thumbs-down', isChallenge: false, question: 'Tem alguma coisa na escola de que você não gosta?' },
+            { id: 9, category: 'ROSA', categoryName: 'Conversando sobre a escola', color: '#E91E63', lightBg: '#FCE4EC', border: '#C2185B', icon: 'fa-hand-wave', isChallenge: false, question: 'Como é o momento de se despedir de quem acompanha você?' },
+            { id: 10, category: 'ROSA', categoryName: 'Conversando sobre a escola', color: '#E91E63', lightBg: '#FCE4EC', border: '#C2185B', icon: 'fa-sparkles', isChallenge: false, question: 'O que você gostaria que acontecesse quando chega à escola?' },
+            { id: 11, category: 'ROSA', categoryName: 'Conversando sobre a escola', color: '#E91E63', lightBg: '#FCE4EC', border: '#C2185B', icon: 'fa-user-group', isChallenge: false, question: 'Tem alguém de quem você sente falta quando está lá?' },
+            { id: 12, category: 'ROSA', categoryName: 'Conversando sobre a escola', color: '#E91E63', lightBg: '#FCE4EC', border: '#C2185B', icon: 'fa-wand-magic', isChallenge: false, question: 'Se pudesse mudar alguma coisa na escola, o que mudaria?' },
 
-            // 🟣 ROXO – Desafios e situações difíceis
-            { id: 13, category: 'ROXO', categoryName: 'Desafios e situações difíceis', color: '#9C27B0', lightBg: '#F3E5F5', border: '#7B1FA2', icon: 'fa-mountain', question: 'O que você acha que é mais difícil na hora de entrar na escola?' },
-            { id: 14, category: 'ROXO', categoryName: 'Desafios e situações difíceis', color: '#9C27B0', lightBg: '#F3E5F5', border: '#7B1FA2', icon: 'fa-tear', question: 'O que você faz quando sente vontade de chorar?' },
-            { id: 15, category: 'ROXO', categoryName: 'Desafios e situações difíceis', color: '#9C27B0', lightBg: '#F3E5F5', border: '#7B1FA2', icon: 'fa-bear-toy', question: 'Se o ursinho não quisesse entrar na escola, o que poderia estar acontecendo?' },
-            { id: 16, category: 'ROXO', categoryName: 'Desafios e situações difíceis', color: '#9C27B0', lightBg: '#F3E5F5', border: '#7B1FA2', icon: 'fa-key', question: 'O que poderia deixar esse momento um pouquinho mais fácil?' },
-            { id: 17, category: 'ROXO', categoryName: 'Desafios e situações difíceis', color: '#9C27B0', lightBg: '#F3E5F5', border: '#7B1FA2', icon: 'fa-shield-halved', question: 'Você já conseguiu fazer alguma coisa mesmo estando com medo? Como foi?' },
-            { id: 18, category: 'ROXO', categoryName: 'Desafios e situações difíceis', color: '#9C27B0', lightBg: '#F3E5F5', border: '#7B1FA2', icon: 'fa-people-roof', question: 'O que gostaria que os adultos entendessem sobre esse momento?' },
+            // 🟣 ROXO – Desafios e situações difíceis (6)
+            { id: 13, category: 'ROXO', categoryName: 'Desafios e situações difíceis', color: '#9C27B0', lightBg: '#F3E5F5', border: '#7B1FA2', icon: 'fa-mountain', isChallenge: false, question: 'O que você acha que é mais difícil na hora de entrar na escola?' },
+            { id: 14, category: 'ROXO', categoryName: 'Desafios e situações difíceis', color: '#9C27B0', lightBg: '#F3E5F5', border: '#7B1FA2', icon: 'fa-face-sad-tear', isChallenge: false, question: 'O que você faz quando sente vontade de chorar?' },
+            { id: 15, category: 'ROXO', categoryName: 'Desafios e situações difíceis', color: '#9C27B0', lightBg: '#F3E5F5', border: '#7B1FA2', icon: 'fa-bear-toy', isChallenge: false, question: 'Se o ursinho não quisesse entrar na escola, o que poderia estar acontecendo?' },
+            { id: 16, category: 'ROXO', categoryName: 'Desafios e situações difíceis', color: '#9C27B0', lightBg: '#F3E5F5', border: '#7B1FA2', icon: 'fa-key', isChallenge: false, question: 'O que poderia deixar esse momento um pouquinho mais fácil?' },
+            { id: 17, category: 'ROXO', categoryName: 'Desafios e situações difíceis', color: '#9C27B0', lightBg: '#F3E5F5', border: '#7B1FA2', icon: 'fa-shield-halved', isChallenge: false, question: 'Você já conseguiu fazer alguma coisa mesmo estando com medo? Como foi?' },
+            { id: 18, category: 'ROXO', categoryName: 'Desafios e situações difíceis', color: '#9C27B0', lightBg: '#F3E5F5', border: '#7B1FA2', icon: 'fa-people-roof', isChallenge: false, question: 'O que gostaria que os adultos entendessem sobre esse momento?' },
 
-            // 🟠 LARANJA – Minha mochila de coragem
-            { id: 19, category: 'LARANJA', categoryName: 'Minha mochila de coragem', color: '#FF9800', lightBg: '#FFF3E0', border: '#E65100', icon: 'fa-backpack', question: 'O que você levaria na mochila para se sentir mais seguro?' },
-            { id: 20, category: 'LARANJA', categoryName: 'Minha mochila de coragem', color: '#FF9800', lightBg: '#FFF3E0', border: '#E65100', icon: 'fa-user-ninja', question: 'Qual pessoa poderia ajudar você quando estivesse triste?' },
-            { id: 21, category: 'LARANJA', categoryName: 'Minha mochila de coragem', color: '#FF9800', lightBg: '#FFF3E0', border: '#E65100', icon: 'fa-lightbulb', question: 'Que lembrança boa poderia ajudar quando sentisse saudade?' },
-            { id: 22, category: 'LARANJA', categoryName: 'Minha mochila de coragem', color: '#FF9800', lightBg: '#FFF3E0', border: '#E65100', icon: 'fa-gamepad', question: 'Qual brincadeira você gostaria de fazer quando chegasse à escola?' },
-            { id: 23, category: 'LARANJA', categoryName: 'Minha mochila de coragem', color: '#FF9800', lightBg: '#FFF3E0', border: '#E65100', icon: 'fa-comment-medical', question: 'O que você poderia dizer para si mesmo quando sentisse medo?' },
-            { id: 24, category: 'LARANJA', categoryName: 'Minha mochila de coragem', color: '#FF9800', lightBg: '#FFF3E0', border: '#E65100', icon: 'fa-graduation-cap', question: 'Se pudesse ensinar uma coisa ao ursinho para ajudá-lo, o que ensinaria?' }
+            // 🟠 LARANJA – Minha mochila de coragem (6)
+            { id: 19, category: 'LARANJA', categoryName: 'Minha mochila de coragem', color: '#FF9800', lightBg: '#FFF3E0', border: '#E65100', icon: 'fa-backpack', isChallenge: false, question: 'O que você levaria na mochila para se sentir mais seguro?' },
+            { id: 20, category: 'LARANJA', categoryName: 'Minha mochila de coragem', color: '#FF9800', lightBg: '#FFF3E0', border: '#E65100', icon: 'fa-user-ninja', isChallenge: false, question: 'Qual pessoa poderia ajudar você quando estivesse triste?' },
+            { id: 21, category: 'LARANJA', categoryName: 'Minha mochila de coragem', color: '#FF9800', lightBg: '#FFF3E0', border: '#E65100', icon: 'fa-lightbulb', isChallenge: false, question: 'Que lembrança boa poderia ajudar quando sentisse saudade?' },
+            { id: 22, category: 'LARANJA', categoryName: 'Minha mochila de coragem', color: '#FF9800', lightBg: '#FFF3E0', border: '#E65100', icon: 'fa-gamepad', isChallenge: false, question: 'Qual brincadeira você gostaria de fazer quando chegasse à escola?' },
+            { id: 23, category: 'LARANJA', categoryName: 'Minha mochila de coragem', color: '#FF9800', lightBg: '#FFF3E0', border: '#E65100', icon: 'fa-comment-medical', isChallenge: false, question: 'O que você poderia dizer para si mesmo quando sentisse medo?' },
+            { id: 24, category: 'LARANJA', categoryName: 'Minha mochila de coragem', color: '#FF9800', lightBg: '#FFF3E0', border: '#E65100', icon: 'fa-graduation-cap', isChallenge: false, question: 'Se pudesse ensinar uma coisa ao ursinho para ajudá-lo, o que ensinaria?' },
+
+            // ⭐ DESAFIOS DIVERTIDOS (4 Casas Especiais)
+            { id: 25, category: 'AMARELO', categoryName: 'Desafio Divertido ⭐', color: '#FFB300', lightBg: '#FFF8E1', border: '#FF6F00', icon: 'fa-music', isChallenge: true, question: 'DANÇA MALUCA: Faça uma dancinha engraçada durante 10 segundos!' },
+            { id: 26, category: 'AMARELO', categoryName: 'Desafio Divertido ⭐', color: '#FFB300', lightBg: '#FFF8E1', border: '#FF6F00', icon: 'fa-paw', isChallenge: true, question: 'IMITAÇÃO DIVERTIDA: Imite um ursinho indo para a escola.' },
+            { id: 27, category: 'AMARELO', categoryName: 'Desafio Divertido ⭐', color: '#FFB300', lightBg: '#FFF8E1', border: '#FF6F00', icon: 'fa-ghost', isChallenge: true, question: 'CARETA DAS EMOÇÕES: Faça uma careta que represente como você fica quando sente saudade.' },
+            { id: 28, category: 'AMARELO', categoryName: 'Desafio Divertido ⭐', color: '#FFB300', lightBg: '#FFF8E1', border: '#FF6F00', icon: 'fa-mask-awesome', isChallenge: true, question: 'PODER DA CORAGEM: Faça uma pose de super-herói e diga uma coisa que você consegue fazer mesmo quando sente medo.' }
         ];
+
+        // Distribuição visual equilibrada na roleta (28 posições intercaladas)
+        const WHEEL_LAYOUT = [
+            RAW_QUESTIONS[0],  // V1
+            RAW_QUESTIONS[6],  // R1
+            RAW_QUESTIONS[12], // X1
+            RAW_QUESTIONS[18], // L1
+            RAW_QUESTIONS[24], // ⭐ Desafio 1
+            RAW_QUESTIONS[1],  // V2
+            RAW_QUESTIONS[7],  // R2
+            RAW_QUESTIONS[13], // X2
+            RAW_QUESTIONS[19], // L2
+            RAW_QUESTIONS[2],  // V3
+            RAW_QUESTIONS[8],  // R3
+            RAW_QUESTIONS[25], // ⭐ Desafio 2
+            RAW_QUESTIONS[14], // X3
+            RAW_QUESTIONS[20], // L3
+            RAW_QUESTIONS[3],  // V4
+            RAW_QUESTIONS[9],  // R4
+            RAW_QUESTIONS[15], // X4
+            RAW_QUESTIONS[21], // L4
+            RAW_QUESTIONS[26], // ⭐ Desafio 3
+            RAW_QUESTIONS[4],  // V5
+            RAW_QUESTIONS[10], // R5
+            RAW_QUESTIONS[16], // X5
+            RAW_QUESTIONS[22], // L5
+            RAW_QUESTIONS[5],  // V6
+            RAW_QUESTIONS[11], // R6
+            RAW_QUESTIONS[27], // ⭐ Desafio 4
+            RAW_QUESTIONS[17], // X6
+            RAW_QUESTIONS[23]  // L6
+        ];
+
+        const QUESTIONS_DATA = WHEEL_LAYOUT;
 
         // Variáveis de Controle
         let availableQuestions = [...QUESTIONS_DATA];
@@ -280,7 +328,7 @@
         // Configuração do Canvas
         const canvas = document.getElementById('wheelCanvas');
         const ctx = canvas.getContext('2d');
-        const totalSlices = QUESTIONS_DATA.length; // 24
+        const totalSlices = QUESTIONS_DATA.length; // 28
         const sliceAngle = (2 * Math.PI) / totalSlices;
         const centerX = canvas.width / 2;
         const centerY = canvas.height / 2;
@@ -296,9 +344,9 @@
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
             osc.type = 'sine';
-            osc.frequency.setValueAtTime(600, audioCtx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 0.04);
-            gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+            osc.frequency.setValueAtTime(650, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(220, audioCtx.currentTime + 0.04);
+            gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
             gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.04);
             osc.connect(gain);
             gain.connect(audioCtx.destination);
@@ -310,22 +358,22 @@
             if (audioCtx.state === 'suspended') {
                 audioCtx.resume();
             }
-            const notes = [440, 554.37, 659.25, 880];
+            const notes = [523.25, 659.25, 783.99, 1046.50];
             notes.forEach((freq, idx) => {
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
                 osc.type = 'triangle';
-                osc.frequency.setValueAtTime(freq, audioCtx.currentTime + idx * 0.1);
-                gain.gain.setValueAtTime(0.2, audioCtx.currentTime + idx * 0.1);
-                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + idx * 0.1 + 0.3);
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime + idx * 0.09);
+                gain.gain.setValueAtTime(0.2, audioCtx.currentTime + idx * 0.09);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + idx * 0.09 + 0.35);
                 osc.connect(gain);
                 gain.connect(audioCtx.destination);
-                osc.start(audioCtx.currentTime + idx * 0.1);
-                osc.stop(audioCtx.currentTime + idx * 0.1 + 0.3);
+                osc.start(audioCtx.currentTime + idx * 0.09);
+                osc.stop(audioCtx.currentTime + idx * 0.09 + 0.35);
             });
         }
 
-        // --- 2. DESENHAR A ROLETA ---
+        // --- 2. DESENHAR A ROLETA (28 SETORES) ---
         function drawWheel() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -342,20 +390,22 @@
                 ctx.fillStyle = item.color;
                 ctx.fill();
 
-                ctx.lineWidth = 2;
+                ctx.lineWidth = 1.5;
                 ctx.strokeStyle = '#FFFFFF';
                 ctx.stroke();
 
-                // Desenhar texto/número na fatia
+                // Desenhar texto/ícone/número na fatia
                 ctx.save();
                 ctx.translate(centerX, centerY);
                 ctx.rotate(angle + sliceAngle / 2);
                 ctx.textAlign = 'right';
                 ctx.fillStyle = '#FFFFFF';
-                ctx.font = 'bold 15px Fredoka, sans-serif';
+                ctx.font = item.isChallenge ? 'bold 14px Fredoka, sans-serif' : 'bold 13px Fredoka, sans-serif';
                 ctx.shadowColor = 'rgba(0,0,0,0.3)';
                 ctx.shadowBlur = 3;
-                ctx.fillText(`${item.id}`, radius - 20, 5);
+                
+                const label = item.isChallenge ? `⭐ ${item.id}` : `${item.id}`;
+                ctx.fillText(label, radius - 15, 4);
                 ctx.restore();
             }
 
@@ -373,7 +423,7 @@
 
             // Verificar se restam perguntas
             if (availableQuestions.length === 0) {
-                if (confirm("Todas as 24 perguntas já foram sorteadas! Deseja reiniciar a lista de perguntas agora?")) {
+                if (confirm("Todas as 28 opções (perguntas e desafios) já foram sorteadas! Deseja reiniciar uma nova rodada agora?")) {
                     resetQuestions();
                 }
                 return;
@@ -383,27 +433,22 @@
             document.getElementById('spinBtn').disabled = true;
             document.getElementById('spinBtn').classList.add('opacity-50', 'cursor-not-allowed');
 
-            // Selecionar pergunta aleatória entre as disponíveis
+            // Selecionar pergunta/desafio aleatório entre as opções disponíveis sem repetição
             const selectedIndex = Math.floor(Math.random() * availableQuestions.length);
             const selectedQuestion = availableQuestions[selectedIndex];
             
-            // Encontrar o índice original da pergunta na roleta (0 a 23)
+            // Encontrar o índice da fatia na roleta (0 a 27)
             const targetSliceIndex = QUESTIONS_DATA.findIndex(q => q.id === selectedQuestion.id);
 
             // Calcular o ângulo exato para que a fatia sorteada pare sob o ponteiro topo (-90 graus ou 3*PI/2)
-            // Ponteiro está a -90° (Top). 
-            // O centro da fatia `targetSliceIndex` no ângulo final precisa bater com 3*PI/2.
             const targetSliceCenterAngle = targetSliceIndex * sliceAngle + (sliceAngle / 2);
             const pointerAngle = (3 * Math.PI) / 2; // -90 graus (topo)
 
-            // Quantidade de voltas completas (por exemplo, 8 voltas) para animação bonita
             const fullRotations = 8;
             
-            // Calculando a rotação total final necessária
             const currentMod = currentRotation % (2 * Math.PI);
             let targetRotation = currentRotation + (fullRotations * 2 * Math.PI) + (pointerAngle - targetSliceCenterAngle - currentMod);
             
-            // Garantir que sempre gire no sentido horário pra frente
             while (targetRotation <= currentRotation + (fullRotations * 2 * Math.PI)) {
                 targetRotation += 2 * Math.PI;
             }
@@ -415,7 +460,7 @@
 
             let lastSliceSoundIndex = -1;
 
-            // Função Easing Cubic-Bezier (Desaceleração suave de 5 segundos)
+            // Função Easing Cubic-Bezier (Desaceleração suave)
             function easeOutCubic(t) {
                 return 1 - Math.pow(1 - t, 3);
             }
@@ -428,7 +473,7 @@
                 currentRotation = startRotation + totalDeltaRotation * easeProgress;
                 drawWheel();
 
-                // Reproduzir efeito sonoro a cada fatia cruzada
+                // Efeito sonoro a cada fatia cruzada
                 const normalizedAngle = (currentRotation % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI);
                 const currentSliceUnderPointer = Math.floor(((3 * Math.PI / 2 - normalizedAngle + 2 * Math.PI) % (2 * Math.PI)) / sliceAngle);
                 
@@ -445,7 +490,7 @@
                     document.getElementById('spinBtn').disabled = false;
                     document.getElementById('spinBtn').classList.remove('opacity-50', 'cursor-not-allowed');
 
-                    // Remover pergunta sorteada da lista disponível
+                    // Remover item sorteado do histórico de disponíveis
                     availableQuestions.splice(selectedIndex, 1);
                     drawnHistory.push(selectedQuestion);
 
@@ -456,7 +501,7 @@
                     playVictorySound();
                     triggerConfetti();
 
-                    // Abrir Modal de Pergunta
+                    // Abrir Modal com Pergunta/Desafio
                     showModal(selectedQuestion);
                 }
             }
@@ -473,11 +518,13 @@
             const icon = document.getElementById('modalCategoryIcon');
             const avatarBg = document.getElementById('modalAvatarBg');
             const avatarIcon = document.getElementById('modalAvatarIcon');
+            const qType = document.getElementById('modalQuestionType');
             const qNum = document.getElementById('modalQuestionNum');
             const qText = document.getElementById('modalQuestionText');
 
             // Preencher Dados
             name.textContent = item.categoryName;
+            qType.textContent = item.isChallenge ? 'Desafio Divertido' : 'Pergunta';
             qNum.textContent = item.id;
             qText.textContent = item.question;
 
@@ -512,20 +559,20 @@
             availableQuestions = [...QUESTIONS_DATA];
             drawnHistory = [];
             updateCounter();
-            alert("A roleta foi reiniciada! Todas as 24 perguntas estão disponíveis novamente.");
+            alert("A roleta foi reiniciada! Todas as 28 casas (24 perguntas + 4 desafios) estão disponíveis novamente.");
         }
 
         function updateCounter() {
             const text = document.getElementById('counterText');
-            text.textContent = `Perguntas sorteadas: ${drawnHistory.length} / ${QUESTIONS_DATA.length}`;
+            text.textContent = `Sorteadas: ${drawnHistory.length} / ${QUESTIONS_DATA.length}`;
         }
 
         // --- 6. EFEITO VISUAL DE CONFETI ---
         function triggerConfetti() {
             if (typeof confetti === 'function') {
                 confetti({
-                    particleCount: 80,
-                    spread: 70,
+                    particleCount: 90,
+                    spread: 80,
                     origin: { y: 0.6 }
                 });
             }
@@ -537,10 +584,10 @@
             updateCounter();
         };
 
-        // Redimensionar responsivo se necessário
         window.addEventListener('resize', () => {
             drawWheel();
         });
     </script>
 </body>
 </html>
+<!-- ... existing code -->
